@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Craftman extends Model
+{
+    /** @use HasFactory<\Database\Factories\CraftmanFactory> */
+    use HasFactory;
+
+    protected $fillable = [
+        'craft_name',
+        'email',
+        'experience_years',
+        'description',
+        'rating',
+        'total_reviews',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+        'rating' => 'decimal:2',
+    ];
+}

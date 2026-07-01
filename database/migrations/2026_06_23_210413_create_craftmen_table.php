@@ -21,6 +21,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->decimal('rating', 3, 2)->default(0.00);
             $table->integer('total_reviews')->default(0);
+            $table->integer('hourly_rate')->default(0);
+            $table->integer('daily_rate')->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

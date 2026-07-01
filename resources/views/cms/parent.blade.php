@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> لوحة التحكم - حرفي || @yield('title') </title>
+    <title> لوحة التحكم - حرفي || @yield('title' , 'الرئيسية') </title>
 
 
     <!-- Bootstrap 5 RTL -->
@@ -21,6 +21,8 @@
 
     <!-- CSS الخاص بالـ Dashboard -->
     <link rel="stylesheet" href="{{ asset('cms/css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
 
     @yield('styles')
 
@@ -39,7 +41,7 @@
 
         <ul class="sidebar-nav">
             <li class="nav-item">
-                <a class="nav-link active" href="index.html">
+                <a class="nav-link active" href="{{ route('main') }}">
                     <i class="fas fa-chart-pie"></i> الرئيسية
                 </a>
             </li>
@@ -183,229 +185,237 @@
     <!-- JavaScript -->
     <!-- ============================================ -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{{asset('cms/plugins/toastr/toastr.min.js')}}"></script>
     <script src="{{ asset('cms/js/main.js') }}"></script>
+    <script src="{{ asset('js/crud.js') }}"></script>
     <script>
-        // ============================================
-        // تحميل البيانات
-        // ============================================
-        document.addEventListener('DOMContentLoaded', function() {
-            // جلب البيانات من localStorage أو API
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const craftsmen = JSON.parse(localStorage.getItem('craftsmen') || '[]');
-            const requests = JSON.parse(localStorage.getItem('requests') || '[]');
-            const offers = JSON.parse(localStorage.getItem('offers') || '[]');
+    // ============================================
+    // تحميل البيانات
+    // ============================================
+    // document.addEventListener('DOMContentLoaded', function() {
+    // جلب البيانات من localStorage أو API
+    // const users = JSON.parse(localStorage.getItem('users') || '[]');
+    // const craftsmen = JSON.parse(localStorage.getItem('craftsmen') || '[]');
+    // const requests = JSON.parse(localStorage.getItem('requests') || '[]');
+    // const offers = JSON.parse(localStorage.getItem('offers') || '[]');
 
-            // تحديث الإحصائيات
-            document.getElementById('statUsers').textContent = users.length;
-            document.getElementById('statCraftsmen').textContent = craftsmen.length;
-            document.getElementById('statRequests').textContent = requests.length;
-            document.getElementById('statOffers').textContent = offers.length;
+    // تحديث الإحصائيات
+    // document.getElementById('statUsers').textContent = users.length;
+    // document.getElementById('statCraftsmen').textContent = craftsmen.length;
+    // document.getElementById('statRequests').textContent = requests.length;
+    // document.getElementById('statOffers').textContent = offers.length;
 
-            // تحديث البادجات
-            document.getElementById('usersBadge').textContent = users.length;
-            document.getElementById('craftsmenBadge').textContent = craftsmen.length;
-            document.getElementById('requestsBadge').textContent = requests.length;
-            document.getElementById('offersBadge').textContent = offers.length;
+    // تحديث البادجات
+    // document.getElementById('usersBadge').textContent = users.length;
+    // document.getElementById('craftsmenBadge').textContent = craftsmen.length;
+    // document.getElementById('requestsBadge').textContent = requests.length;
+    // document.getElementById('offersBadge').textContent = offers.length;
 
-            // تحديث وقت آخر تحديث
-            document.getElementById('lastUpdate').innerHTML =
-                `<i class="fas fa-clock"></i> ${new Date().toLocaleString('ar')}`;
+    // تحديث وقت آخر تحديث
+    // document.getElementById('lastUpdate').innerHTML =
+    //     `<i class="fas fa-clock"></i> ${new Date().toLocaleString('ar')}`;
 
-            // رسم الرسوم البيانية
-            drawCharts(requests, craftsmen);
+    // رسم الرسوم البيانية
+    // drawCharts(requests, craftsmen);
 
-            // عرض آخر النشاطات
-            renderActivities(users, craftsmen, requests, offers);
-        });
+    // عرض آخر النشاطات
+    // renderActivities(users, craftsmen, requests, offers);
+    // });
 
-        // ============================================
-        // دالة رسم الرسوم البيانية
-        // ============================================
-        function drawCharts(requests, craftsmen) {
-            // الطلبات حسب الشهر
-            const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'];
-            const data = months.map((_, i) => {
-                return requests.filter(r => new Date(r.createdAt).getMonth() === i).length;
-            });
+    // ============================================
+    // دالة رسم الرسوم البيانية
+    // ============================================
+    // function drawCharts(requests, craftsmen) {
+    //     // الطلبات حسب الشهر
+    //     const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'];
+    //     const data = months.map((_, i) => {
+    //         return requests.filter(r => new Date(r.createdAt).getMonth() === i).length;
+    //     });
 
-            new Chart(document.getElementById('requestsChart'), {
-                type: 'bar',
-                data: {
-                    labels: months,
-                    datasets: [{
-                        label: 'الطلبات',
-                        data: data,
-                        backgroundColor: 'rgba(255, 193, 7, 0.6)',
-                        borderColor: '#FFC107',
-                        borderWidth: 2,
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
-                            }
-                        }
-                    }
-                }
-            });
+    //     new Chart(document.getElementById('requestsChart'), {
+    //         type: 'bar',
+    //         data: {
+    //             labels: months,
+    //             datasets: [{
+    //                 label: 'الطلبات',
+    //                 data: data,
+    //                 backgroundColor: 'rgba(255, 193, 7, 0.6)',
+    //                 borderColor: '#FFC107',
+    //                 borderWidth: 2,
+    //                 borderRadius: 8
+    //             }]
+    //         },
+    //         options: {
+    //             responsive: true,
+    //             plugins: {
+    //                 legend: {
+    //                     display: false
+    //                 }
+    //             },
+    //             scales: {
+    //                 y: {
+    //                     beginAtZero: true,
+    //                     ticks: {
+    //                         stepSize: 1
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     });
 
-            // توزيع الحرفيين
-            const craftCounts = {};
-            craftsmen.forEach(c => {
-                craftCounts[c.craft] = (craftCounts[c.craft] || 0) + 1;
-            });
+    //     // توزيع الحرفيين
+    //     const craftCounts = {};
+    //     craftsmen.forEach(c => {
+    //         craftCounts[c.craft] = (craftCounts[c.craft] || 0) + 1;
+    //     });
 
-            new Chart(document.getElementById('craftsmenChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(craftCounts),
-                    datasets: [{
-                        data: Object.values(craftCounts),
-                        backgroundColor: ['#6c5ce7', '#00b894', '#0984e3', '#e17055', '#fdcb6e']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                font: {
-                                    size: 10
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
+    //     new Chart(document.getElementById('craftsmenChart'), {
+    //         type: 'doughnut',
+    //         data: {
+    //             labels: Object.keys(craftCounts),
+    //             datasets: [{
+    //                 data: Object.values(craftCounts),
+    //                 backgroundColor: ['#6c5ce7', '#00b894', '#0984e3', '#e17055', '#fdcb6e']
+    //             }]
+    //         },
+    //         options: {
+    //             responsive: true,
+    //             plugins: {
+    //                 legend: {
+    //                     position: 'bottom',
+    //                     labels: {
+    //                         font: {
+    //                             size: 10
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     });
+    // }
 
-        // ============================================
-        // دالة عرض آخر النشاطات
-        // ============================================
-        function renderActivities(users, craftsmen, requests, offers) {
-            const container = document.getElementById('recentActivities');
-            let activities = [];
+    // ============================================
+    // دالة عرض آخر النشاطات
+    // ============================================
+    // function renderActivities(users, craftsmen, requests, offers) {
+    //     const container = document.getElementById('recentActivities');
+    //     let activities = [];
 
-            users.slice(-3).forEach(u => {
-                activities.push({
-                    text: `مستخدم جديد: ${u.fullName || u.firstName}`,
-                    time: u.createdAt
-                });
-            });
-            craftsmen.slice(-3).forEach(c => {
-                activities.push({
-                    text: `حرفي جديد: ${c.name} (${c.craft})`,
-                    time: c.joinDate
-                });
-            });
-            requests.slice(-3).forEach(r => {
-                activities.push({
-                    text: `طلب جديد: ${r.title}`,
-                    time: r.createdAt
-                });
-            });
-            offers.slice(-3).forEach(o => {
-                activities.push({
-                    text: `عرض جديد من ${o.craftsmanName}`,
-                    time: o.createdAt
-                });
-            });
+    //     users.slice(-3).forEach(u => {
+    //         activities.push({
+    //             text: `مستخدم جديد: ${u.fullName || u.firstName}`,
+    //             time: u.createdAt
+    //         });
+    //     });
+    //     craftsmen.slice(-3).forEach(c => {
+    //         activities.push({
+    //             text: `حرفي جديد: ${c.name} (${c.craft})`,
+    //             time: c.joinDate
+    //         });
+    //     });
+    //     requests.slice(-3).forEach(r => {
+    //         activities.push({
+    //             text: `طلب جديد: ${r.title}`,
+    //             time: r.createdAt
+    //         });
+    //     });
+    //     offers.slice(-3).forEach(o => {
+    //         activities.push({
+    //             text: `عرض جديد من ${o.craftsmanName}`,
+    //             time: o.createdAt
+    //         });
+    //     });
 
-            activities.sort((a, b) => new Date(b.time) - new Date(a.time));
-            activities = activities.slice(0, 8);
+    //     activities.sort((a, b) => new Date(b.time) - new Date(a.time));
+    //     activities = activities.slice(0, 8);
 
-            if (activities.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-4 text-muted">
-                        <i class="fas fa-inbox fa-2x mb-2"></i>
-                        <p>لا توجد نشاطات</p>
-                    </div>
-                `;
-                return;
-            }
+    //     if (activities.length === 0) {
+    //         container.innerHTML = `
+    //                 <div class="text-center py-4 text-muted">
+    //                     <i class="fas fa-inbox fa-2x mb-2"></i>
+    //                     <p>لا توجد نشاطات</p>
+    //                 </div>
+    //             `;
+    //         return;
+    //     }
 
-            container.innerHTML = activities.map(a => `
-                <div class="activity-item">
-                    <p class="mb-0 small">${a.text}</p>
-                    <small class="text-muted">${timeAgo(new Date(a.time))}</small>
-                </div>
-            `).join('');
-        }
+    //     container.innerHTML = activities.map(a => `
+    //             <div class="activity-item">
+    //                 <p class="mb-0 small">${a.text}</p>
+    //                 <small class="text-muted">${timeAgo(new Date(a.time))}</small>
+    //             </div>
+    //         `).join('');
+    // }
 
-        // ============================================
-        // دالة timeAgo
-        // ============================================
-        function timeAgo(date) {
-            const seconds = Math.floor((new Date() - date) / 1000);
-            if (seconds < 60) return 'الآن';
-            const minutes = Math.floor(seconds / 60);
-            if (minutes < 60) return `منذ ${minutes} دقيقة`;
-            const hours = Math.floor(minutes / 60);
-            if (hours < 24) return `منذ ${hours} ساعة`;
-            const days = Math.floor(hours / 24);
-            return `منذ ${days} يوم`;
-        }
-        // ============================================
-        // 5. التعديل السريع
-        // ============================================
-        function quickEdit() {
-            Swal.fire({
-                title: '✏️ تعديل سريع',
-                html: `
-                    <div class="text-start">
-                        <p class="text-muted">اختر العنصر الذي تريد تعديله:</p>
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-outline-primary" onclick="showSection('users'); Swal.close();">
-                                <i class="fas fa-users"></i> تعديل مستخدم
-                            </button>
-                            <button class="btn btn-outline-warning" onclick="showSection('craftsmen'); Swal.close();">
-                                <i class="fas fa-tools"></i> تعديل حرفي
-                            </button>
-                            <button class="btn btn-outline-success" onclick="showSection('requests'); Swal.close();">
-                                <i class="fas fa-clipboard-list"></i> تعديل طلب
-                            </button>
-                            <button class="btn btn-outline-info" onclick="showSection('offers'); Swal.close();">
-                                <i class="fas fa-handshake"></i> تعديل عرض
-                            </button>
-                        </div>
-                    </div>
-                `,
-                confirmButtonColor: '#FFC107',
-                confirmButtonText: 'إغلاق'
-            });
-        }
+    // ============================================
+    // دالة timeAgo
+    // ============================================
+    // function timeAgo(date) {
+    //     const seconds = Math.floor((new Date() - date) / 1000);
+    //     if (seconds < 60) return 'الآن';
+    //     const minutes = Math.floor(seconds / 60);
+    //     if (minutes < 60) return `منذ ${minutes} دقيقة`;
+    //     const hours = Math.floor(minutes / 60);
+    //     if (hours < 24) return `منذ ${hours} ساعة`;
+    //     const days = Math.floor(hours / 24);
+    //     return `منذ ${days} يوم`;
+    // }
+    // ============================================
+    // 5. التعديل السريع
+    // ============================================
+    // function quickEdit() {
+    //     Swal.fire({
+    //         title: '✏️ تعديل سريع',
+    //         html: `
+    //                 <div class="text-start">
+    //                     <p class="text-muted">اختر العنصر الذي تريد تعديله:</p>
+    //                     <div class="d-grid gap-2">
+    //                         <button class="btn btn-outline-primary" onclick="showSection('users'); Swal.close();">
+    //                             <i class="fas fa-users"></i> تعديل مستخدم
+    //                         </button>
+    //                         <button class="btn btn-outline-warning" onclick="showSection('craftsmen'); Swal.close();">
+    //                             <i class="fas fa-tools"></i> تعديل حرفي
+    //                         </button>
+    //                         <button class="btn btn-outline-success" onclick="showSection('requests'); Swal.close();">
+    //                             <i class="fas fa-clipboard-list"></i> تعديل طلب
+    //                         </button>
+    //                         <button class="btn btn-outline-info" onclick="showSection('offers'); Swal.close();">
+    //                             <i class="fas fa-handshake"></i> تعديل عرض
+    //                         </button>
+    //                     </div>
+    //                 </div>
+    //             `,
+    //         confirmButtonColor: '#FFC107',
+    //         confirmButtonText: 'إغلاق'
+    //     });
+    // }
 
-        // ============================================
-        // دالة تسجيل الخروج
-        // ============================================
-        function logout() {
-            Swal.fire({
-                title: 'تسجيل الخروج',
-                text: 'هل أنت متأكد؟',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#FFC107',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'نعم',
-                cancelButtonText: 'إلغاء'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    localStorage.removeItem('currentUser');
-                    window.location.href = '../index.html';
-                }
-            });
-        }
+    // ============================================
+    // دالة تسجيل الخروج
+    // ============================================
+    // function logout() {
+    // Swal.fire({
+    //     title: 'تسجيل الخروج',
+    //     text: 'هل أنت متأكد؟',
+    //     icon: 'question',
+    //     showCancelButton: true,
+    //     confirmButtonColor: '#FFC107',
+    //     cancelButtonColor: '#6c757d',
+    //     confirmButtonText: 'نعم',
+    //     cancelButtonText: 'إلغاء'
+    // }).then((result) => {
+    //     if (result.isConfirmed) {
+    //         localStorage.removeItem('currentUser');
+    //         window.location.href = '../index.html';
+    //     }
+    // });
+    // }
     </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
     @yield('script')
 </body>

@@ -314,3 +314,7 @@ body {
     background: #FFC107;
     border-radius: 10px;
 }
+.arrow{
+    transition: 0.3s;
+    float:left;
+}

@@ -21,7 +21,7 @@
 
     <!-- CSS الخاص بالـ Dashboard -->
     <link rel="stylesheet" href="{{ asset('cms/css/style.css') }}">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     @yield('styles')
 
 </head>
@@ -67,6 +67,66 @@
                     <span class="badge" id="offersBadge">0</span>
                 </a>
             </li>
+            
+            
+            <li class="nav-item has-treeview">
+
+    <a href="#" class="nav-link" onclick="toggleCategories(event, this)">
+        <i class="fas fa-layer-group"></i>
+        التصنيفات
+        <i class="fas fa-angle-left arrow"></i>
+    </a>
+
+    <ul class="nav nav-treeview" id="categoriesMenu">
+
+        <li class="nav-item">
+            <a href="{{ route('categories.index') }}" class="nav-link">
+                <i class="fas fa-list"></i>
+                عرض التصنيفات
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('categories.create') }}" class="nav-link">
+                <i class="fas fa-plus-circle"></i>
+                إضافة تصنيف
+            </a>
+        </li>
+
+    </ul>
+
+</li>
+         
+<li class="nav-item has-treeview">
+
+    <a href="#" class="nav-link" onclick="toggleProfessions(event, this)">
+        <i class="fas fa-wrench"></i>
+        المهن
+        <i class="fas fa-angle-left arrow"></i>
+    </a>
+
+    <ul class="nav nav-treeview" id="professionsMenu">
+
+        <li class="nav-item">
+            <a href="{{ route('professions.index') }}" class="nav-link">
+                <i class="fas fa-list"></i>
+                عرض المهن
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('professions.create') }}" class="nav-link">
+                <i class="fas fa-plus-circle"></i>
+                إضافة مهنة
+            </a>
+        </li>
+
+    </ul>
+
+</li>
+         
+
+
             <li class="nav-item">
                 <a class="nav-link" href="settings.html">
                     <i class="fas fa-cog"></i> الإعدادات
@@ -406,6 +466,49 @@
                 }
             });
         }
+        function toggleCategories(event, element){
+
+    event.preventDefault();
+
+    let menu = document.getElementById('categoriesMenu');
+    let arrow = element.querySelector('.arrow');
+
+    if(menu.style.display === "block"){
+
+        menu.style.display = "none";
+        arrow.style.transform = "rotate(0deg)";
+
+    }else{
+
+        menu.style.display = "block";
+        arrow.style.transform = "rotate(-90deg)";
+
+    }
+
+}
+function toggleProfessions(event, element){
+
+    event.preventDefault();
+
+    let menu = document.getElementById('professionsMenu');
+    let arrow = element.querySelector('.arrow');
+
+    if(menu.style.display === "block"){
+
+        menu.style.display = "none";
+        arrow.style.transform = "rotate(0deg)";
+
+    }else{
+
+        menu.style.display = "block";
+        arrow.style.transform = "rotate(-90deg)";
+
+    }
+
+}
     </script>
-    @yield('script')
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js/crud.js') }}"></script>
+    @yield('scripts')
 </body>

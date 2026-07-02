@@ -395,7 +395,7 @@
 </div>
 @endsection
 
-@section('script')
+@section('scripts')
 <script>
 // ============================================
 // 1. عرض تفاصيل الحرفي

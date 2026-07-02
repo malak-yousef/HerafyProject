@@ -279,7 +279,7 @@
 </div>
 @endsection
 
-@section('script')
+@section('scripts')
 <script>
 function performStore() {
     let formData = new FormData();

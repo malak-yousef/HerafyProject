@@ -284,9 +284,9 @@
 </div>
 @endsection
 
-<!-- @section('script')
+@section('scripts')
 
-<script>
+<!-- <script>
 function performUpdate(id) {
     let formData = new FormData();
     formData.append('name', document.getElementById('name').value);

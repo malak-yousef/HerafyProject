@@ -22,8 +22,7 @@
     <!-- CSS الخاص بالـ Dashboard -->
     <link rel="stylesheet" href="{{ asset('cms/css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <<<<<<< HEAD=======>>>>>>> fcc92032953f49a014ad485980f15f8664f6c39d
-        @yield('styles')
+    @yield('styles')
 
 </head>
 

@@ -158,7 +158,6 @@ function confirmDestroy(url, td) {
     });
 }
 
-
 function destroy(url, td) {
     axios.delete(url)
         .then(function (response) {
@@ -213,3 +212,4 @@ function showMessage(data) {
         timer: 1500
     })
 }
+

@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Portfolio;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Craftman extends Model
 {
     /** @use HasFactory<\Database\Factories\CraftmanFactory> */
-    use HasFactory;
+    use HasFactory , SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -31,4 +33,8 @@ class Craftman extends Model
         'is_active' => 'boolean',
         'rating' => 'decimal:2',
     ];
+
+    public function portfolios() {
+        return $this->hasMany(Portfolio::class);
+    } 
 }

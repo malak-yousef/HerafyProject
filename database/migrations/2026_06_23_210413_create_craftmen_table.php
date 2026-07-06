@@ -24,6 +24,8 @@ return new class extends Migration
             $table->integer('hourly_rate')->default(0);
             $table->integer('daily_rate')->default(0);
             $table->boolean('is_active')->default(true);
+            $table->string('profile_image')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -150,15 +150,15 @@
                     <!-- الصورة الشخصية -->
                     <div class="col-md-3">
                         <label class="form-label">الصورة الشخصية</label>
-                        <div class="image-preview" onclick="document.getElementById('profileImage').click()">
+                        <div class="image-preview" onclick="document.getElementById('profile_image').click()">
                             <div class="placeholder" id="imagePlaceholder">
                                 <i class="fas fa-camera"></i>
                                 <span>اختر صورة</span>
                             </div>
                             <img id="imagePreview" style="display: none;" alt="صورة الحرفي">
                         </div>
-                        <input type="file" class="form-control d-none" id="profileImage" name="profile_image"
-                            accept="image/*" onchange="previewImage(event)">
+                        <input type="file" class="form-control d-none" id="profile_image" name="profile_image"
+                            accept="image/*" >
                         <small class="text-muted">صورة شخصية (اختياري)</small>
                     </div>
 
@@ -293,7 +293,8 @@ function performStore() {
     formData.append('daily_rate', document.getElementById('daily_rate').value);
     formData.append('description', document.getElementById('description').value);
     formData.append('is_active', document.getElementById('is_active').value);
-    formData.append('password', document.getElementById('password').value); // جديد
+    formData.append('password', document.getElementById('password').value);  
+    formData.append('profile_image', document.getElementById('profile_image').files[0]); 
 
     // استدعاء الدالة store لإرسال البيانات
     store('/cms/admin/craftmen', formData);

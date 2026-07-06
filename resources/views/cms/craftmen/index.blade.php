@@ -4,235 +4,235 @@
 
 @section('styles')
 <style>
-/* تنسيق الصورة في الجدول */
-.craftsman-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #FFC107;
-}
-
-.craftsman-avatar-sm {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-/* تنسيق البادجات */
-.badge-status {
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 500;
-}
-
-/* تنسيق أزرار الإجراءات */
-.action-btns {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-}
-
-.action-btn {
-    width: 32px;
-    height: 32px;
-    border: none;
-    border-radius: 8px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    color: #fff;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.action-btn:hover {
-    transform: scale(1.15);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-}
-
-.action-btn.btn-edit {
-    background: #6c5ce7;
-}
-
-.action-btn.btn-edit:hover {
-    background: #5a4bd1;
-}
-
-.action-btn.btn-view {
-    background: #fdcb6e;
-    color: #2d3436;
-}
-
-.action-btn.btn-view:hover {
-    background: #fdcb6e;
-}
-
-.action-btn.btn-toggle {
-    background: #0984e3;
-}
-
-.action-btn.btn-toggle:hover {
-    background: #0770c4;
-}
-
-.action-btn.btn-delete {
-    background: #e17055;
-}
-
-.action-btn.btn-delete:hover {
-    background: #d63031;
-}
-
-/* تنسيق التقييم بالنجوم */
-.stars {
-    color: #fdcb6e;
-    letter-spacing: 2px;
-    font-size: 14px;
-}
-
-.stars .empty {
-    color: #dfe6e9;
-}
-
-/* تنسيق الجدول */
-.table-container {
-    background: #fff;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-}
-
-.table-container .table-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.table-container .table-header input {
-    border-radius: 10px;
-    border: 2px solid #e9ecef;
-    padding: 8px 15px;
-    transition: all 0.3s ease;
-    max-width: 300px;
-}
-
-.table-container .table-header input:focus {
-    border-color: #FFC107;
-    box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
-}
-
-.table-container table th {
-    background: #f8f9fa;
-    color: #2d3436;
-    font-weight: 600;
-    border-bottom: 2px solid #e9ecef;
-    white-space: nowrap;
-    font-size: 13px;
-}
-
-.table-container table td {
-    vertical-align: middle;
-    font-size: 14px;
-}
-
-.table-responsive {
-    max-height: 550px;
-    overflow-y: auto;
-}
-
-.table-responsive::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-
-.table-responsive::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-.table-responsive::-webkit-scrollbar-thumb {
-    background: #FFC107;
-    border-radius: 10px;
-}
-
-/* تنسيق الـ Pagination */
-.card-footer {
-    background: transparent;
-    border-top: 1px solid #e9ecef;
-    padding: 15px 0 0;
-}
-
-.card-footer .pagination {
-    margin-bottom: 0;
-    justify-content: center;
-}
-
-.card-footer .pagination .page-link {
-    border-radius: 8px;
-    margin: 0 3px;
-    color: #2d3436;
-    border: 1px solid #e9ecef;
-    transition: all 0.3s ease;
-}
-
-.card-footer .pagination .page-link:hover {
-    background: #FFC107;
-    border-color: #FFC107;
-    color: #fff;
-}
-
-.card-footer .pagination .active .page-link {
-    background: #FFC107;
-    border-color: #FFC107;
-    color: #fff;
-}
-
-/* تنسيق الجوال */
-@media (max-width: 768px) {
-    .table-container {
-        padding: 15px;
+    /* تنسيق الصورة في الجدول */
+    .craftsman-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #FFC107;
     }
 
-    .table-container .table-header {
-        flex-direction: column;
-        align-items: stretch;
+    .craftsman-avatar-sm {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
     }
 
-    .table-container .table-header input {
-        max-width: 100%;
+    /* تنسيق البادجات */
+    .badge-status {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
     }
 
+    /* تنسيق أزرار الإجراءات */
     .action-btns {
-        gap: 3px;
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
     }
 
     .action-btn {
-        width: 28px;
-        height: 28px;
-        font-size: 12px;
+        width: 32px;
+        height: 32px;
+        border: none;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        color: #fff;
+        cursor: pointer;
+        text-decoration: none;
     }
-}
 
-/* تنسيق الصورة الافتراضية */
-.avatar-placeholder {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #FFC107;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-weight: 700;
-    font-size: 18px;
-}
+    .action-btn:hover {
+        transform: scale(1.15);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .action-btn.btn-edit {
+        background: #6c5ce7;
+    }
+
+    .action-btn.btn-edit:hover {
+        background: #5a4bd1;
+    }
+
+    .action-btn.btn-view {
+        background: #fdcb6e;
+        color: #2d3436;
+    }
+
+    .action-btn.btn-view:hover {
+        background: #fdcb6e;
+    }
+
+    .action-btn.btn-toggle {
+        background: #0984e3;
+    }
+
+    .action-btn.btn-toggle:hover {
+        background: #0770c4;
+    }
+
+    .action-btn.btn-delete {
+        background: #e17055;
+    }
+
+    .action-btn.btn-delete:hover {
+        background: #d63031;
+    }
+
+    /* تنسيق التقييم بالنجوم */
+    .stars {
+        color: #fdcb6e;
+        letter-spacing: 2px;
+        font-size: 14px;
+    }
+
+    .stars .empty {
+        color: #dfe6e9;
+    }
+
+    /* تنسيق الجدول */
+    .table-container {
+        background: #fff;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .table-container .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .table-container .table-header input {
+        border-radius: 10px;
+        border: 2px solid #e9ecef;
+        padding: 8px 15px;
+        transition: all 0.3s ease;
+        max-width: 300px;
+    }
+
+    .table-container .table-header input:focus {
+        border-color: #FFC107;
+        box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+    }
+
+    .table-container table th {
+        background: #f8f9fa;
+        color: #2d3436;
+        font-weight: 600;
+        border-bottom: 2px solid #e9ecef;
+        white-space: nowrap;
+        font-size: 13px;
+    }
+
+    .table-container table td {
+        vertical-align: middle;
+        font-size: 14px;
+    }
+
+    .table-responsive {
+        max-height: 550px;
+        overflow-y: auto;
+    }
+
+    .table-responsive::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    .table-responsive::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: #FFC107;
+        border-radius: 10px;
+    }
+
+    /* تنسيق الـ Pagination */
+    .card-footer {
+        background: transparent;
+        border-top: 1px solid #e9ecef;
+        padding: 15px 0 0;
+    }
+
+    .card-footer .pagination {
+        margin-bottom: 0;
+        justify-content: center;
+    }
+
+    .card-footer .pagination .page-link {
+        border-radius: 8px;
+        margin: 0 3px;
+        color: #2d3436;
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+
+    .card-footer .pagination .page-link:hover {
+        background: #FFC107;
+        border-color: #FFC107;
+        color: #fff;
+    }
+
+    .card-footer .pagination .active .page-link {
+        background: #FFC107;
+        border-color: #FFC107;
+        color: #fff;
+    }
+
+    /* تنسيق الجوال */
+    @media (max-width: 768px) {
+        .table-container {
+            padding: 15px;
+        }
+
+        .table-container .table-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .table-container .table-header input {
+            max-width: 100%;
+        }
+
+        .action-btns {
+            gap: 3px;
+        }
+
+        .action-btn {
+            width: 28px;
+            height: 28px;
+            font-size: 12px;
+        }
+    }
+
+    /* تنسيق الصورة الافتراضية */
+    .avatar-placeholder {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #FFC107;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 18px;
+    }
 </style>
 @endsection
 
@@ -241,10 +241,7 @@
 @section('content')
 <div id="section-craftsmen" class="section-content">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h4 class="fw-bold mb-0">🔧 إدارة الحرفيين</h4>
-            <p class="text-muted small">عرض وإدارة جميع الحرفيين المسجلين</p>
-        </div>
+
         <div class="d-flex gap-2">
             <a href="{{ route('craftmen.create') }}" class="btn btn-success btn-sm">
                 <i class="fas fa-plus"></i> إضافة حرفي
@@ -294,7 +291,7 @@
                         <td>{{ $craftman->id }}</td>
                         <td>
                             @if($craftman->profile_image)
-                            <img src="{{ asset($craftman->profile_image) }}" alt="{{ $craftman->name }}"
+                            <img src="{{ asset('storage/images/craftman/' . $craftman->profile_image) }}" alt="{{ $craftman->name }}"
                                 class="craftsman-avatar">
                             @else
                             <span class="avatar-placeholder">
@@ -354,13 +351,6 @@
                                     <i class="fas fa-edit"></i>
                                 </a>
 
-                                {{-- تبديل الحالة --}}
-                                <!-- <button class="action-btn btn-toggle"
-                                    onclick="toggleCraftsmanStatus('{{ $craftman->id }}', {{ $craftman->is_active ? 'true' : 'false' }})"
-                                    title="{{ $craftman->is_active ? 'تعطيل' : 'تفعيل' }}">
-                                    <i class="fas {{ $craftman->is_active ? 'fa-pause' : 'fa-play' }}"></i>
-                                </button> -->
-
                                 {{-- حذف --}}
                                 <button class="action-btn btn-delete"
                                     onclick="performDestroy('{{ $craftman->id}}',this)" title="حذف">
@@ -378,6 +368,7 @@
                             <a href="{{ route('craftmen.create') }}" class="btn btn-warning btn-sm mt-2">
                                 <i class="fas fa-plus"></i> أضف أول حرفي
                             </a>
+                            <a href="{{ route('craftmen_trashed') }}" class="btn btn-danger btn-sm mt-2"><i class="fas fa-trash-alt"></i> الحرفيين المحذوفين"></a>
                         </td>
                     </tr>
                     @endforelse
@@ -397,42 +388,42 @@
 
 @section('scripts')
 <script>
-// ============================================
-// 1. عرض تفاصيل الحرفي
-// ============================================
-function viewCraftsman(id) {
-    // جلب البيانات من الـ API
-    fetch(`/admin/craftsmen/${id}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
+    // ============================================
+    // 1. عرض تفاصيل الحرفي
+    // ============================================
+    function viewCraftsman(id) {
+        // جلب البيانات من الـ API
+        fetch(`/admin/craftsmen/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'خطأ',
+                        text: data.error,
+                        confirmButtonColor: '#FFC107'
+                    });
+                    return;
+                }
+
+                // حساب التقييم بالنجوم
+                const rating = data.rating || 0;
+                const fullStars = Math.floor(rating);
+                const hasHalf = rating - fullStars >= 0.5;
+                let starsHTML = '';
+                for (let i = 0; i < fullStars; i++) {
+                    starsHTML += '<i class="fas fa-star text-warning"></i>';
+                }
+                if (hasHalf) {
+                    starsHTML += '<i class="fas fa-star-half-alt text-warning"></i>';
+                }
+                for (let i = 0; i < 5 - fullStars - (hasHalf ? 1 : 0); i++) {
+                    starsHTML += '<i class="fas fa-star text-muted"></i>';
+                }
+
                 Swal.fire({
-                    icon: 'error',
-                    title: 'خطأ',
-                    text: data.error,
-                    confirmButtonColor: '#FFC107'
-                });
-                return;
-            }
-
-            // حساب التقييم بالنجوم
-            const rating = data.rating || 0;
-            const fullStars = Math.floor(rating);
-            const hasHalf = rating - fullStars >= 0.5;
-            let starsHTML = '';
-            for (let i = 0; i < fullStars; i++) {
-                starsHTML += '<i class="fas fa-star text-warning"></i>';
-            }
-            if (hasHalf) {
-                starsHTML += '<i class="fas fa-star-half-alt text-warning"></i>';
-            }
-            for (let i = 0; i < 5 - fullStars - (hasHalf ? 1 : 0); i++) {
-                starsHTML += '<i class="fas fa-star text-muted"></i>';
-            }
-
-            Swal.fire({
-                title: `🔧 ${data.name}`,
-                html: `
+                    title: `🔧 ${data.name}`,
+                    html: `
                         <div class="text-start">
                             <div class="text-center mb-3">
                                 ${data.profile_image ? 
@@ -454,25 +445,25 @@ function viewCraftsman(id) {
                             <p><strong>تاريخ الانضمام:</strong> ${new Date(data.created_at).toLocaleDateString('ar')}</p>
                         </div>
                     `,
-                confirmButtonColor: '#FFC107',
-                confirmButtonText: 'إغلاق',
-                width: '550px'
+                    confirmButtonColor: '#FFC107',
+                    confirmButtonText: 'إغلاق',
+                    width: '550px'
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'خطأ',
+                    text: 'حدث خطأ أثناء جلب البيانات',
+                    confirmButtonColor: '#FFC107'
+                });
             });
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'خطأ',
-                text: 'حدث خطأ أثناء جلب البيانات',
-                confirmButtonColor: '#FFC107'
-            });
-        });
-}
+    }
 
 
-function performDestroy(id, referance) {
-    confirmDestroy('/cms/admin/craftmen/' + id, referance);
-}
+    function performDestroy(id, referance) {
+        confirmDestroy('/cms/admin/craftmen/' + id, referance);
+    }
 </script>
 @endsection

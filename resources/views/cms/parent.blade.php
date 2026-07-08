@@ -43,12 +43,16 @@
                     <i class="fas fa-chart-pie"></i> الرئيسية
                 </a>
             </li>
+            
+            <!-- المستخدمين -->
             <li class="nav-item">
                 <a class="nav-link" href="users.html">
                     <i class="fas fa-users"></i> المستخدمون
                     <span class="badge" id="usersBadge">0</span>
                 </a>
             </li>
+           
+            <!-- الحرفين -->
             <li class="nav-item">
                 <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'craftmenMenu')">
                     <i class="fas fa-tools"></i> الحرفيون
@@ -61,6 +65,7 @@
                 </ul>
             </li>
 
+            <!-- مشاريع الحرفين -->
             <li class="nav-item">
                 <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'portfoliosMenu')">
                     <i class="fas fa-tools"></i> مشاريع الحرفيين
@@ -72,6 +77,20 @@
                     <li><a href="{{ route('portfolios.create') }}"> <i class="fas fa-plus-circle"></i> إضافة مشروع
                             حرفي</a></li>
                     <li><a href="{{ route('portfolios_trashed') }}"> <i class="fas fa-trash"></i> مشاريع الحرفيين المحذوفة</a></li>
+                </ul>
+            </li>
+            
+            <!-- صور مشاريع الحرفين -->
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'portfolio_imagesMenu')">
+                    <i class="fas fa-tools"></i>معرض مشاريع الحرفيين 
+                    <i class="fas fa-angle-left arrow"></i>
+                </a>
+                <ul class="submenu" id="portfolio_imagesMenu" style="display:none;">
+                    <li><a href="{{ route('portfolio_images.index') }}"><i class="fas fa-list"></i> عرض معرض المشاريع </a>
+                    </li>
+                    <li><a href="{{ route('portfolio_images.create') }}"> <i class="fas fa-plus-circle"></i> إضافة معرض للمشروع </a></li>
+                    <li><a href="{{ route('portfolio_images_trashed') }}"> <i class="fas fa-trash"></i> معارض المشاريع المحذوفة</a></li>
                 </ul>
             </li>
 

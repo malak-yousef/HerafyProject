@@ -321,8 +321,6 @@
                                     <i class="fas fa-edit"></i>
                                 </a>
 
-
-
                                 {{-- حذف --}}
                                 <button class="action-btn btn-delete"
                                     onclick="performDestroy('{{ $portfolio->id }}', this)" title="حذف">

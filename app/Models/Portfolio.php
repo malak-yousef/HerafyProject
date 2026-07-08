@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Craftman;
+use App\Models\PortfolioImage;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Portfolio extends Model
@@ -29,5 +30,10 @@ class Portfolio extends Model
     public function craftman()
     {
         return $this->belongsTo(Craftman::class);
+    }
+
+    public function portfolio_images()
+    {
+        return $this->hasMany(PortfolioImage::class);
     }
 }

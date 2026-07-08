@@ -5,6 +5,7 @@ use App\Http\Controllers\{
     CraftmanController,
     PortfolioController,
     ProfessionController,
+    PortfolioImageController,
 };
 //use App\Models\Category;
 use Illuminate\Support\Facades\Route;
@@ -33,7 +34,14 @@ Route::prefix('cms/admin')->group(function () {
     Route::get('portfolios_restore/{id}', [PortfolioController::class, 'restore'])->name('portfolios_restore');
     Route::get('portfolios_force_destroy/{id}', [PortfolioController::class, 'forceDestroy'])->name('portfolios_force_destroy');
     Route::get('portfolios_destroy_all', [PortfolioController::class, 'DestroyAll'])->name('portfolios_destroy_all');
-    });
+
+    Route::resource('portfolio_images', PortfolioImageController::class);
+    Route::post('portfolio_images_update/{id}', [PortfolioImageController::class, 'update'])->name('portfolio_images_update');
+    Route::get('portfolio_images_trashed', [PortfolioImageController::class, 'trashed'])->name('portfolio_images_trashed');
+    Route::get('portfolio_images_restore/{id}', [PortfolioImageController::class, 'restore'])->name('portfolio_images_restore');
+    Route::get('portfolio_images_force_destroy/{id}', [PortfolioImageController::class, 'forceDestroy'])->name('portfolio_images_force_destroy');
+    Route::get('portfolio_images_destroy_all', [PortfolioImageController::class, 'DestroyAll'])->name('portfolio_images_destroy_all');
+});
 
 
 

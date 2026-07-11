@@ -28,6 +28,7 @@ class CraftmanFactory extends Factory
             'rating'=> fake()->randomFloat(2, 0, 5),
             'total_reviews'=> fake()->numberBetween(0, 1000),
             'is_active'=> true,
+            'profile_image'=> fake()->imageUrl(),
         ];
     }
 }

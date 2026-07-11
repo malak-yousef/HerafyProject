@@ -12,7 +12,7 @@ class CraftmanController extends Controller
      */
     public function index()
     {
-        $craftmen = Craftman::orderBy('id', 'desc')->paginate(4);
+        $craftmen = Craftman::orderBy('id', 'desc')->withoutTrashed()->paginate(4);
         return response()->view('cms.craftmen.index', compact('craftmen'));
     }
 
@@ -42,6 +42,7 @@ class CraftmanController extends Controller
                 'hourly_rate' => 'required |numeric',
                 'daily_rate' => 'required |numeric',
                 'is_active' => 'required |boolean',
+                'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ],
             messages: [
                 'required' => 'هذا الحقل مطلوب',
@@ -55,6 +56,14 @@ class CraftmanController extends Controller
             ], 400);
         } else {
             $craftmen = new Craftman();
+
+            if (request()->hasFile('profile_image')) {
+                $image = $request->file('profile_image');
+                $imageName = time() . '_' . $image->getClientOriginalExtension();
+                $image->move('storage/images/craftman', $imageName);
+                $craftmen->profile_image = $imageName;
+            }
+
             $craftmen->name = $request->input('name');
             $craftmen->craft_name = $request->input('craft_name');
             $craftmen->email = $request->input('email');
@@ -137,11 +146,19 @@ class CraftmanController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'icon' => 'خطأ في البيانات',
-                'title' => $validator->getMessageBag()->first(), // صححت كلمة titel → title
+                'title' => $validator->getMessageBag()->first(),
             ], 400);
         }
 
         $craftmen = Craftman::findOrFail($id);
+
+        if (request()->hasFile('profile_image')) {
+            $image = $request->file('profile_image');
+            $imageName = time() . '_' . $image->getClientOriginalExtension();
+            $image->move('storage/images/craftman', $imageName);
+            $craftmen->profile_image = $imageName;
+        }
+
         $craftmen->name = $request->input('name');
         $craftmen->craft_name = $request->input('craft_name');
         // البريد الإلكتروني: إذا الحقل disabled، الأفضل ما تحدثه
@@ -171,5 +188,28 @@ class CraftmanController extends Controller
     public function destroy($id)
     {
         $craftmen = Craftman::destroy($id);
+    }
+    public function trashed()
+    {
+        $craftmen = Craftman::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
+        return response()->view('cms.craftmen.trashed', compact('craftmen'));
+    }
+
+    public function restore($id)
+    {
+        $craftmen = Craftman::onlyTrashed()->findOrFail($id);
+        $craftmen->restore();
+        return redirect()->route('craftmen_trashed')->with('success', 'تم استعادة الحرفي بنجاح.');
+    }
+    public function forceDestroy($id)
+    {
+        $craftmen = Craftman::onlyTrashed()->findOrFail($id);
+        $craftmen->forceDelete();
+        return redirect()->route('craftmen_trashed')->with('success', 'تم حذف الحرفي بشكل دائم.');
+    }
+    public function DestroyAll()
+    {
+        $craftmen = Craftman::onlyTrashed()->forceDelete();
+        return redirect()->route('craftmen_trashed')->with('success', 'تم حذف جميع الحرفيين بشكل دائم.');
     }
 }

@@ -25,7 +25,8 @@ class CraftmanSeeder extends Seeder
             'description'=> 'Craftman 1 description',
             'rating'=> 4.5,
             'total_reviews'=> 100,
-            'is_active'=> true,    
+            'is_active'=> true,  
+            'profile_image'=> 'craftman1.jpg', 
         ]);
         $craftman2 =Craftman::create([
             'name' =>'Ali',
@@ -37,6 +38,7 @@ class CraftmanSeeder extends Seeder
             'rating'=> 4.5,
             'total_reviews'=> 100,
             'is_active'=> true,    
+            'profile_image'=> 'craftman2.jpg',
         ]);
         $craftman3 =Craftman::create([
             'name' =>'Ahmed',
@@ -47,7 +49,8 @@ class CraftmanSeeder extends Seeder
             'description'=> 'Craftman 3 description',
             'rating'=> 2.5,
             'total_reviews'=> 20,
-            'is_active'=> true,    
+            'is_active'=> true,  
+            'profile_image'=> 'craftman3.jpg',  
         ]);
 
         

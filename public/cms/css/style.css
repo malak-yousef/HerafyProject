@@ -314,7 +314,27 @@ body {
     background: #FFC107;
     border-radius: 10px;
 }
-.arrow{
-    transition: 0.3s;
-    float:left;
+
+.submenu {
+    list-style: none;
+    padding-left: 20px;
+    margin: 5px 0;
+}
+
+.submenu li a {
+    display: block;
+    padding: 5px 10px;
+    color: #898888;
+    text-decoration: none;
+}
+
+.submenu li a:hover {
+    color: #f7f4f4;
+    background: #f8f9fa52;
+    border-radius: 5px;
+}
+
+.arrow {
+    float: right;
+    transition: transform 0.3s;
 }

@@ -49,27 +49,9 @@
                     <span class="badge" id="usersBadge">0</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('craftmen.index') }}">
-                    <i class="fas fa-tools"></i> الحرفيون
-                    <span class="badge" id="craftsmenBadge">0</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="requests.html">
-                    <i class="fas fa-clipboard-list"></i> الطلبات
-                    <span class="badge" id="requestsBadge">0</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="offers.html">
-                    <i class="fas fa-handshake"></i> العروض
-                    <span class="badge" id="offersBadge">0</span>
-                </a>
-            </li>
-
-
-            <li class="nav-item has-treeview">
+            
+            
+           {{--   <li class="nav-item has-treeview">
 
                 <a href="#" class="nav-link" onclick="toggleCategories(event, this)">
                     <i class="fas fa-layer-group"></i>
@@ -124,6 +106,66 @@
                 </ul>
 
             </li>
+
+                --}}
+
+          
+
+
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'craftmenMenu')">
+                    <i class="fas fa-tools"></i> الحرفيون
+                    <i class="fas fa-angle-left arrow"></i>
+                </a>
+                <ul class="submenu" id="craftmenMenu" style="display:none;">
+                    <li><a href="{{ route('craftmen.index') }}"><i class="fas fa-list"></i> عرض الحرفيين</a></li>
+                    <li><a href="{{ route('craftmen.create') }}"> <i class="fas fa-plus-circle"></i> إضافة حرفي</a></li>
+                </ul>
+            </li>
+
+           
+
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'categoryMenu')">
+                    <i class="fas fa-tools"></i> التصنيفات
+                    <i class="fas fa-angle-left arrow"></i>
+                </a>
+                <ul class="submenu" id="categoryMenu" style="display:none;">
+                    <li><a href="{{ route('categories.index') }}"><i class="fas fa-list"></i> عرض التصنيفات</a></li>
+                    <li><a href="{{ route('categories.create') }}"> <i class="fas fa-plus-circle"></i> إضافة تصنيف</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'professionsMenu')">
+                    <i class="fas fa-tools"></i> المهن
+                    <i class="fas fa-angle-left arrow"></i>
+                </a>
+                <ul class="submenu" id="professionsMenu" style="display:none;">
+                    <li><a href="{{ route('professions.index') }}"><i class="fas fa-list"></i> عرض المهن</a></li>
+                    <li><a href="{{ route('professions.create') }}"> <i class="fas fa-plus-circle"></i> إضافة مهنة</a>
+                    </li>
+                </ul>
+            </li>
+
+
+             
+
+
+              <li class="nav-item">
+                <a class="nav-link" href="requests.html">
+                    <i class="fas fa-clipboard-list"></i> الطلبات
+                    <span class="badge" id="requestsBadge">0</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="offers.html">
+                    <i class="fas fa-handshake"></i> العروض
+                    <span class="badge" id="offersBadge">0</span>
+                </a>
+            </li>
+
 
 
 
@@ -471,8 +513,7 @@
             }
         });
     }
-
-    function toggleCategories(event, element) {
+/* function toggleCategories(event, element) {
 
         event.preventDefault();
 
@@ -512,6 +553,22 @@
 
         }
 
+     */
+    
+
+    function toggleMenu(event, element, menuId) {
+        event.preventDefault();
+
+        let menu = document.getElementById(menuId);
+        let arrow = element.querySelector('.arrow');
+
+        if (menu.style.display === "block") {
+            menu.style.display = "none";
+            arrow.style.transform = "rotate(0deg)";
+        } else {
+            menu.style.display = "block";
+            arrow.style.transform = "rotate(90deg)";
+        }
     }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

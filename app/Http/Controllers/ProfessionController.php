@@ -14,7 +14,8 @@ class ProfessionController extends Controller
     public function index()
     {
         
-        $professions = Profession::with('category')->orderBy('id' , 'desc')->paginate(4);
+        
+         $professions = Profession::orderBy('id' , 'desc')->withoutTrashed()->paginate(4);
         return response()->view('cms.profession.index' , compact('professions'));
     }
 
@@ -143,5 +144,25 @@ class ProfessionController extends Controller
     public function destroy($id)
     {
          $professions = Profession::destroy($id);
+    }
+public function trashed()
+    {
+        $professions = Profession::onlyTrashed()->orderBy('deleted_at' , 'desc')->get();
+        return response()->view('cms.profession.trashed' , compact('professions'));
+    }
+
+    public function restore($id){
+      $professions = Profession::onlyTrashed()->findOrFail($id)->restore();
+     return back()->with('success' , 'Success');
+    }
+
+    public function force($id){
+      $professions = Profession::onlyTrashed()->findOrFail($id)->forceDelete();
+     return back()->with('success' , 'Success');
+    }
+
+    public function forceAll(){
+      $professions = Profession::onlyTrashed()->forceDelete();
+     return back()->with('success' , 'Success');
     }
 }

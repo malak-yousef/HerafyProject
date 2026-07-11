@@ -159,6 +159,16 @@ data-bs-target="#addCategoryModal">
 </button>
 </a>
 
+<a href="{{ route('categories_trashed') }} ">
+    <button class="btn btn-danger"
+data-bs-toggle="modal"
+data-bs-target="#addCategoryModal">
+
+سلة المحذوفات للتصنيفات
+
+</button>
+</a>
+
 </div>
 
 
@@ -259,11 +269,18 @@ data-bs-target="#addCategoryModal">
         <button type="button" 
         onclick="performDestroy({{$category->id}} , this)"
                 class="action-btn delete-btn"
-                title="حذف">
+                title="نقل لسلة المحذوفات">
             <i class="fa-solid fa-trash"></i>
         </button>
 
     </form>
+
+
+
+
+
+
+    
 
 </td>
 

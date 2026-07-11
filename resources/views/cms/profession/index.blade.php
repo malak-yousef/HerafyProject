@@ -144,6 +144,19 @@ data-bs-target="#addCategoryModal">
 </button>
 </a>
 
+
+<a href="{{ route('professions_trashed') }} ">
+    <button class="btn btn-danger"
+data-bs-toggle="modal"
+data-bs-target="#addCategoryModal">
+
+سلة المحذوفات للمهن
+
+</button>
+</a>
+
+
+
 </div>
 
 
@@ -248,7 +261,7 @@ data-bs-target="#addCategoryModal">
         <button type="button" 
         onclick="performDestroy({{$profession->id}} , this)"
                 class="action-btn delete-btn"
-                title="حذف">
+                title="نقل لسلة المحذوفات">
             <i class="fa-solid fa-trash"></i>
         </button>
 

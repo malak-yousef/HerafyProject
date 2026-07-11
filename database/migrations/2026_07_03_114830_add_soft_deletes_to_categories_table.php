@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('order_professions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('order_id')->constrained()->onDelete('cascade');
-            $table->foreignId('profession_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
+        Schema::table('categories', function (Blueprint $table) {
+               $table->softDeletes();
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('order_professions');
+        Schema::table('categories', function (Blueprint $table) {
+               $table->dropSoftDeletes();
+        });
     }
 };

@@ -412,15 +412,3 @@ data-bs-target="#addadminModal">
 
 
 
-
-{{--سطر 170 ضيف الى parent
- <li class="nav-item">
-                <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'adminsMenu')">
-                    <i class="fas fa-tools"></i> المشرفين
-                    <i class="fas fa-angle-left arrow"></i>
-                </a>
-                <ul class="submenu" id="adminsMenu" style="display:none;">
-                    <li><a href="{{ route('admins.index') }}"><i class="fas fa-user-shield"></i> عرض المشرفين</a></li>
-                    <li><a href="{{ route('admins.create') }}"><i class="fas fa-user-plus"></i> إضافة مشرف</a></li>
-                </ul>
-            </li>  --}}

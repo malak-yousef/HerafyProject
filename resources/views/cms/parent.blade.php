@@ -134,6 +134,7 @@
                 </ul>
             </li>
 
+
             <li class="nav-item">
                 <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'professionsMenu')">
                     <i class="fas fa-tools"></i> المهن
@@ -149,7 +150,7 @@
 
              
 
-{{--
+
  <li class="nav-item">
                 <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'adminsMenu')">
                     <i class="fas fa-tools"></i> المشرفين
@@ -159,7 +160,7 @@
                     <li><a href="{{ route('admins.index') }}"><i class="fas fa-user-shield"></i> عرض المشرفين</a></li>
                     <li><a href="{{ route('admins.create') }}"><i class="fas fa-user-plus"></i> إضافة مشرف</a></li>
                 </ul>
-            </li>  --}}
+            </li>  
 
 
               <li class="nav-item">
@@ -537,69 +538,14 @@
                 menu.style.display = "block";
                 arrow.style.transform = "rotate(90deg)";
             }
-<<<<<<< HEAD
-        });
-    }
-/* function toggleCategories(event, element) {
-
-        event.preventDefault();
-
-        let menu = document.getElementById('categoriesMenu');
-        let arrow = element.querySelector('.arrow');
-
-        if (menu.style.display === "block") {
-
-            menu.style.display = "none";
-            arrow.style.transform = "rotate(0deg)";
-
-        } else {
-
-            menu.style.display = "block";
-            arrow.style.transform = "rotate(-90deg)";
-
-        }
-
-    }
-
-    function toggleProfessions(event, element) {
-
-        event.preventDefault();
-
-        let menu = document.getElementById('professionsMenu');
-        let arrow = element.querySelector('.arrow');
-
-        if (menu.style.display === "block") {
-
-            menu.style.display = "none";
-            arrow.style.transform = "rotate(0deg)";
-
-        } else {
-
-            menu.style.display = "block";
-            arrow.style.transform = "rotate(-90deg)";
-
-        }
-
-     */
     
 
-    function toggleMenu(event, element, menuId) {
-        event.preventDefault();
+            
+    
 
-        let menu = document.getElementById(menuId);
-        let arrow = element.querySelector('.arrow');
-
-        if (menu.style.display === "block") {
-            menu.style.display = "none";
-            arrow.style.transform = "rotate(0deg)";
-        } else {
-            menu.style.display = "block";
-            arrow.style.transform = "rotate(90deg)";
         }
-    }
-=======
-        }
->>>>>>> da7b582f1583a261e15ba612281b161133645675
+   
+            
     </script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

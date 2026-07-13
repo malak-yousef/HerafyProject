@@ -5,7 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -21,8 +21,17 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'user_name',
         'email',
         'password',
+        'mobile',
+        'gender',
+        'status',
+        'image',
+        'address',
+        'date',
+        'actor_type',
+        'actor_id',
     ];
 
     /**
@@ -45,7 +54,8 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function actor()
+
+    public function actor(): MorphTo
     {
         return $this->morphTo();
     }

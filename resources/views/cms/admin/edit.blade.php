@@ -91,15 +91,15 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label" for="first_name">ادخل الاسم الأول</label>
-                                    <input type="text" id="first_name" name="first_name" class="form-control" placeholder="تعديل الاسم الأول..." value="{{ $admins->user->first_name }}">
+                                    <label class="form-label" for="name">ادخل الاسم </label>
+                                    <input type="text" id="name" name="name" class="form-control" placeholder="تعديل الاسم الأول..." value="{{ $admins->name }}">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label" for="last_name">ادخل الاسم الثاني</label>
-                                    <input type="text" id="last_name" name="last_name" class="form-control" placeholder="تعديل الاسم الثاني..." value="{{ $admins->user->last_name }}">
+                                    <label class="form-label" for="user_name">اسم المستخدم</label>
+                                    <input type="text" id="user_name" name="user_name" class="form-control" placeholder="تعديل الاسم الثاني..." value="{{ $admins->user_name }}">
                                 </div>
                             </div>
 
@@ -108,18 +108,20 @@
                                     <label class="form-label" for="image">الصورة</label>
                                     <input type="file" id="image" name="image" class="form-control" accept="image/*">
                                     <div class="mt-3">
-                                        <img src="{{ asset('storage/images/admin/'.$admins->user->image) }}"
+                                        <img src="{{ asset('storage/images/admin/'.$admins->image) }}"
                                             width="120"
                                             height="120"
                                             style="border-radius:10px;object-fit:contain;">
                                     </div>
+
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label" for="mobile">ادخل الموبايل</label>
-                                    <input type="text" id="mobile" name="mobile" class="form-control" placeholder="تعديل الموبايل..." value="{{ $admins->user->mobile }}">
+
+                                    <input type="text" id="mobile" name="mobile" class="form-control" placeholder="تعديل الموبايل..." value="{{ $admins->mobile }}">
                                 </div>
                             </div>
 
@@ -130,39 +132,47 @@
                                 </div>
                             </div>
 
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="password">كلمة السر</label>
+                                    <input type="password" id="password" name="password" class="form-control" value="{{ $admins->password }}" disabled readonly>
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="password"> تاكيد كلمة السر </label>
+                                    <input type="password" id="password" name="password" class="form-control" value="{{ $admins->password }}" disabled readonly>
+                                </div>
+                            </div>
+
+
+
+
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label" for="address">العنوان</label>
-                                    <input type="text" id="address" name="address" class="form-control" placeholder="العنوان.." value="{{ $admins->user->address }}">
+                                    <input type="text" id="address" name="address" class="form-control" placeholder="العنوان.." value="{{ $admins->address }}">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label" for="date">ادخل تاريخ الميلاد</label>
-                                    <input type="date" id="date" name="date" class="form-control" value="{{ $admins->user->date }}">
+                                    <input type="date" id="date" name="date" class="form-control" value="{{ $admins->date }}">
                                 </div>
                             </div>
-
-
-                            <div class="col-md-9">
-                                <div class="row g-3">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="form-label" for="image">ادخل صورة</label>
-                                            <input id="image" name="image" class="form-control" placeholder=" تعديل صورة..." value="{{ $admins->user->image }}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
 
 
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label" for="status">الحالة</label>
                                     <select id="status" name="status" class="form-select">
-                                        <option selected hidden>{{ $admins->user->status }}</option>
+                                        <option selected hidden>{{ $admins->status }}</option>
                                         <option value="active">فعال</option>
                                         <option value="in_active">غير فعال</option>
                                         <option value="pending">قيد التنفيذ</option>
@@ -173,7 +183,8 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <option selected hidden>{{ $admins->user->gender }}</option>
+                                    <option selected hidden>{{ $admins->gender }}</option>
+
                                     <label class="form-label" for="gender">الجنس</label>
                                     <select id="gender" name="gender" class="form-select">
                                         <option value="male">ذكر</option>
@@ -211,15 +222,15 @@
 
         let formData = new FormData();
 
-        formData.append('first_name', document.getElementById('first_name').value);
-        formData.append('last_name', document.getElementById('last_name').value);
+        formData.append('name', document.getElementById('name').value);
+        formData.append('user_name', document.getElementById('user_name').value);
         formData.append('email', document.getElementById('email').value);
         formData.append('mobile', document.getElementById('mobile').value);
+        formData.append('password', document.getElementById('password').value);
         formData.append('address', document.getElementById('address').value);
         formData.append('date', document.getElementById('date').value);
         formData.append('status', document.getElementById('status').value);
         formData.append('gender', document.getElementById('gender').value);
-
         if (document.getElementById('image').files[0]) {
             formData.append('image', document.getElementById('image').files[0]);
         }

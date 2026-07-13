@@ -90,15 +90,15 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label" for="first_name">الاسم الاول</label>
-                                    <input type="text" id="first_name" name="first_name" class="form-control" placeholder="الاسم الاول">
+                                    <label class="form-label" for="name">الاسم </label>
+                                    <input type="text" id="name" name="name" class="form-control" placeholder="الاسم ">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label" for="last_name">الاسم الاخير</label>
-                                    <input type="text" id="last_name" name="last_name" class="form-control" placeholder="الاسم الاخير">
+                                    <label class="form-label" for="user_name">اسم المستخدم </label>
+                                    <input type="text" id="user_name" name="user_name" class="form-control" placeholder="اسم المستخدم">
                                 </div>
                             </div>
 
@@ -137,36 +137,48 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="image">الصورة</label>
-                                    <input type="file" id="image" name="image" class="form-control" accept="image/*">
+                            <<<<<<< HEAD
+                                <div class="col-md-6">
+                                =======
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="password">تاكيد كلمة السر</label>
+                                        <input type="password" id="password" name="password" class="form-control" placeholder="تاكيد كلمة السر">
+                                    </div>
                                 </div>
-                            </div>
+
+                                <div class="col-md-6">
+                                    >>>>>>> 119177bf77a17fdfdfa77e280b453a197ce1d38a
+                                    <div class="form-group">
+                                        <label class="form-label" for="image">الصورة</label>
+                                        <input type="file" id="image" name="image" class="form-control" accept="image/*">
+                                    </div>
+                                </div>
 
 
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="status">الحالة</label>
-                                    <select class="form-select" name="status" id="status">
-                                        <option value="pending">قيد التنفيذ</option>
-                                        <option value="active">فعال</option>
-                                        <option value="inactive">غير فعال</option>
-                                        <option value="blocked">محظور</option>
-                                    </select>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="status">الحالة</label>
+                                        <select class="form-select" name="status" id="status">
+                                            <option value="pending">قيد التنفيذ</option>
+                                            <option value="active">فعال</option>
+                                            <option value="inactive">غير فعال</option>
+                                            <option value="blocked">محظور</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="gender">الجنس</label>
-                                    <select class="form-select" name="gender" id="gender">
-                                        <option value="">اختر الجنس</option>
-                                        <option value="male">ذكر</option>
-                                        <option value="female">أنثى</option>
-                                    </select>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="gender">الجنس</label>
+                                        <select class="form-select" name="gender" id="gender">
+                                            <option value="">اختر الجنس</option>
+                                            <option value="male">ذكر</option>
+                                            <option value="female">أنثى</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
                         </div>
                     </div>
@@ -182,9 +194,8 @@
     function performStore() {
 
         let formData = new FormData();
-
-        formData.append('first_name', document.getElementById('first_name').value);
-        formData.append('last_name', document.getElementById('last_name').value);
+        formData.append('name', document.getElementById('name').value);
+        formData.append('user_name', document.getElementById('user_name').value);
         formData.append('email', document.getElementById('email').value);
         formData.append('mobile', document.getElementById('mobile').value);
         formData.append('address', document.getElementById('address').value);
@@ -192,10 +203,6 @@
         formData.append('password', document.getElementById('password').value);
         formData.append('status', document.getElementById('status').value);
         formData.append('gender', document.getElementById('gender').value);
-
-
-
-
         if (document.getElementById('image').files[0]) {
             formData.append('image', document.getElementById('image').files[0]);
         }
@@ -204,14 +211,3 @@
     }
 </script>
 @endsection
-{{--اضافة هذا الجزء الى البيرنت
- <li class="nav-item">
-                <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'adminsMenu')">
-                    <i class="fas fa-tools"></i> المشرفين
-                    <i class="fas fa-angle-left arrow"></i>
-                </a>
-                <ul class="submenu" id="adminsMenu" style="display:none;">
-                    <li><a href="{{ route('admins.index') }}"><i class="fas fa-user-shield"></i> عرض المشرفين</a></li>
-<li><a href="{{ route('admins.create') }}"><i class="fas fa-user-plus"></i> إضافة مشرف</a></li>
-</ul>
-</li> --}}

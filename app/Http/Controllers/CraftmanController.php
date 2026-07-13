@@ -33,16 +33,21 @@ class CraftmanController extends Controller
         $validator = validator(
             $request->all(),
             [
-                'name' => 'required |string|min:3|max:50',
-                'craft_name' => 'required |string|min:3|max:50',
-                'email' => 'required |email',
-                'password' => 'required |string|min:3|max:50',
-                'experience_years' => 'required |numeric',
-                'description' => 'required |string|min:3|max:255',
-                'hourly_rate' => 'required |numeric',
-                'daily_rate' => 'required |numeric',
-                'is_active' => 'required |boolean',
-                'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'first_name'       => 'required |string|min:3|max:50',
+                'last_name'        => 'required |string|min:3|max:50',
+                'id_number'        => 'required |numeric|unique:craftmen,id_number',
+                'mobile'           => 'nullable |numeric|unique:craftmen,mobile',
+                'craft_name'       => 'required |string|min:3|max:50:craftmen,craft_name',
+                'email'            => 'required |email',
+                'password'         => 'required |string|min:3|max:50',
+                'experience_years' => 'required |numeric:craftmen,experience_years',
+                'description'      => 'required |string|min:3|max:255:craftmen,description',
+                'hourly_rate'      => 'required |numeric:craftmen,hourly_rate',
+                'daily_rate'       => 'required |numeric:craftmen,daily_rate',
+                'status'           => 'required |in:pending,active,inactive,blocked,',
+                'address'          => 'nullable |string|min:3|max:255',
+                'gender'           => 'required |in:male,female',
+                'image'            => 'nullable |image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ],
             messages: [
                 'required' => 'هذا الحقل مطلوب',
@@ -57,8 +62,8 @@ class CraftmanController extends Controller
         } else {
             $craftmen = new Craftman();
 
-            if (request()->hasFile('profile_image')) {
-                $image = $request->file('profile_image');
+            if (request()->hasFile('image')) {
+                $image = $request->file('image');
                 $imageName = time() . '_' . $image->getClientOriginalExtension();
                 $image->move('storage/images/craftman', $imageName);
                 $craftmen->profile_image = $imageName;
@@ -70,9 +75,12 @@ class CraftmanController extends Controller
             $craftmen->password = $request->input('password');
             $craftmen->experience_years = $request->input('experience_years');
             $craftmen->description = $request->input('description');
+            $craftmen->address = $request->input('address');
+            $craftmen->mobile = $request->input('mobile');
+            $craftmen->gender = $request->input('gender');
             $craftmen->hourly_rate = $request->input('hourly_rate');
             $craftmen->daily_rate = $request->input('daily_rate');
-            $craftmen->is_active = $request->input('is_active');
+            $craftmen->status = $request->input('status');
             $isSaved = $craftmen->save();
             return response()->json([
                 'icon' => 'success',

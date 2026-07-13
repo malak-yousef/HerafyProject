@@ -6,116 +6,114 @@
 @section('styles')
 
 <style>
+    .admin-page {
+        padding: 30px;
+    }
 
-.admin-page{
-    padding:30px;
-}
-
-.admin-card{
-    background:white;
-    padding:25px;
-    border-radius:18px;
-    box-shadow:0 5px 25px #00000010;
-}
-
-
-.add-btn{
-
-    background:#ffbf00;
-    color:#14213d;
-    border:none;
-    padding:12px 20px;
-    border-radius:10px;
-    font-weight:bold;
-
-}
-
-.action-btn {
-    width: 38px;
-    height: 38px;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    margin: 3px;
-    text-decoration: none;
-    font-size: 17px;
-    transition: .3s;
-    
-}
+    .admin-card {
+        background: white;
+        padding: 25px;
+        border-radius: 18px;
+        box-shadow: 0 5px 25px #00000010;
+    }
 
 
-/* عرض */
-.show-btn {
-    background: #e8f1ff;
-    color: #2563eb;
-}
+    .add-btn {
+
+        background: #ffbf00;
+        color: #14213d;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-weight: bold;
+
+    }
+
+    .action-btn {
+        width: 38px;
+        height: 38px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+        margin: 3px;
+        text-decoration: none;
+        font-size: 17px;
+        transition: .3s;
+
+    }
 
 
-/* تعديل */
-.edit-btn {
-    background: #fff4dd;
-    color: #f59e0b;
-}
+    /* عرض */
+    .show-btn {
+        background: #e8f1ff;
+        color: #2563eb;
+    }
 
 
-/* حذف */
-.delete-btn {
-    background: #ffe5e5;
-    color: #dc2626;
-    border: none;
-}
+    /* تعديل */
+    .edit-btn {
+        background: #fff4dd;
+        color: #f59e0b;
+    }
 
 
-/* Hover */
-.action-btn:hover {
-    transform: translateY(-3px);
-    opacity: .8;
-}
+    /* حذف */
+    .delete-btn {
+        background: #ffe5e5;
+        color: #dc2626;
+        border: none;
+    }
 
-.description-column{
-    max-width: 350px;
-    white-space: normal;
-    word-wrap: break-word;
-}
 
-.actions-column{
-    white-space: nowrap;
-    width: 180px;
-}
+    /* Hover */
+    .action-btn:hover {
+        transform: translateY(-3px);
+        opacity: .8;
+    }
 
-.pagination-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 25px;
-}
+    .description-column {
+        max-width: 350px;
+        white-space: normal;
+        word-wrap: break-word;
+    }
 
-.pagination {
-    list-style: none;
-    display: flex;
-    gap: 8px;
-    padding: 0;
-}
+    .actions-column {
+        white-space: nowrap;
+        width: 180px;
+    }
 
-.pagination li a {
-    text-decoration: none;
-    padding: 8px 14px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    color: #6c63ff;
-    background: white;
-    font-size: 14px;
-}
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 25px;
+    }
 
-.pagination li.active a {
-    background: #6c63ff;
-    color: white;
-}
+    .pagination {
+        list-style: none;
+        display: flex;
+        gap: 8px;
+        padding: 0;
+    }
 
-.pagination li a:hover {
-    background: #eee;
-}
+    .pagination li a {
+        text-decoration: none;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        color: #6c63ff;
+        background: white;
+        font-size: 14px;
+    }
 
+    .pagination li.active a {
+        background: #6c63ff;
+        color: white;
+    }
+
+    .pagination li a:hover {
+        background: #eee;
+    }
 </style>
 
 @endsection
@@ -136,262 +134,262 @@
 <div class="container-fluid admin-page">
 
 
-<div class="card admin-card">
+    <div class="card admin-card">
 
 
-<div class="d-flex justify-content-between mb-4">
+        <div class="d-flex justify-content-between mb-4">
 
 
-<h3>
-إدارة المشرفين
-</h3>
-
-
-
-
-<a href="{{ route('admins.create') }} ">
-    <button class="add-btn"
-data-bs-toggle="modal"
-data-bs-target="#addadminModal">
-
-+ إضافة مشرف
-
-</button>
-</a>
-{{-- <a href="{{ route('admins_trashed') }} ">
-    <button class="btn btn-danger"
-data-bs-toggle="modal"
-data-bs-target="#addadminModal">
-
-سلة المحذوفات للمشرفين
-
-</button>
-</a>  --}}
- 
-
-</div>
+            <h3>
+                إدارة المشرفين
+            </h3>
 
 
 
 
-<table class="table table-hover align-middle">
+            <a href="{{ route('admins.create') }} ">
+                <button class="add-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#addadminModal">
 
-<thead>
+                    + إضافة مشرف
 
-<tr>
+                </button>
+            </a>
+            {{-- <a href="{{ route('admins_trashed') }} ">
+            <button class="btn btn-danger"
+                data-bs-toggle="modal"
+                data-bs-target="#addadminModal">
 
-<th style="width: 15px">#</th>
- <th class="text-center">الصورة</th> 
-<th class="text-center">الاسم الاول</th>
+                سلة المحذوفات للمشرفين
 
-<th class="text-center">الاسم الاخير</th>
-
-<th class="text-center">البريد الالكتروني</th>
-
-<th class="text-center">الموبايل</th>
-
-<th class="text-center ">العنوان</th>
-
-<th class="text-center">تاريخ الميلاد</th>
-
+            </button>
+            </a> --}}
 
 
-{{-- <td>
+        </div>
+
+
+
+
+        <table class="table table-hover align-middle">
+
+            <thead>
+
+                <tr>
+
+                    <th style="width: 15px">#</th>
+                    <th class="text-center">الصورة</th>
+                    <th class="text-center">الاسم الاول</th>
+
+                    <th class="text-center">الاسم الاخير</th>
+
+                    <th class="text-center">البريد الالكتروني</th>
+
+                    <th class="text-center">الموبايل</th>
+
+                    <th class="text-center ">العنوان</th>
+
+                    <th class="text-center">تاريخ الميلاد</th>
+
+
+
+                    {{-- <td>
 @if($admin->image)
-    <img src="{{ asset('storage/'.$admin->image) }}" 
-         width="60" 
-         height="60"
-         style="border-radius:50%;object-fit:cover;">
-@else
-    لا توجد صورة
-@endif
-</td> --}}
+    <img src="{{ asset('storage/'.$admin->image) }}"
+                    width="60"
+                    height="60"
+                    style="border-radius:50%;object-fit:cover;">
+                    @else
+                    لا توجد صورة
+                    @endif
+                    </td> --}}
 
-{{-- ما بنفع نحطها هان لانها مشفرة
+                    {{-- ما بنفع نحطها هان لانها مشفرة
 <th class="text-center">كلمة السر</th> --}}
 
 
-<th class="text-center">الحالة</th>
-<th class="text-center">الجنس</th>
+                    <th class="text-center">الحالة</th>
+                    <th class="text-center">الجنس</th>
 
 
-<th class="text-center actions-column">اجراءات</th>
-
- 
-</tr>
-
-</thead>
+                    <th class="text-center actions-column">اجراءات</th>
 
 
+                </tr>
 
-<tbody>
-
-
-@foreach($admins as $admin)
-
-
-<tr>
+            </thead>
 
 
 
-<td>
-    <span class="badge rounded-pill bg-secondary">
-        {{ $admin->id }}
-    </span>
-</td>
+            <tbody>
 
-<td><img class="img-circle img-bordered-sm" src="{{ asset('storage/images/admin/' . $admin->user->image) }}" width="50" height="50" alt="user-image"></td>
- 
 
-<td>
-    <span class="badge rounded-pill bg-success">
-        {{ $admin->user->first_name ?? "" }}
-    </span>
-</td>
+                @foreach($admins as $admin)
 
-<td>
-    <span class="badge rounded-pill bg-success">
-        {{ $admin->user->last_name ?? "" }}
-    </span>
-</td>
 
-<td>
-    <span class="badge rounded-pill bg-info text-dark">
-        {{ $admin->email }}
-    </span>
-</td>
+                <tr>
 
-<td>
-    <span class="badge rounded-pill bg-dark">
-        {{ $admin->user->mobile ?? "" }}
-    </span>
-</td>
 
-<td>
-    <span class="badge rounded-pill bg-light text-dark border">
-        {{ $admin->user->address ?? "" }}
-    </span>
-</td>
 
-<td>
-    <span class="badge rounded-pill bg-danger">
-        {{ $admin->user->date ?? "" }}
-    </span>
-</td>
+                    <td>
+                        <span class="badge rounded-pill bg-secondary">
+                            {{ $admin->id }}
+                        </span>
+                    </td>
 
-<td>
-    @if($admin->user->status == 'active')
-    <span class="badge rounded-pill bg-success">
-        {{ $admin->user->status ?? "" }}
-    </span>
+                    <td><img class="img-circle img-bordered-sm" src="{{ asset('storage/images/admin/' . $admin->user->image) }}" width="50" height="50" alt="user-image"></td>
 
-@elseif($admin->user->status == 'inactive')
-    <span class="badge rounded-pill bg-secondary">
-        {{ $admin->user->status ?? "" }}
-    </span>
 
-@elseif($admin->user->status == 'pending')
-    <span class="badge rounded-pill bg-warning text-dark">
-        {{ $admin->user->status ?? "" }}
-    </span>
+                    <td>
+                        <span class="badge rounded-pill bg-success">
+                            {{ $admin->user->first_name ?? "" }}
+                        </span>
+                    </td>
 
-@elseif($admin->user->status == 'blocked')
-    <span class="badge rounded-pill bg-danger">
-        {{ $admin->user->status ?? "" }}
-    </span>
+                    <td>
+                        <span class="badge rounded-pill bg-success">
+                            {{ $admin->user->last_name ?? "" }}
+                        </span>
+                    </td>
 
-@endif
-</td>
+                    <td>
+                        <span class="badge rounded-pill bg-info text-dark">
+                            {{ $admin->email }}
+                        </span>
+                    </td>
 
-<td>
-    
-    @if($admin->user->gender == 'male')
-        <span class="badge rounded-pill bg-primary">
-            {{ $admin->user->gender ?? "" }}
-        </span>
-    @else
-        <span class="badge rounded-pill bg-warning text-dark">
-            {{ $admin->user->gender ?? "" }}
-        </span>
-    @endif
-</td>
-{{--<td>
+                    <td>
+                        <span class="badge rounded-pill bg-dark">
+                            {{ $admin->user->mobile ?? "" }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="badge rounded-pill bg-light text-dark border">
+                            {{ $admin->user->address ?? "" }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="badge rounded-pill bg-danger">
+                            {{ $admin->user->date ?? "" }}
+                        </span>
+                    </td>
+
+                    <td>
+                        @if($admin->user->status == 'active')
+                        <span class="badge rounded-pill bg-success">
+                            {{ $admin->user->status ?? "" }}
+                        </span>
+
+                        @elseif($admin->user->status == 'inactive')
+                        <span class="badge rounded-pill bg-secondary">
+                            {{ $admin->user->status ?? "" }}
+                        </span>
+
+                        @elseif($admin->user->status == 'pending')
+                        <span class="badge rounded-pill bg-warning text-dark">
+                            {{ $admin->user->status ?? "" }}
+                        </span>
+
+                        @elseif($admin->user->status == 'blocked')
+                        <span class="badge rounded-pill bg-danger">
+                            {{ $admin->user->status ?? "" }}
+                        </span>
+
+                        @endif
+                    </td>
+
+                    <td>
+
+                        @if($admin->user->gender == 'male')
+                        <span class="badge rounded-pill bg-primary">
+                            {{ $admin->user->gender ?? "" }}
+                        </span>
+                        @else
+                        <span class="badge rounded-pill bg-warning text-dark">
+                            {{ $admin->user->gender ?? "" }}
+                        </span>
+                        @endif
+                    </td>
+                    {{--<td>
 {{ $admin->image }}
-</td>  --}}
+                    </td> --}}
 
-{{-- 
+                    {{--
 ما بنفع نحطها هان لانها مشفرة
 <td>
 {{ $admin->password }}
-</td> --}}
+                    </td> --}}
 
 
 
 
 
 
-<td class="text-center actions-column">
+                    <td class="text-center actions-column">
 
-    <!-- زر العرض Show -->
-    <a href="{{ route('admins.show', $admin->id) }}" 
-       class="action-btn show-btn"
-       title="عرض">
-        <i class="fa-solid fa-eye"></i>
-    </a>
-
-
-    <!-- زر التعديل Edit -->
-    <a href="{{ route('admins.edit', $admin->id) }}" 
-       class="action-btn edit-btn"
-       title="تعديل">
-        <i class="fa-solid fa-pen-to-square"></i>
-    </a>
+                        <!-- زر العرض Show -->
+                        <a href="{{ route('admins.show', $admin->id) }}"
+                            class="action-btn show-btn"
+                            title="عرض">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
 
 
-    <!-- زر الحذف Delete -->
-    <form action="{{ route('admins.destroy', $admin->id) }}" 
-          method="POST" 
-          style="display:inline-block">
-
-        @csrf
-        @method('DELETE')
-
-        <button type="button" 
-        onclick="performDestroy({{$admin->id}} , this)"
-                class="action-btn delete-btn"
-                title="نقل لسلة المحذوفات">
-            <i class="fa-solid fa-trash"></i>
-        </button>
-
-    </form>
+                        <!-- زر التعديل Edit -->
+                        <a href="{{ route('admins.edit', $admin->id) }}"
+                            class="action-btn edit-btn"
+                            title="تعديل">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
 
 
+                        <!-- زر الحذف Delete -->
+                        <form action="{{ route('admins.destroy', $admin->id) }}"
+                            method="POST"
+                            style="display:inline-block">
+
+                            @csrf
+                            @method('DELETE')
+
+                            <button type="button"
+                                onclick="performDestroy({{$admin->id}} , this)"
+                                class="action-btn delete-btn"
+                                title="نقل لسلة المحذوفات">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+
+                        </form>
 
 
 
 
-    
-
-</td>
-
-</tr>
-
-
-@endforeach
 
 
 
-</tbody>
+
+                    </td>
+
+                </tr>
 
 
-</table>
+                @endforeach
 
 
 
-{{ $admins->links() }}
+            </tbody>
 
 
-</div>
+        </table>
+
+
+
+        {{ $admins->links() }}
+
+
+    </div>
 
 
 </div>
@@ -404,11 +402,8 @@ data-bs-target="#addadminModal">
 
 @section('scripts')
 <script>
-    function performDestroy(id , reference){
-        confirmDestroy('/cms/admin/admins/'+id , reference);
+    function performDestroy(id, reference) {
+        confirmDestroy('/cms/admin/admins/' + id, reference);
     }
 </script>
 @endsection
-
-
-

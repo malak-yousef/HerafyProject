@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-           $table->string('first_name');
+            $table->string('first_name');
             $table->string('last_name');
             $table->string('email')->unique();
-             $table->string('mobile');
-              $table->string('address');
-              $table->date('date');
-               $table->string('image')->nullable();
-                 $table->string('password');
+            $table->string('mobile');
+            $table->string('address');
+            $table->date('date');
+            $table->string('image')->nullable();
+            $table->string('password');
 
             $table->enum('status', [
                 'pending',
@@ -28,8 +28,8 @@ return new class extends Migration
                 'inactive',
                 'blocked'
             ])->default('pending');
-                $table->enum('gender' , ['male' , 'female']);
-                
+            $table->enum('gender', ['male', 'female']);
+
             $table->timestamps();
             $table->morphs('actor');
         });

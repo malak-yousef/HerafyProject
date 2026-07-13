@@ -14,8 +14,8 @@ class AdminController extends Controller
      */
     public function index()
     {
-       $admins = Admin::orderBy('id', 'desc')->paginate(10);
-        return response()->view('cms.admin.index' , compact('admins'));
+        $admins = Admin::orderBy('id', 'desc')->paginate(10);
+        return response()->view('cms.admin.index', compact('admins'));
     }
 
     /**
@@ -31,67 +31,63 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = validator($request->all(),[
-           
-        ]);
-        if(! $validator->fails()){
-          $admins = new Admin();
-          $admins->email = $request->input('email');
-          // $admins->password = $request->input('password');  
+        $validator = validator($request->all(), []);
+        if (! $validator->fails()) {
+            $admins = new Admin();
+            $admins->email = $request->input('email');
+            // $admins->password = $request->input('password');  
             $admins->password = Hash::make($request->password);
 
-           $isSaved = $admins->save();
-           if($isSaved){
-            $users = new User();
-            
+            $isSaved = $admins->save();
+            if ($isSaved) {
+                $users = new User();
+
 
                 if (request()->hasFile('image')) {
-                     $image = $request->file('image');
-                      $imageName = time() . 'image.' . $image->getClientOriginalExtension();
-                  $image->move('storage/images/admin' , $imageName);
-                  //$image->storeAs('storage/images/admin' , $imageName);
-                  $users->image = $imageName;
-                   }
+                    $image = $request->file('image');
+                    $imageName = time() . 'image.' . $image->getClientOriginalExtension();
+                    $image->move('storage/images/admin', $imageName);
+                    //$image->storeAs('storage/images/admin' , $imageName);
+                    $users->image = $imageName;
+                }
 
-               $users->first_name = $request->input('first_name');
-               $users->last_name = $request->input('last_name');
-               $users->email = $request->input('email');
-               $users->mobile = $request->input('mobile');
-               $users->address = $request->input('address');
-               $users->date = $request->input('date');
-             
-              // $users->password = $request->input('password');
-              $users->password = Hash::make($request->password);
-               $users->status = $request->input('status');
-                  $users->gender = $request->input('gender');
-                  
-                  $users->actor()->associate($admins);
-                  $isSaved = $users->save();
+                $users->first_name = $request->input('first_name');
+                $users->last_name = $request->input('last_name');
+                $users->email = $request->input('email');
+                $users->mobile = $request->input('mobile');
+                $users->address = $request->input('address');
+                $users->date = $request->input('date');
 
-                  return response()->json([
-             'icon' => 'success' ,
-                'title' => 'Created Admin is Successfully',
-         ] , 200);
-           }
-        }
-        else{
-         return response()->json([
-             'icon' => 'error' ,
+                // $users->password = $request->input('password');
+                $users->password = Hash::make($request->password);
+                $users->status = $request->input('status');
+                $users->gender = $request->input('gender');
+
+                $users->actor()->associate($admins);
+                $isSaved = $users->save();
+
+                return response()->json([
+                    'icon' => 'success',
+                    'title' => 'Created Admin is Successfully',
+                ], 200);
+            }
+        } else {
+            return response()->json([
+                'icon' => 'error',
                 'title' => $validator->getMessageBag()->first(),
-         ] , 400);
+            ], 400);
         }
-        
     }
 
-    
-    
+
+
 
     /**
      * Display the specified resource.
      */
 
 
-    
+
 
     /**
      * Display the specified resource.
@@ -99,7 +95,7 @@ class AdminController extends Controller
     public function show($id)
     {
         $admins = Admin::findOrFail($id);
-        return response()->view('cms.admin.show' , compact('admins'));
+        return response()->view('cms.admin.show', compact('admins'));
     }
 
     /**
@@ -108,7 +104,7 @@ class AdminController extends Controller
     public function edit($id)
     {
         $admins = Admin::findOrFail($id);
-        return response()->view('cms.admin.edit' , compact('admins'));
+        return response()->view('cms.admin.edit', compact('admins'));
     }
 
     /**
@@ -116,67 +112,62 @@ class AdminController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator($request->all() , [
-          // 'password' =>'required',
+        $validator = Validator($request->all(), [
+            // 'password' =>'required',
         ]);
-        if(! $validator->fails()){
-          $admins = Admin::findOrFail($id);
-          $admins->email = $request->input('email');
-          // $admins->password = $request->input('password'); 
+        if (! $validator->fails()) {
+            $admins = Admin::findOrFail($id);
+            $admins->email = $request->input('email');
+            // $admins->password = $request->input('password'); 
 
-           $isSaved = $admins->save();
-           if($isSaved){
-            $users = $admins->user;
-            
+            $isSaved = $admins->save();
+            if ($isSaved) {
+                $users = $admins->user;
 
-            
+
+
                 if (request()->hasFile('image')) {
-                     $image = $request->file('image');
-                      $imageName = time() . 'image.' . $image->getClientOriginalExtension();
-                  $image->move('storage/images/admin' , $imageName);
-                  //$image->storeAs('storage/images/admin' , $imageName);
-                  $users->image = $imageName;
-                   }
-                  
-               $users->first_name = $request->input('first_name');
-               $users->last_name = $request->input('last_name');
-            
-               $users->mobile = $request->input('mobile');
-               $users->address = $request->input('address');
-               $users->date = $request->input('date');
-             //  $users->image = $request->get('image');
-               
-               $users->status = $request->input('status');
-                  $users->gender = $request->input('gender');
-                  
-                  $users->actor()->associate($admins);
-                  $isSaved = $users->save();
+                    $image = $request->file('image');
+                    $imageName = time() . 'image.' . $image->getClientOriginalExtension();
+                    $image->move('storage/images/admin', $imageName);
+                    //$image->storeAs('storage/images/admin' , $imageName);
+                    $users->image = $imageName;
+                }
 
-                  return ['redirect' =>route('admins.index')];
-           }
-        }
-        else{
-         return response()->json([
-             'icon' => 'error' ,
+                $users->first_name = $request->input('first_name');
+                $users->last_name = $request->input('last_name');
+
+                $users->mobile = $request->input('mobile');
+                $users->address = $request->input('address');
+                $users->date = $request->input('date');
+                //  $users->image = $request->get('image');
+
+                $users->status = $request->input('status');
+                $users->gender = $request->input('gender');
+
+                $users->actor()->associate($admins);
+                $isSaved = $users->save();
+
+                return ['redirect' => route('admins.index')];
+            }
+        } else {
+            return response()->json([
+                'icon' => 'error',
                 'title' => $validator->getMessageBag()->first(),
-         ] , 400);
+            ], 400);
         }
-        
     }
 
-    
+
 
     /**
      * Remove the specified resource from storage.
      */
-    
-    
+
+
     public function destroy($id)
     {
-        
+
         $admins = Admin::destroy($id);
     }
-
 }
-
-

@@ -8,6 +8,7 @@ use App\Http\Controllers\{
     PortfolioController,
     ProfessionController,
     PortfolioImageController,
+    CustomerController,
 };
 
 //use App\Models\Category;
@@ -60,6 +61,13 @@ Route::prefix('cms/admin')->group(function () {
     Route::get('portfolio_images_restore/{id}', [PortfolioImageController::class, 'restore'])->name('portfolio_images_restore');
     Route::get('portfolio_images_force_destroy/{id}', [PortfolioImageController::class, 'forceDestroy'])->name('portfolio_images_force_destroy');
     Route::get('portfolio_images_destroy_all', [PortfolioImageController::class, 'DestroyAll'])->name('portfolio_images_destroy_all');
+    
+    Route::resource('customers', CustomerController::class);
+    Route::post('customers_update/{id}', [CustomerController::class, 'update'])->name('customers_update');
+    Route::get('customers_trashed', [CustomerController::class, 'trashed'])->name('customers_trashed');
+    Route::get('customers_restore/{id}', [CustomerController::class, 'restore'])->name('customers_restore');
+    Route::get('customers_force_destroy/{id}', [CustomerController::class, 'forceDestroy'])->name('customers_force_destroy');
+    Route::get('customers_destroy_all', [CustomerController::class, 'DestroyAll'])->name('customers_destroy_all');
 
 });
 

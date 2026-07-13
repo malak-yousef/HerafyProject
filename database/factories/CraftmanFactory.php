@@ -21,13 +21,13 @@ class CraftmanFactory extends Factory
         return [
             'name' => fake()->name(),
             'craft_name' => fake()->name(),
-            'email' => fake()->email(),
-            'password'=> Hash::make('password'),
+            'id_number' => fake()->unique()->regexify('[A-Z]{3}[0-9]{6}'),
             'experience_years'=> fake()->numberBetween(1, 30),
             'description'=> fake()->text(),
             'rating'=> fake()->randomFloat(2, 0, 5),
             'total_reviews'=> fake()->numberBetween(0, 1000),
-            'is_active'=> true,
+            'hourly_rate'=> fake()->numberBetween(0, 1000),
+            'daily_rate'=> fake()->numberBetween(0, 1000),
             'profile_image'=> fake()->imageUrl(),
         ];
     }

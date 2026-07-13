@@ -180,39 +180,30 @@ data-bs-target="#addadminModal">
 
 <tr>
 
-<th style="width: 15px">#</th>
+<th style="width: 15px">الرقم#</th>
  <th class="text-center">الصورة</th> 
-<th class="text-center">الاسم الاول</th>
+<th class="text-center">الاسم </th>
 
-<th class="text-center">الاسم الاخير</th>
+<th class="text-center">اسم المستخدم</th>
 
 <th class="text-center">البريد الالكتروني</th>
 
 <th class="text-center">الموبايل</th>
-
 <th class="text-center ">العنوان</th>
-
 <th class="text-center">تاريخ الميلاد</th>
 
+<th class="text-center">الحالة</th>
+<th class="text-center">الجنس</th>
 
 
-{{-- <td>
-@if($admin->image)
-    <img src="{{ asset('storage/'.$admin->image) }}" 
-         width="60" 
-         height="60"
-         style="border-radius:50%;object-fit:cover;">
-@else
-    لا توجد صورة
-@endif
-</td> --}}
+
+
+
 
 {{-- ما بنفع نحطها هان لانها مشفرة
 <th class="text-center">كلمة السر</th> --}}
 
 
-<th class="text-center">الحالة</th>
-<th class="text-center">الجنس</th>
 
 
 <th class="text-center actions-column">اجراءات</th>
@@ -232,26 +223,30 @@ data-bs-target="#addadminModal">
 
 <tr>
 
+<td>{{ $loop->iteration }}</td>
+
 
 
 <td>
-    <span class="badge rounded-pill bg-secondary">
-        {{ $admin->id }}
-    </span>
+    <div class="avatar avatar-md">
+   <img src="{{ asset('storage/images/admin/' . $admin->image) }}"
+     alt="user-image"
+     width="50"
+     height="50"
+     class="rounded-circle border">
+    </div>
 </td>
-
-<td><img class="img-circle img-bordered-sm" src="{{ asset('storage/images/admin/' . $admin->user->image) }}" width="50" height="50" alt="user-image"></td>
  
 
 <td>
     <span class="badge rounded-pill bg-success">
-        {{ $admin->user->first_name ?? "" }}
+        {{ $admin->name ?? "" }}
     </span>
 </td>
 
 <td>
     <span class="badge rounded-pill bg-success">
-        {{ $admin->user->last_name ?? "" }}
+        {{ $admin->user_name ?? "" }}
     </span>
 </td>
 
@@ -263,41 +258,41 @@ data-bs-target="#addadminModal">
 
 <td>
     <span class="badge rounded-pill bg-dark">
-        {{ $admin->user->mobile ?? "" }}
+        {{ $admin->mobile ?? "" }}
     </span>
 </td>
 
 <td>
     <span class="badge rounded-pill bg-light text-dark border">
-        {{ $admin->user->address ?? "" }}
+        {{ $admin->address ?? "" }}
     </span>
 </td>
 
 <td>
     <span class="badge rounded-pill bg-danger">
-        {{ $admin->user->date ?? "" }}
+        {{ $admin->date ?? "" }}
     </span>
 </td>
 
 <td>
-    @if($admin->user->status == 'active')
+    @if($admin->status == 'active')
     <span class="badge rounded-pill bg-success">
-        {{ $admin->user->status ?? "" }}
+        {{ $admin->status ?? "" }}
     </span>
 
-@elseif($admin->user->status == 'inactive')
+@elseif($admin->status == 'inactive')
     <span class="badge rounded-pill bg-secondary">
-        {{ $admin->user->status ?? "" }}
+        {{ $admin->status ?? "" }}
     </span>
 
-@elseif($admin->user->status == 'pending')
+@elseif($admin->status == 'pending')
     <span class="badge rounded-pill bg-warning text-dark">
-        {{ $admin->user->status ?? "" }}
+        {{ $admin->status ?? "" }}
     </span>
 
-@elseif($admin->user->status == 'blocked')
+@elseif($admin->status == 'blocked')
     <span class="badge rounded-pill bg-danger">
-        {{ $admin->user->status ?? "" }}
+        {{ $admin->status ?? "" }}
     </span>
 
 @endif
@@ -305,13 +300,13 @@ data-bs-target="#addadminModal">
 
 <td>
     
-    @if($admin->user->gender == 'male')
+    @if($admin->gender == 'male')
         <span class="badge rounded-pill bg-primary">
-            {{ $admin->user->gender ?? "" }}
+            {{ $admin->gender ?? "" }}
         </span>
     @else
         <span class="badge rounded-pill bg-warning text-dark">
-            {{ $admin->user->gender ?? "" }}
+            {{ $admin->gender ?? "" }}
         </span>
     @endif
 </td>
@@ -349,21 +344,10 @@ data-bs-target="#addadminModal">
 
 
     <!-- زر الحذف Delete -->
-    <form action="{{ route('admins.destroy', $admin->id) }}" 
-          method="POST" 
-          style="display:inline-block">
-
-        @csrf
-        @method('DELETE')
-
-        <button type="button" 
-        onclick="performDestroy({{$admin->id}} , this)"
-                class="action-btn delete-btn"
-                title="نقل لسلة المحذوفات">
-            <i class="fa-solid fa-trash"></i>
-        </button>
-
-    </form>
+    <a href="#" onclick="performDestroy({{$admin->id}} , this)"
+  class="avatar-text avatar-md">
+   <i class="fa-solid fa-trash"></i>
+    </a>
 
 
 

@@ -87,15 +87,15 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label" for="first_name">الاسم الاول</label>
-                                    <input type="text" id="first_name" name="first_name" class="form-control" placeholder="الاسم الاول">
+                                    <label class="form-label" for="name">الاسم </label>
+                                    <input type="text" id="name" name="name" class="form-control" placeholder="الاسم ">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label" for="last_name">الاسم الاخير</label>
-                                    <input type="text" id="last_name" name="last_name" class="form-control" placeholder="الاسم الاخير">
+                                    <label class="form-label" for="user_name">اسم المستخدم </label>
+                                    <input type="text" id="user_name" name="user_name" class="form-control" placeholder="اسم المستخدم">
                                 </div>
                             </div>
 
@@ -131,6 +131,14 @@
                                 <div class="form-group">
                                     <label class="form-label" for="password">كلمة السر</label>
                                     <input type="password" id="password" name="password" class="form-control" placeholder="كلمة السر">
+                                </div>
+                            </div>
+
+
+                             <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="password">تاكيد كلمة السر</label>
+                                    <input type="password" id="password" name="password" class="form-control" placeholder="تاكيد كلمة السر">
                                 </div>
                             </div>
 
@@ -178,8 +186,8 @@ function performStore(){
 
     let formData = new FormData();
 
-    formData.append('first_name', document.getElementById('first_name').value);
-    formData.append('last_name', document.getElementById('last_name').value);
+    formData.append('name', document.getElementById('name').value);
+    formData.append('user_name', document.getElementById('user_name').value);
     formData.append('email', document.getElementById('email').value);
     formData.append('mobile', document.getElementById('mobile').value);
     formData.append('address', document.getElementById('address').value);

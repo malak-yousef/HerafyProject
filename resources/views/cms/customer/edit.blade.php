@@ -1,232 +1,320 @@
 @extends('cms.parent')
 
-@section('title', 'تعديل مشرفين')
+@section('title', 'تعديل زبون')
 
-@section('styles' )
-
+@section('styles')
 <style>
-    .admin-page {
+    .form-card {
+        background: #fff;
+        border-radius: 15px;
         padding: 30px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
     }
 
-    .admin-card {
-        background: white;
-        padding: 25px;
-        border-radius: 18px;
-        box-shadow: 0 5px 25px #00000010;
-    }
-
-
-    .add-btn {
-
-        background: #ffbf00;
-        color: #14213d;
-        border: none;
-        padding: 12px 20px;
-        border-radius: 10px;
-        font-weight: bold;
-
-    }
-
-    .form-group {
-        margin-bottom: 10px;
-    }
-
-    .form-label {
+    .form-card .form-label {
         font-weight: 600;
-        color: #14213d;
+        color: #2d3436;
     }
 
-    .form-control,
-    .form-select {
-        height: 45px;
+    .form-card .form-control,
+    .form-card .form-select {
         border-radius: 10px;
+        border: 2px solid #e9ecef;
+        padding: 10px 15px;
+        transition: all 0.3s ease;
+    }
+
+    .form-card .form-control:focus,
+    .form-card .form-select:focus {
+        border-color: #FFC107;
+        box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+    }
+
+    .form-card .form-control.is-invalid {
+        border-color: #e17055;
+    }
+
+    .form-card .form-control.is-valid {
+        border-color: #00b894;
+    }
+
+    .form-card .invalid-feedback {
+        font-size: 13px;
+        color: #e17055;
+    }
+
+    .form-card .btn-submit {
+        padding: 12px 40px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .form-card .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+    }
+
+    .form-card .btn-back {
+        padding: 12px 30px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .form-card .btn-back:hover {
+        transform: translateY(-2px);
+    }
+
+    .image-preview {
+        width: 150px;
+        height: 150px;
+        border-radius: 10px;
+        border: 2px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: #f8f9fa;
+    }
+
+    .image-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .image-preview .no-image {
+        color: #adb5bd;
+        text-align: center;
+    }
+
+    .image-preview .no-image i {
+        font-size: 2rem;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .image-preview .no-image span {
+        font-size: 12px;
+    }
+
+    @media (max-width: 768px) {
+        .form-card {
+            padding: 20px;
+        }
+
+        .image-preview {
+            width: 120px;
+            height: 120px;
+        }
     }
 </style>
-
 @endsection
 
-@section('main_content')
-
-تعديل مشرفين
-
-@endsection
-
-
-
+@section('main_content', 'تعديل زبون')
 
 @section('content')
-<div class="main-content">
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="card invoice-container">
-
-                <form id="admin-form">
-
-                    <div class="card-header d-flex align-items-center">
-                        <h5>تعديل مشرف</h5>
-                        <div class="page-header-right ms-auto">
-                            <div class="page-header-right-items">
-                                <div class="d-flex d-md-none">
-                                    <a href="javascript:void(0)" class="page-header-right-close-toggle">
-                                        <i class="feather-arrow-left me-2"></i>
-                                        <span>Back</span>
-                                    </a>
-                                </div>
-                                <div class="buttons">
-                                    <button class="btn btn-warning" type="button" onclick="performUpdate({{ $admins->id }})">Update</button>
-                                    <a href="{{ route('admins.index') }}" class="btn btn-info">Go Back</a>
-                                </div>
-                            </div>
-                            <div class="d-md-none d-flex align-items-center">
-                                <a href="javascript:void(0)" class="page-header-right-open-toggle">
-                                    <i class="feather-align-right fs-20"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-body p-4">
-                        <div class="row g-4">
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="first_name">ادخل الاسم الأول</label>
-                                    <input type="text" id="first_name" name="first_name" class="form-control" placeholder="تعديل الاسم الأول..." value="{{ $admins->user->first_name }}">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="last_name">ادخل الاسم الثاني</label>
-                                    <input type="text" id="last_name" name="last_name" class="form-control" placeholder="تعديل الاسم الثاني..." value="{{ $admins->user->last_name }}">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="image">الصورة</label>
-                                    <input type="file" id="image" name="image" class="form-control" accept="image/*">
-                                    <div class="mt-3">
-                                        <img src="{{ asset('storage/images/admin/'.$admins->user->image) }}"
-                                            width="120"
-                                            height="120"
-                                            style="border-radius:10px;object-fit:contain;">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="mobile">ادخل الموبايل</label>
-                                    <input type="text" id="mobile" name="mobile" class="form-control" placeholder="تعديل الموبايل..." value="{{ $admins->user->mobile }}">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="email">ادخل البريد</label>
-                                    <input type="email" id="email" name="email" class="form-control" placeholder="تعديل البريد..." value="{{ $admins->email }}">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="address">العنوان</label>
-                                    <input type="text" id="address" name="address" class="form-control" placeholder="العنوان.." value="{{ $admins->user->address }}">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="date">ادخل تاريخ الميلاد</label>
-                                    <input type="date" id="date" name="date" class="form-control" value="{{ $admins->user->date }}">
-                                </div>
-                            </div>
-
-
-                            <div class="col-md-9">
-                                <div class="row g-3">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="form-label" for="image">ادخل صورة</label>
-                                            <input id="image" name="image" class="form-control" placeholder=" تعديل صورة..." value="{{ $admins->user->image }}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="status">الحالة</label>
-                                    <select id="status" name="status" class="form-select">
-                                        <option selected hidden>{{ $admins->user->status }}</option>
-                                        <option value="active">فعال</option>
-                                        <option value="in_active">غير فعال</option>
-                                        <option value="pending">قيد التنفيذ</option>
-                                        <option value="blocked">محظور</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <option selected hidden>{{ $admins->user->gender }}</option>
-                                    <label class="form-label" for="gender">الجنس</label>
-                                    <select id="gender" name="gender" class="form-select">
-                                        <option value="male">ذكر</option>
-                                        <option value="female">انثى</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </form>
-
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="form-card">
+            <!-- عنوان الصفحة -->
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <div>
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-user-edit text-warning"></i> تعديل زبون
+                    </h5>
+                    <p class="text-muted small mb-0">تعديل بيانات الزبون</p>
+                </div>
+                <a href="{{ route('customers.index') }}" class="btn btn-outline-secondary btn-back">
+                    <i class="fas fa-arrow-right"></i> العودة
+                </a>
             </div>
+
+            <!-- عرض الأخطاء -->
+            <div id="error_alert" class="alert alert-danger" hidden>
+                <ul id="error_messages_ul"></ul>
+            </div>
+
+            <!-- نموذج التعديل -->
+            <form id="editCustomerForm" onsubmit="event.preventDefault(); performUpdate({{ $customers->id }});">
+                <div class="row g-4">
+
+                    <!-- الصورة الشخصية -->
+                    <div class="col-md-3">
+                        <label class="form-label">الصورة الشخصية</label>
+                        <div class="image-preview" onclick="document.getElementById('image').click()">
+                            @if($customers->user && $customers->user->image)
+                            <img id="imagePreview" src="{{ asset('storage/images/customer/' . $customers->user->image) }}"
+                                alt="صورة الزبون" style="width:100%; height:100%; object-fit:cover;">
+                            @else
+                            <div class="placeholder" id="imagePlaceholder">
+                                <i class="fas fa-camera"></i>
+                                <span>عدل صورة</span>
+                            </div>
+                            <img id="imagePreview" style="display: none;" alt="صورة الحرفي">
+                            @endif
+                        </div>
+                        <input type="file" class="form-control d-none" id="image" name="image" accept="image/*">
+                        <small class="text-muted">صورة شخصية (اختياري)</small>
+                    </div>
+
+                    <!-- باقي الحقول -->
+                    <div class="col-md-9">
+                        <div class="row g-3">
+
+                            <!-- الاسم -->
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">
+                                    <i class="fas fa-user text-warning"></i> الاسم الكامل <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" id="name" name="name" class="form-control"
+                                    placeholder="احمد علي" value="{{ $customers->user->name }}" required>
+                            </div>
+
+                            <!-- اليوزر -->
+                            <div class="col-md-6">
+                                <label for="user_name" class="form-label">
+                                    <i class="fas fa-user-tag text-warning"></i> اسم المستخدم <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" id="user_name" name="user_name" class="form-control"
+                                    placeholder="اسم المستخدم" value="{{ $customers->user->user_name }}" required>
+                            </div>
+
+                            <!-- البريد الالكتروني -->
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">
+                                    <i class="fas fa-envelope text-warning"></i> البريد الالكتروني <span class="text-danger">*</span>
+                                </label>
+                                <input type="email" id="email" name="email" class="form-control"
+                                    placeholder="example@email.com" value="{{ $customers->user->email }}" required>
+                            </div>
+
+                            <!-- رقم الهوية -->
+                            <div class="col-md-6">
+                                <label for="id_number" class="form-label">
+                                    <i class="fas fa-id-card text-warning"></i> رقم الهوية <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="id_number" name="id_number"
+                                    placeholder="مثال: 123456789" value="{{ $customers->id_number }}" required>
+                            </div>
+
+                            <!-- رقم الهاتف -->
+                            <div class="col-md-6">
+                                <label for="mobile" class="form-label">
+                                    <i class="fas fa-phone text-warning"></i> رقم الهاتف
+                                </label>
+                                <input type="text" id="mobile" name="mobile" class="form-control"
+                                    placeholder="0599 123 456" value="{{ $customers->user->mobile }}">
+                            </div>
+
+                            <!-- العنوان -->
+                            <div class="col-md-6">
+                                <label for="address" class="form-label">
+                                    <i class="fas fa-map-marker-alt text-warning"></i> العنوان
+                                </label>
+                                <input type="text" id="address" name="address" class="form-control"
+                                    placeholder="العنوان" value="{{ $customers->user->address }}">
+                            </div>
+
+                            <!-- تاريخ الميلاد -->
+                            <div class="col-md-6">
+                                <label for="date" class="form-label">
+                                    <i class="fas fa-calendar text-warning"></i> تاريخ الميلاد
+                                </label>
+                                <input type="date" id="date" name="date" class="form-control"
+                                    value="{{ $customers->user->date }}">
+                            </div>
+
+                            <!-- كلمة السر -->
+                            <div class="col-md-6">
+                                <label for="password" class="form-label">
+                                    <i class="fas fa-lock text-warning"></i> كلمة السر
+                                </label>
+                                <input type="password" id="password" name="password" class="form-control"
+                                    placeholder="اتركها فارغة إذا لم ترد التغيير">
+                            </div>
+
+                            <!-- الجنس -->
+                            <div class="col-md-6">
+                                <label for="gender" class="form-label">
+                                    <i class="fas fa-venus-mars text-warning"></i> الجنس
+                                </label>
+                                <select class="form-select" name="gender" id="gender">
+                                    <option value="">اختر الجنس</option>
+                                    <option value="male" {{ $customers->user->gender   == 'male'   ? 'selected' : '' }}>ذكر</option>
+                                    <option value="female" {{ $customers->user->gender == 'female' ? 'selected' : '' }}>أنثى</option>
+                                </select>
+                            </div>
+
+                            <!-- الحالة -->
+                            <div class="col-md-6">
+                                <label for="status" class="form-label">
+                                    <i class="fas fa-toggle-on text-warning"></i> الحالة
+                                </label>
+                                <select class="form-select" name="status" id="status">
+                                    <option value="active" {{ $customers->user->status == 'active' ? 'selected' : '' }}>فعال</option>
+                                    <option value="inactive" {{ $customers->user->status == 'inactive' ? 'selected' : '' }}>غير فعال</option>
+                                    <option value="pending" {{ $customers->user->status == 'pending' ? 'selected' : '' }}>قيد التنفيذ</option>
+                                    <option value="blocked" {{ $customers->user->status == 'blocked' ? 'selected' : '' }}>محظور</option>
+                                </select>
+                                <small class="text-muted">حالة حساب الزبون</small>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- أزرار الإجراء -->
+                <div class="d-flex gap-3 mt-4 pt-3 border-top">
+                    <button type="submit" class="btn btn-warning btn-submit">
+                        <i class="fas fa-save"></i> تحديث البيانات
+                    </button>
+                    <a href="{{ route('customers.index') }}" class="btn btn-outline-danger btn-back ms-auto">
+                        <i class="fas fa-times"></i> إلغاء
+                    </a>
+                </div>
+
+            </form>
         </div>
     </div>
 </div>
 @endsection
 
 @section('scripts')
-
-
-
 <script>
-    function performStore() {
-        const form = document.getElementById('admin-form');
-        let formData = new FormData(form);
+    // ============================================
+    // تحديث البيانات
+    // ============================================
+    // function performUpdate() {
+    //     let formData = new FormData();
 
-        // إرسال البيانات
-        // store('/cms/admin/deanships', formData , 'deanship-form');
-        store('/cms/admin/admins', formData);
-    }
-</script>
-<script>
+    //     formData.append('id_number', document.getElementById('id_number').value);
+    //     formData.append('name', document.getElementById('name').value);
+    //     formData.append('user_name', document.getElementById('user_name').value);
+    //     formData.append('email', document.getElementById('email').value);
+    //     formData.append('mobile', document.getElementById('mobile').value);
+    //     formData.append('address', document.getElementById('address').value);
+    //     formData.append('date', document.getElementById('date').value);
+    //     formData.append('password', document.getElementById('password').value);
+    //     formData.append('status', document.getElementById('status').value);
+    //     formData.append('gender', document.getElementById('gender').value);
+
+    //     // إضافة الصورة إذا تم اختيارها
+    //     if (document.getElementById('image').files[0]) {
+    //         formData.append('image', document.getElementById('image').files[0]);
+    //     }
+
+    //     // استدعاء دالة التحديث
+    //     storeRoute('/cms/admin/customers_update/' + id, formData);
+    // }
+
     function performUpdate(id) {
-
-        let formData = new FormData();
-
-        formData.append('first_name', document.getElementById('first_name').value);
-        formData.append('last_name', document.getElementById('last_name').value);
-        formData.append('email', document.getElementById('email').value);
-        formData.append('mobile', document.getElementById('mobile').value);
-        formData.append('address', document.getElementById('address').value);
-        formData.append('date', document.getElementById('date').value);
-        formData.append('status', document.getElementById('status').value);
-        formData.append('gender', document.getElementById('gender').value);
-
-        if (document.getElementById('image').files[0]) {
-            formData.append('image', document.getElementById('image').files[0]);
-        }
-
-        // إرسال البيانات 
-        storeRoute('/cms/admin/admins_update/' + id, formData);
+        let form = document.getElementById('editCustomerForm');
+        let formData = new FormData(form);
+        storeRoute('/cms/admin/customers_update/' + id, formData);
     }
-</script>
 
+    console.log('✅ صفحة تعديل الزبون جاهزة');
+</script>
 @endsection

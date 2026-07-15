@@ -13,7 +13,7 @@ class CraftmanSeeder extends Seeder
      */
     public function run(): void
     {
-        Craftman::factory(5)->create();
+        // Craftman::factory(5)->create();
         
 // طريقة تانية لانشاء سيدر بتعمل استدعاء بنفس الطريقة 
         // $craftman1 =Craftman::create([

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Craftman;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class CraftmanController extends Controller
 {
@@ -33,17 +35,17 @@ class CraftmanController extends Controller
         $validator = validator(
             $request->all(),
             [
-                'first_name'       => 'required |string|min:3|max:50',
-                'last_name'        => 'required |string|min:3|max:50',
+                'name'             => 'required |string|min:3|max:50',
+                'user_name'        => 'required |string|min:3|max:50|unique:users,user_name',
                 'id_number'        => 'required |numeric|unique:craftmen,id_number',
-                'mobile'           => 'nullable |numeric|unique:craftmen,mobile',
-                'craft_name'       => 'required |string|min:3|max:50:craftmen,craft_name',
-                'email'            => 'required |email',
+                'mobile'           => 'nullable |numeric',
+                'craft_name'       => 'required |string|min:3|max:50',
+                'email'            => 'required |email|unique:users,email',
                 'password'         => 'required |string|min:3|max:50',
-                'experience_years' => 'required |numeric:craftmen,experience_years',
-                'description'      => 'required |string|min:3|max:255:craftmen,description',
-                'hourly_rate'      => 'required |numeric:craftmen,hourly_rate',
-                'daily_rate'       => 'required |numeric:craftmen,daily_rate',
+                'experience_years' => 'required |numeric',
+                'description'      => 'nullable |string|min:3|max:255',
+                'hourly_rate'      => 'required |numeric',
+                'daily_rate'       => 'required |numeric',
                 'status'           => 'required |in:pending,active,inactive,blocked,',
                 'address'          => 'nullable |string|min:3|max:255',
                 'gender'           => 'required |in:male,female',
@@ -56,36 +58,52 @@ class CraftmanController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'icon' => 'خطأ في البيانات',
-                'titel' => $validator->getMessageBag()->first(),
+                'icon' => 'error',
+                'title' => $validator->getMessageBag()->first(),
             ], 400);
         } else {
             $craftmen = new Craftman();
+            $craftmen->id_number        = $request->input('id_number');
+            $craftmen->craft_name       = $request->input('craft_name');
+            $craftmen->experience_years = $request->input('experience_years');
+            $craftmen->description      = $request->input('description');
+            $craftmen->hourly_rate      = $request->input('hourly_rate');
+            $craftmen->daily_rate       = $request->input('daily_rate');
+            $isSaved = $craftmen->save();
 
-            if (request()->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '_' . $image->getClientOriginalExtension();
-                $image->move('storage/images/craftman', $imageName);
-                $craftmen->profile_image = $imageName;
+            if ($isSaved) {
+                $users = new User();
+
+                if (request()->hasFile('image')) {
+                    $image = $request->file('image');
+                    $imageName = time() . '.' . $image->getClientOriginalExtension();
+                    $image->move('storage/images/craftman', $imageName);
+                    $users->image = $imageName;
+                }
+
+                $users->name      = $request->input('name');
+                $users->user_name = $request->input('user_name');
+                $users->email     = $request->input('email');
+                $users->password  = Hash::make($request->input('password'));
+                $users->address   = $request->input('address');
+                $users->mobile    = $request->input('mobile');
+                $users->gender    = $request->input('gender');
+                $users->status    = $request->input('status');
+                $users->actor()->associate($craftmen);
+                $isSaved = $users->save();
             }
 
-            $craftmen->name = $request->input('name');
-            $craftmen->craft_name = $request->input('craft_name');
-            $craftmen->email = $request->input('email');
-            $craftmen->password = $request->input('password');
-            $craftmen->experience_years = $request->input('experience_years');
-            $craftmen->description = $request->input('description');
-            $craftmen->address = $request->input('address');
-            $craftmen->mobile = $request->input('mobile');
-            $craftmen->gender = $request->input('gender');
-            $craftmen->hourly_rate = $request->input('hourly_rate');
-            $craftmen->daily_rate = $request->input('daily_rate');
-            $craftmen->status = $request->input('status');
-            $isSaved = $craftmen->save();
-            return response()->json([
-                'icon' => 'success',
-                'title' => 'تم الحفظ بنجاح',
-            ], 200);
+            if (!$isSaved) {
+                return response()->json([
+                    'icon'  => 'error',
+                    'title' => 'لم يتم حفظ بيانات الحرفي',
+                ], 400);
+            } else {
+                return response()->json([
+                    'icon' => 'success',
+                    'title' => 'تم الحفظ بنجاح',
+                ], 200);
+            }
         }
 
         // الطريقة الثانية لاستقبال البيانات
@@ -133,60 +151,82 @@ class CraftmanController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $craftmen = Craftman::findOrFail($id);
+        $user = $craftmen->user;
+        if (!$user) {
+            return response()->json([
+                'icon' => 'error',
+                'title' => 'خطأ',
+                'text' => 'لا يوجد مستخدم مرتبط بهذا الحرفي',
+            ], 400);
+        }
+        $user_id = $user->id;
         $validator = validator(
             $request->all(),
             [
-                'name' => 'nullable|string|min:3|max:50',
-                'craft_name' => 'nullable|string|min:3|max:50',
-                'email' => 'nullable|email',
-                'password' => 'nullable|string|min:3|max:50',
-                'experience_years' => 'nullable|numeric',
-                'description' => 'nullable|string|min:3|max:255',
-                'hourly_rate' => 'nullable|numeric',
-                'daily_rate' => 'nullable|numeric',
-                'is_active' => 'nullable|boolean',
+                'name'             => 'required|string|min:3|max:50',
+                'user_name'        => 'required|string|min:3|max:50|unique:users,user_name,' . $user_id,
+                'id_number'        => 'required|numeric|unique:craftmen,id_number,' . $id,
+                'mobile'           => 'nullable|numeric',
+                'craft_name'       => 'required|string|min:3|max:50',
+                'email'            => 'required|email|unique:users,email,' . $user_id,
+                'password'         => 'nullable|string|min:3|max:50',
+                'experience_years' => 'required|numeric',
+                'description'      => 'nullable|string|min:3|max:255',
+                'hourly_rate'      => 'required|numeric',
+                'daily_rate'       => 'required|numeric',
+                'status'           => 'required|string|in:pending,active,inactive,blocked',
+                'address'          => 'nullable|string|min:3|max:255',
+                'gender'           => 'required|in:male,female',
+                'image'            => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ],
             [
                 'required' => 'هذا الحقل مطلوب',
             ]
         );
-
         if ($validator->fails()) {
+
             return response()->json([
-                'icon' => 'خطأ في البيانات',
-                'title' => $validator->getMessageBag()->first(),
+                'icon'  => 'error',
+                'title' => 'خطأ في البيانات',
+                'text'  => $validator->getMessageBag()->first(),
             ], 400);
         }
-
-        $craftmen = Craftman::findOrFail($id);
-
-        if (request()->hasFile('profile_image')) {
-            $image = $request->file('profile_image');
-            $imageName = time() . '_' . $image->getClientOriginalExtension();
-            $image->move('storage/images/craftman', $imageName);
-            $craftmen->profile_image = $imageName;
-        }
-
-        $craftmen->name = $request->input('name');
-        $craftmen->craft_name = $request->input('craft_name');
-        // البريد الإلكتروني: إذا الحقل disabled، الأفضل ما تحدثه
-        if ($request->filled('email')) {
-            $craftmen->email = $request->input('email');
-        }
-        // كلمة المرور: تشفير
-        if ($request->filled('password')) {
-            $craftmen->password = bcrypt($request->input('password'));
-        }
-        // $craftmen->phone = $request->input('phone');
+        $craftmen->id_number        = $request->input('id_number');
+        $craftmen->craft_name       = $request->input('craft_name');
         $craftmen->experience_years = $request->input('experience_years');
-        $craftmen->description = $request->input('description');
-        $craftmen->hourly_rate = $request->input('hourly_rate');
-        $craftmen->daily_rate = $request->input('daily_rate');
-        $craftmen->is_active = $request->input('is_active');
+        $craftmen->description      = $request->input('description');
+        $craftmen->hourly_rate      = $request->input('hourly_rate');
+        $craftmen->daily_rate       = $request->input('daily_rate');
 
         $craftmen->save();
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(
+                public_path('storage/images/craftman'),
+                $imageName
+            );
+            $user->image = $imageName;
+        }
+        $user->name      = $request->input('name');
+        $user->user_name = $request->input('user_name');
+        $user->email     = $request->input('email');
+        $user->mobile    = $request->input('mobile');
+        $user->address   = $request->input('address');
+        $user->gender    = $request->input('gender');
+        $user->status    = $request->input('status');
+        if ($request->filled('password')) {
+            $user->password = Hash::make(
+                $request->input('password')
+            );
+        }
+        
+        $user->save();
 
-        return ['redirect' => route('craftmen.index')];
+        return [
+            'redirect' => route('craftmen.index')
+        ];
     }
 
 

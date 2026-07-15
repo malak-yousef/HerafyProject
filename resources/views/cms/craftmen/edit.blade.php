@@ -149,13 +149,13 @@
                 onsubmit="event.preventDefault(); performUpdate({{$craftmen->id}});">
 
                 <div class="row g-4">
-                    
+
                     <!-- الصورة الشخصية -->
                     <div class="col-md-3">
                         <label class="form-label">الصورة الشخصية</label>
-                        <div class="image-preview" onclick="document.getElementById('profile_image').click()">
-                            @if($craftmen->profile_image)
-                            <img id="imagePreview" src="{{ asset('storage/images/craftman/' . $craftmen->profile_image) }}"
+                        <div class="image-preview" onclick="document.getElementById('image').click()">
+                            @if($craftmen->user && $craftmen->user->image)
+                            <img id="imagePreview" src="{{ asset('storage/images/craftman/' . $craftmen->user->image) }}"
                                 alt="صورة الحرفي" style="width:100%; height:100%; object-fit:cover;">
                             @else
                             <div class="placeholder" id="imagePlaceholder">
@@ -165,7 +165,7 @@
                             <img id="imagePreview" style="display: none;" alt="صورة الحرفي">
                             @endif
                         </div>
-                        <input type="file" class="form-control d-none" id="profile_image" name="profile_image" accept="image/*">
+                        <input type="file" class="form-control d-none" id="image" name="image" accept="image/*">
                         <small class="text-muted">صورة شخصية (اختياري)</small>
                     </div>
 
@@ -178,9 +178,28 @@
                                     <i class="fas fa-user text-warning"></i> الاسم الكامل <span
                                         class="text-danger">*</span>
                                 </label>
-                                <input type="text" class="form-control " id="name" name="name"
-                                    placeholder="مثال: أحمد النجار" value="{{ $craftmen->name }}" required>
+                                <input type="text" class="form-control" id="name" name="name"
+                                    placeholder="مثال: أحمد " value="{{ $craftmen->user->name }}" required>
+                            </div>
 
+                            <!-- اسم المستخدم -->
+                            <div class="col-md-6">
+                                <label for="user_name" class="form-label">
+                                    <i class="fas fa-user text-warning"></i> اسم المستخدم <span
+                                        class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="user_name" name="user_name"
+                                    placeholder="مثال: abdMash1" value="{{ $craftmen->user->user_name }}" required>
+                            </div>
+
+                            <!-- رقم الهوية -->
+                            <div class="col-md-6">
+                                <label for="id_number" class="form-label">
+                                    <i class="fas fa-id-card text-warning"></i> رقم الهوية <span
+                                        class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="id_number" name="id_number"
+                                    placeholder="مثال: 123456789" value="{{ $craftmen->id_number }}" required>
                             </div>
 
                             <!-- الحرفة -->
@@ -188,9 +207,8 @@
                                 <label for="craft_name" class="form-label">
                                     <i class="fas fa-tools text-warning"></i> الحرفة <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" class="form-control " id="craft_name" name="craft_name"
-                                    placeholder="مثال: نجارة" value="{{ $craftmen->craft_name }}" required>
-
+                                <input type="text" class="form-control" id="craft_name" name="craft_name"
+                                    placeholder="مثال: نجارة" value="{{ $craftmen->craft_name}}" required>
                             </div>
 
                             <!-- البريد الإلكتروني -->
@@ -198,19 +216,34 @@
                                 <label for="email" class="form-label">
                                     <i class="fas fa-envelope text-warning"></i> البريد الإلكتروني
                                 </label>
-                                <input type="email" class="form-control " id="email" name="email"
-                                    placeholder="example@email.com" value="{{ $craftmen->email }}" readonly>
-
+                                <input type="email" class="form-control" id="email" name="email"
+                                    placeholder="example@email.com" value="{{ $craftmen->user->email }}">
                             </div>
 
                             <!-- رقم الهاتف -->
                             <div class="col-md-6">
-                                <label for="phone" class="form-label">
-                                    <i class="fas fa-phone text-warning"></i> رقم الهاتف
+                                <label for="mobile" class="form-label">
+                                    <i class="fas fa-mobile text-warning"></i> رقم الهاتف
                                 </label>
-                                <input type="text" class="form-control " id="phone" name="phone"
-                                    placeholder="0599 123 456" value="{{ old('phone') }}">
+                                <input type="text" class="form-control" id="mobile" name="mobile"
+                                    placeholder="0599 123 456" value="{{ $craftmen->user->mobile }}">
+                            </div>
 
+                            <!-- كلمة المرور  -->
+                            <div class="col-md-6">
+                                <label for="password" class="form-label">
+                                    <i class="fas fa-lock text-warning"></i> كلمة المرور
+                                </label>
+                                <input type="password" id="password" name="password" class="form-control" placeholder="اتركها فارغة إذا لم ترد تغييرها">
+                            </div>
+
+                            <!-- العنوان -->
+                            <div class="col-md-6">
+                                <label for="address" class="form-label">
+                                    <i class="fas fa-map-marker-alt text-warning"></i> العنوان
+                                </label>
+                                <input type="text" class="form-control" id="address" name="address"
+                                    placeholder="مثال: شارع فلسطين، غزة" value="{{ $craftmen->user->address }}">
                             </div>
 
                             <!-- سنوات الخبرة -->
@@ -218,10 +251,8 @@
                                 <label for="experience_years" class="form-label">
                                     <i class="fas fa-star text-warning"></i> سنوات الخبرة
                                 </label>
-                                <input type="number" class="form-control  " id="experience_years"
-                                    name="experience_years" placeholder="8" min="0"
-                                    value="{{ $craftmen->experience_years }}">
-
+                                <input type="number" class="form-control" id="experience_years" name="experience_years"
+                                    placeholder="8" min="0" value="{{ $craftmen->experience_years }}">
                             </div>
 
                             <!-- السعر بالساعة -->
@@ -229,9 +260,8 @@
                                 <label for="hourly_rate" class="form-label">
                                     <i class="fas fa-clock text-warning"></i> السعر بالساعة (₪)
                                 </label>
-                                <input type="number" class="form-control  " id="hourly_rate" name="hourly_rate"
+                                <input type="number" class="form-control" id="hourly_rate" name="hourly_rate"
                                     placeholder="50" min="0" step="0.5" value="{{ $craftmen->hourly_rate }}">
-
                             </div>
 
                             <!-- السعر باليوم -->
@@ -239,9 +269,31 @@
                                 <label for="daily_rate" class="form-label">
                                     <i class="fas fa-calendar-day text-warning"></i> السعر باليوم (₪)
                                 </label>
-                                <input type="number" class="form-control  " id="daily_rate" name="daily_rate"
+                                <input type="number" class="form-control" id="daily_rate" name="daily_rate"
                                     placeholder="350" min="0" step="0.5" value="{{ $craftmen->daily_rate }}">
+                            </div>
 
+                            <!-- الجنس -->
+                            <div class="col-6">
+                                <label class="form-check-label" for="gender"> الجنس : </label>
+                                <select class="form-control select2" id="gender" name="gender" style="width: 100%;">
+                                    <option value="male" {{ $craftmen->user->gender == 'male' ? 'selected' : '' }}>ذكر
+                                    </option>
+                                    <option value="female" {{ $craftmen->user->gender == 'female' ? 'selected' : ''}}>انثى
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- حالة التفعيل -->
+                            <div class="col-6">
+                                <label class="form-check-label" for="status"> حالة الحساب : </label>
+                                <select name="status" id="status" class="form-control select2"
+                                    style="width:100%;">
+                                    <option value="pending" {{ $craftmen->user->status == 'pending'  ? 'selected' : ''}}>قيد الانتظار</option>
+                                    <option value="active" {{ $craftmen->user->status == 'active'   ? 'selected' : ''}}>فعال</option>
+                                    <option value="inactive" {{ $craftmen->user->status == 'inactive' ? 'selected' : ''}}>غير فعال</option>
+                                    <option value="blocked" {{ $craftmen->user->status == 'blocked'  ? 'selected' : ''}}>محظور</option>
+                                </select>
 
                             </div>
 
@@ -250,23 +302,10 @@
                                 <label for="description" class="form-label">
                                     <i class="fas fa-align-left text-warning"></i> الوصف
                                 </label>
-                                <textarea class="form-control " id="description" name="description" rows="4"
-                                    placeholder=" اكتب وصفاً عن الحرفي وخبراته ومهاراته...">{{ $craftmen->description }}</textarea>
-
+                                <textarea class="form-control" id="description" name="description" rows="4"
+                                    placeholder="اكتب وصفاً عن الحرفي وخبراته ومهاراته...">{{ $craftmen->description }}</textarea>
                             </div>
 
-                            <!-- حالة التفعيل -->
-                            <div class="col-xl-3">
-                                <div class="form-group">
-                                    <label for="is_active" class="form_label"> حالة التفعيل </label>
-                                    <select name="is_active" id="is_active" class="form-control select2"
-                                        style="width:100%;">
-                                        <option value="1" {{ $craftmen->is_active ==1 ? 'selected' : '' }}>فعال</option>
-                                        <option value="0" {{ $craftmen->is_active ==0 ? 'selected' : '' }}>غير فعال
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -296,7 +335,7 @@ function performUpdate(id) {
     let formData = new FormData();
     formData.append('name', document.getElementById('name').value);
     formData.append('email', document.getElementById('email').value);
-    formData.append('phone', document.getElementById('phone').value);
+    formData.append('mobile', document.getElementById('mobile').value);
     formData.append('craft_name', document.getElementById('craft_name').value);
     formData.append('experience_years', document.getElementById('experience_years').value);
     formData.append('hourly_rate', document.getElementById('hourly_rate').value);

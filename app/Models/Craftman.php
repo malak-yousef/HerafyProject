@@ -20,14 +20,11 @@ class Craftman extends Model
         'id_number',
         'experience_years',
         'description',
-        'rating',
-        'total_reviews',
         'hourly_rate',
         'daily_rate',
     ];
 
     protected $casts = [
-        'rating' => 'decimal:2',
         'hourly_rate' => 'decimal:2',
         'daily_rate' => 'decimal:2',
     ];

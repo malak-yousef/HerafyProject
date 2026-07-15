@@ -166,21 +166,22 @@
                         <div class="row g-3">
                             <!-- الاسم الكامل -->
                             <div class="col-md-6">
-                                <label for="first_name" class="form-label">
-                                    <i class="fas fa-user text-warning"></i> الاسم الاول <span
+                                <label for="name" class="form-label">
+                                    <i class="fas fa-user text-warning"></i> الاسم الكامل <span
                                         class="text-danger">*</span>
                                 </label>
-                                <input type="text" class="form-control" id="first_name" first_name="first_name"
-                                    placeholder="مثال: أحمد " value="{{ old('first_name') }}" required>
+                                <input type="text" class="form-control" id="name" name="name"
+                                    placeholder="مثال: أحمد " value="{{ old('name') }}" required>
                             </div>
 
+                            <!-- اسم المستخدم -->
                             <div class="col-md-6">
-                                <label for="last_name" class="form-label">
-                                    <i class="fas fa-user text-warning"></i> الاسم الاخير <span
+                                <label for="user_name" class="form-label">
+                                    <i class="fas fa-user text-warning"></i> اسم المستخدم <span
                                         class="text-danger">*</span>
                                 </label>
-                                <input type="text" class="form-control" id="last_name" last_name="last_name"
-                                    placeholder="مثال: محمد" value="{{ old('last_name') }}" required>
+                                <input type="text" class="form-control" id="user_name" user_name="user_name"
+                                    placeholder="مثال: abdMash1" value="{{ old('user_name') }}" required>
                             </div>
 
                             <!-- رقم الهوية -->
@@ -220,7 +221,7 @@
                                     placeholder="0599 123 456" value="{{ old('mobile') }}">
                             </div>
 
-                            <!-- كلمة المرور (جديد) -->
+                            <!-- كلمة المرور  -->
                             <div class="col-md-6">
                                 <label for="password" class="form-label">
                                     <i class="fas fa-lock text-warning"></i> كلمة المرور
@@ -284,8 +285,7 @@
                                     <option value="inactive">غير فعال</option>
                                     <option value="blocked">محظور</option>
                                 </select>
-                                <span class="text-muted small d-block">إذا كان مفعلاً، سيظهر الحرفي في نتائج
-                                    البحث</span>
+                                
                             </div>
 
                             <!-- الوصف -->
@@ -324,20 +324,20 @@
     function performStore() {
         let formData = new FormData();
         // إضافة كل الحقول المطلوبة
-        formData.append('first_name', document.getElementById('first_name').value);
-        formData.append('last_name', document.getElementById('last_name').value);
-        formData.append('id_number', document.getElementById('id_number').value);
+        formData.append('name', document.getElementById('name').value);
+        formData.append('user_name', document.getElementById('user_name').value);
         formData.append('mobile', document.getElementById('mobile').value);
         formData.append('address', document.getElementById('address').value);
+        formData.append('status', document.getElementById('status').value);
+        formData.append('gender', document.getElementById('gender').value);
+        formData.append('email', document.getElementById('email').value);
+        formData.append('password', document.getElementById('password').value);
+        formData.append('id_number', document.getElementById('id_number').value);
         formData.append('craft_name', document.getElementById('craft_name').value);
         formData.append('experience_years', document.getElementById('experience_years').value);
         formData.append('hourly_rate', document.getElementById('hourly_rate').value);
         formData.append('daily_rate', document.getElementById('daily_rate').value);
         formData.append('description', document.getElementById('description').value);
-        formData.append('status', document.getElementById('status').value);
-        formData.append('gender', document.getElementById('gender').value);
-        formData.append('email', document.getElementById('email').value);
-        formData.append('password', document.getElementById('password').value);
         formData.append('image', document.getElementById('image').files[0]);
 
         // استدعاء الدالة store لإرسال البيانات

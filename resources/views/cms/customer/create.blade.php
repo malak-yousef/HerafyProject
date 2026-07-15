@@ -133,7 +133,7 @@
                     </h5>
                     <p class="text-muted small mb-0">أدخل بيانات الزبون الجديد</p>
                 </div>
-                <a href="{{ route('admins.index') }}" class="btn btn-outline-secondary btn-back">
+                <a href="{{ route('customers.index') }}" class="btn btn-outline-secondary btn-back">
                     <i class="fas fa-arrow-right"></i> العودة
                 </a>
             </div>
@@ -167,22 +167,25 @@
                     <div class="col-md-9">
                         <div class="row g-3">
 
+                        <!-- الاسم -->
                             <div class="col-md-6">
-                                <label for="first_name" class="form-label">
-                                    <i class="fas fa-user text-warning"></i> الاسم الاول <span class="text-danger">*</span>
+                                <label for="name" class="form-label">
+                                    <i class="fas fa-user text-warning"></i> الاسم الكامل <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" id="first_name" name="first_name" class="form-control"
-                                    placeholder="الاسم الاول" value="{{ old('first_name') }}" required>
+                                <input type="text" id="name" name="name" class="form-control"
+                                    placeholder="احمد علي" value="{{ old('name') }}" required>
                             </div>
 
+                            <!-- اليوزر -->
                             <div class="col-md-6">
-                                <label for="last_name" class="form-label">
-                                    <i class="fas fa-user text-warning"></i> الاسم الاخير <span class="text-danger">*</span>
+                                <label for="user_name" class="form-label">
+                                    <i class="fas fa-user text-warning"></i> اسم المستخدم <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" id="last_name" name="last_name" class="form-control"
-                                    placeholder="الاسم الاخير" value="{{ old('last_name') }}" required>
+                                <input type="text" id="user_name" name="user_name" class="form-control"
+                                    placeholder="اسم المستخدم" value="{{ old('user_name') }}" required>
                             </div>
 
+                            <!-- البريد الالكتروني -->
                             <div class="col-md-6">
                                 <label for="email" class="form-label">
                                     <i class="fas fa-envelope text-warning"></i> البريد الالكتروني <span class="text-danger">*</span>
@@ -191,6 +194,17 @@
                                     placeholder="example@email.com" value="{{ old('email') }}" required>
                             </div>
 
+                            <!-- رقم الهوية -->
+                              <div class="col-md-6">
+                                <label for="id_number" class="form-label">
+                                    <i class="fas fa-id-card text-warning"></i> رقم الهوية <span
+                                        class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="id_number" name="id_number"
+                                    placeholder="مثال: 123456789" value="{{ old('id_number') }}" required>
+                            </div>
+
+                            <!-- رقم الهاتف -->
                             <div class="col-md-6">
                                 <label for="mobile" class="form-label">
                                     <i class="fas fa-phone text-warning"></i> رقم الهاتف
@@ -199,6 +213,7 @@
                                     placeholder="0599 123 456" value="{{ old('mobile') }}">
                             </div>
 
+                            <!-- العنوان -->
                             <div class="col-md-6">
                                 <label for="address" class="form-label">
                                     <i class="fas fa-map-marker-alt text-warning"></i> العنوان
@@ -207,6 +222,7 @@
                                     placeholder="العنوان" value="{{ old('address') }}">
                             </div>
 
+                            <!-- تاريخ الميلاد -->
                             <div class="col-md-6">
                                 <label for="date" class="form-label">
                                     <i class="fas fa-calendar text-warning"></i> تاريخ الميلاد
@@ -215,6 +231,7 @@
                                     value="{{ old('date') }}">
                             </div>
 
+                            <!-- كلمة السر -->
                             <div class="col-md-6">
                                 <label for="password" class="form-label">
                                     <i class="fas fa-lock text-warning"></i> كلمة السر <span class="text-danger">*</span>
@@ -223,6 +240,7 @@
                                     placeholder="كلمة السر" required>
                             </div>
 
+                            <!-- الجنس -->
                             <div class="col-md-6">
                                 <label for="gender" class="form-label">
                                     <i class="fas fa-venus-mars text-warning"></i> الجنس
@@ -234,6 +252,7 @@
                                 </select>
                             </div>
 
+                            <!-- الحالة -->
                             <div class="col-md-6">
                                 <label for="status" class="form-label">
                                     <i class="fas fa-toggle-on text-warning"></i> الحالة
@@ -259,7 +278,7 @@
                     <button type="reset" class="btn btn-outline-secondary btn-back">
                         <i class="fas fa-undo"></i> إعادة تعيين
                     </button>
-                    <a href="{{ route('admins.index') }}" class="btn btn-outline-danger btn-back ms-auto">
+                    <a href="{{ route('customers.index') }}" class="btn btn-outline-danger btn-back ms-auto">
                         <i class="fas fa-times"></i> إلغاء
                     </a>
                 </div>
@@ -296,8 +315,9 @@
     function performStore() {
         let formData = new FormData();
 
-        formData.append('first_name', document.getElementById('first_name').value);
-        formData.append('last_name', document.getElementById('last_name').value);
+        formData.append('id_number', document.getElementById('id_number').value);
+        formData.append('name', document.getElementById('name').value);
+        formData.append('user_name', document.getElementById('user_name').value);
         formData.append('email', document.getElementById('email').value);
         formData.append('mobile', document.getElementById('mobile').value);
         formData.append('address', document.getElementById('address').value);

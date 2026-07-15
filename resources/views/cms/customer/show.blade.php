@@ -1,238 +1,285 @@
 @extends('cms.parent')
 
-@section('title', 'عرض بيانات مشرفين')
+@section('title', 'عرض زبون')
 
-@section('styles' )
-
+@section('styles')
 <style>
-    .admin-page {
+    .form-card {
+        background: #fff;
+        border-radius: 15px;
         padding: 30px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
     }
 
-    .admin-card {
-        background: white;
-        padding: 25px;
-        border-radius: 18px;
-        box-shadow: 0 5px 25px #00000010;
+    .form-card .form-label {
+        font-weight: 600;
+        color: #2d3436;
     }
 
-
-    .add-btn {
-
-        background: #ffbf00;
-        color: #14213d;
-        border: none;
-        padding: 12px 20px;
+    .form-card .form-control,
+    .form-card .form-select {
         border-radius: 10px;
-        font-weight: bold;
-
+        border: 2px solid #e9ecef;
+        padding: 10px 15px;
+        background-color: #f8f9fa;
     }
 
-    .form-group {
+    .image-display {
+        width: 100%;
+        max-width: 250px;
+        height: 250px;
+        border-radius: 15px;
+        border: 2px solid #e9ecef;
+        overflow: hidden;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    .image-display img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .image-display .no-image {
+        color: #adb5bd;
+        text-align: center;
+    }
+
+    .image-display .no-image i {
+        font-size: 3rem;
+        display: block;
         margin-bottom: 10px;
     }
 
-    .form-label {
-        font-weight: 600;
-        color: #14213d;
+    .info-box {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 12px 15px;
+        margin-top: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-right: 3px solid #FFC107;
     }
 
-    .form-control,
-    .form-select {
-        height: 45px;
+    .info-box .info-label {
+        font-size: 13px;
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .info-box .info-value {
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d3436;
+    }
+
+    .btn-submit {
+        padding: 12px 40px;
         border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+    }
+
+    .btn-back {
+        padding: 12px 30px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-back:hover {
+        transform: translateY(-2px);
+    }
+
+    .badge-status {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+        .form-card {
+            padding: 20px;
+        }
+        .image-display {
+            max-width: 100%;
+            height: 200px;
+        }
     }
 </style>
-
 @endsection
 
-@section('main_content')
-
-عرض بيانات مشرفين
-
-@endsection
-
-
-
+@section('main_content', 'عرض زبون')
 
 @section('content')
-<div class="main-content">
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="card invoice-container">
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="form-card">
 
-                <form id="admin-form">
+            <!-- عنوان الصفحة -->
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <div>
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-user-circle text-warning"></i> عرض زبون
+                    </h5>
+                    <p class="text-muted small mb-0">{{ $customers->user->name ?? 'غير محدد' }}</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{{ route('customers.edit', $customers->id) }}" class="btn btn-warning btn-sm">
+                        <i class="fas fa-edit"></i> تعديل
+                    </a>
+                    <a href="{{ route('customers.index') }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-arrow-right"></i> العودة
+                    </a>
+                </div>
+            </div>
 
-                    <div class="card-header d-flex align-items-center">
-                        <h5>عرض بيانات مشرف</h5>
-                        <div class="page-header-right ms-auto">
-                            <div class="page-header-right-items">
-                                <div class="d-flex d-md-none">
-                                    <a href="javascript:void(0)" class="page-header-right-close-toggle">
-                                        <i class="feather-arrow-left me-2"></i>
-                                        <span>Back</span>
-                                    </a>
-                                </div>
-                                <div class="buttons">
+            <!-- عرض الأخطاء -->
+            <div id="error_alert" class="alert alert-danger" hidden>
+                <ul id="error_messages_ul"></ul>
+            </div>
 
-                                    <a href="{{ route('admins.index') }}" class="btn btn-info">Go Back</a>
-                                </div>
+            <div class="row g-4">
+
+                <!-- الصورة -->
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">الصورة الشخصية</label>
+                    <div class="image-display">
+                        @if($customers->user && $customers->user->image)
+                            <img src="{{ asset('storage/images/customer/' . $customers->user->image) }}" alt="{{ $customers->user->name }}">
+                        @else
+                            <div class="no-image">
+                                <i class="fas fa-user"></i>
+                                <span>لا توجد صورة</span>
                             </div>
-                            <div class="d-md-none d-flex align-items-center">
-                                <a href="javascript:void(0)" class="page-header-right-open-toggle">
-                                    <i class="feather-align-right fs-20"></i>
-                                </a>
-                            </div>
+                        @endif
+                    </div>
+
+                    <!-- معلومات إضافية -->
+                    <div class="mt-4">
+                        <div class="info-box">
+                            <span class="info-label"><i class="fas fa-calendar text-warning"></i> تاريخ الإضافة</span>
+                            <span class="info-value">{{ $customers->created_at ? $customers->created_at->format('Y-m-d h:i A') : '-' }}</span>
+                        </div>
+                        <div class="info-box">
+                            <span class="info-label"><i class="fas fa-clock text-warning"></i> آخر تحديث</span>
+                            <span class="info-value">{{ $customers->updated_at ? $customers->updated_at->format('Y-m-d h:i A') : '-' }}</span>
                         </div>
                     </div>
+                </div>
 
-                    <div class="card-body p-4">
-                        <div class="row g-4">
+                <!-- التفاصيل -->
+                <div class="col-md-8">
+                    <div class="row g-3">
 
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="first_name">ادخل الاسم الأول</label>
-                                    <input disabled type="text" id="first_name" name="first_name" class="form-control" placeholder="تعديل الاسم الأول..." value="{{ $admins->user->first_name }}">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="last_name">ادخل الاسم الثاني</label>
-                                    <input disabled type="text" id="last_name" name="last_name" class="form-control" placeholder="تعديل الاسم الثاني..." value="{{ $admins->user->last_name }}">
-                                </div>
-                            </div>
-                            {{-- لو خليتها هيك بهذه الواجهة مش حتظهر الصورة
-                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label" for="image">الصورة</label>
-                                    <input disabled type="file" id="image" name="image" class="form-control" accept="image/*">
-                                </div>
-                            </div> --}}
-                            {{-- <div class="col-md-6">
-                     <div class="form-group">
-                       <label disabled class="form-label">الصورة</label>
-                  <div>
-        
-                <img src="{{ asset('storage/images/admin/'.$admin->user->image) }}"
-                            width="150"
-                            height="150"
-                            style="border-radius:10px; object-fit:contain;">
-
+                        <!-- الاسم -->
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fas fa-user text-warning"></i> الاسم الكامل</label>
+                            <input type="text" class="form-control" value="{{ $customers->user->name ?? '-' }}" disabled readonly>
                         </div>
+
+                        <!-- اسم المستخدم -->
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fas fa-user-tag text-warning"></i> اسم المستخدم</label>
+                            <input type="text" class="form-control" value="{{ $customers->user->user_name ?? '-' }}" disabled readonly>
+                        </div>
+
+                        <!-- البريد الإلكتروني -->
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fas fa-envelope text-warning"></i> البريد الإلكتروني</label>
+                            <input type="text" class="form-control" value="{{ $customers->user->email ?? '-' }}" disabled readonly>
+                        </div>
+
+                        <!-- رقم الهوية -->
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fas fa-id-card text-warning"></i> رقم الهوية</label>
+                            <input type="text" class="form-control" value="{{ $customers->id_number ?? '-' }}" disabled readonly>
+                        </div>
+
+                        <!-- رقم الهاتف -->
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fas fa-phone text-warning"></i> رقم الهاتف</label>
+                            <input type="text" class="form-control" value="{{ $customers->user->mobile ?? '-' }}" disabled readonly>
+                        </div>
+
+                        <!-- العنوان -->
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fas fa-map-marker-alt text-warning"></i> العنوان</label>
+                            <input type="text" class="form-control" value="{{ $customers->user->address ?? '-' }}" disabled readonly>
+                        </div>
+
+                        <!-- تاريخ الميلاد -->
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fas fa-calendar text-warning"></i> تاريخ الميلاد</label>
+                            <input type="text" class="form-control" value="{{ $customers->user->date ? $customers->user->date : '-' }}" disabled readonly>
+                        </div>
+
+                        <!-- الجنس -->
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fas fa-venus-mars text-warning"></i> الجنس</label>
+                            <input type="text" class="form-control" value="{{ $customers->user->gender == 'male' ? 'ذكر' : ($customers->user->gender == 'female' ? 'أنثى' : '-') }}" disabled readonly>
+                        </div>
+
+                        <!-- الحالة -->
+                        <div class="col-md-12">
+                            <label class="form-label"><i class="fas fa-toggle-on text-warning"></i> حالة الحساب</label>
+                            <div>
+                                @if($customers->user && $customers->user->status == 'active')
+                                    <span class="badge bg-success badge-status">✅ فعال</span>
+                                @elseif($customers->user && $customers->user->status == 'inactive')
+                                    <span class="badge bg-danger badge-status">❌ غير فعال</span>
+                                @elseif($customers->user && $customers->user->status == 'pending')
+                                    <span class="badge bg-warning text-dark badge-status">⏳ قيد التنفيذ</span>
+                                @elseif($customers->user && $customers->user->status == 'blocked')
+                                    <span class="badge bg-dark badge-status">🚫 محظور</span>
+                                @else
+                                    <span class="badge bg-secondary badge-status">غير محدد</span>
+                                @endif
+                            </div>
+                        </div>
+
                     </div>
-            </div> --}}
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label">الصورة</label>
-
-                    <div>
-                        <img src="{{ asset('storage/images/admin/'.$admins->user->image) }}"
-                            width="150"
-                            height="150"
-                            style="border-radius:10px; object-fit:contain;">
-                    </div>
-
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label" for="mobile">ادخل الموبايل</label>
-                    <input disabled type="text" id="mobile" name="mobile" class="form-control" placeholder="تعديل الموبايل..." value="{{ $admins->user->mobile }}">
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label" for="email">ادخل البريد</label>
-                    <input disabled type="email" id="email" name="email" class="form-control" placeholder="تعديل البريد..." value="{{ $admins->email }}">
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label" for="address">العنوان</label>
-                    <input disabled type="text" id="address" name="address" class="form-control" placeholder="العنوان.." value="{{ $admins->user->address }}">
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label" for="date">ادخل تاريخ الميلاد</label>
-                    <input disabled type="date" id="date" name="date" class="form-control" value="{{ $admins->user->date }}">
-                </div>
-            </div>
-
-
-
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label" for="status">الحالة</label>
-                    <select disabled id="status" name="status" class="form-select">
-                        <option value="active" {{ old('status', $admins->user->status) == 'active' ? 'selected' : '' }}>فعال</option>
-                        <option value="in_active" {{ old('status', $admins->user->status) == 'in_active' ? 'selected' : '' }}>غير فعال</option>
-                        <option value="pending" {{ old('status', $admins->user->status) == 'pending' ? 'selected' : '' }}>قيد التنفيذ</option>
-                        <option value="blocked" {{ old('status', $admins->user->status) == 'blocked' ? 'selected' : '' }}>محظور</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label" for="gender">الجنس</label>
-                    <select disabled id="gender" name="gender" class="form-select">
-                        <option value="male" {{ old('gender', $admins->user->gender) == 'male' ? 'selected' : '' }}>ذكر</option>
-                        <option value="female" {{ old('gender', $admins->user->gender) == 'female' ? 'selected' : '' }}>انثى</option>
-                    </select>
-                </div>
+            <!-- أزرار الإجراء -->
+            <div class="d-flex gap-3 mt-4 pt-3 border-top">
+                <a href="{{ route('customers.edit', $customers->id) }}" class="btn btn-warning btn-submit">
+                    <i class="fas fa-edit"></i> تعديل
+                </a>
+                <button class="btn btn-danger btn-submit" onclick="performDestroy('{{ $customers->id }}', this)">
+                    <i class="fas fa-trash-alt"></i> حذف
+                </button>
+                <a href="{{ route('customers.index') }}" class="btn btn-outline-secondary btn-back ms-auto">
+                    <i class="fas fa-arrow-right"></i> العودة إلى القائمة
+                </a>
             </div>
 
         </div>
     </div>
-    </form>
-
-</div>
-</div>
-</div>
 </div>
 @endsection
 
 @section('scripts')
-
-
-
 <script>
-    function performStore() {
-        const form = document.getElementById('admin-form');
-        let formData = new FormData(form);
-
-        // إرسال البيانات
-        // store('/cms/admin/deanships', formData , 'deanship-form');
-        store('/cms/admin/admins', formData);
+    // ============================================
+    // حذف الزبون
+    // ============================================
+    function performDestroy(id, reference) {
+        confirmDestroy('/cms/admin/customers/' + id, reference);
     }
+
+    console.log('✅ صفحة عرض الزبون جاهزة');
 </script>
-<script>
-    function performUpdate(id) {
-
-        let formData = new FormData();
-
-        formData.append('first_name', document.getElementById('first_name').value);
-        formData.append('last_name', document.getElementById('last_name').value);
-        formData.append('email', document.getElementById('email').value);
-        formData.append('mobile', document.getElementById('mobile').value);
-        formData.append('address', document.getElementById('address').value);
-        formData.append('date', document.getElementById('date').value);
-        formData.append('status', document.getElementById('status').value);
-        formData.append('gender', document.getElementById('gender').value);
-        if (document.getElementById('image').files[0]) {
-            formData.append('image', document.getElementById('image').files[0]);
-        }
-        // إرسال البيانات 
-        storeRoute('/cms/admin/admins_update/' + id, formData);
-    }
-</script>
-
 @endsection

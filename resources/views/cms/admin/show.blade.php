@@ -5,6 +5,7 @@
 @section('styles' )
 
 <style>
+
 .admin-page{
     padding:30px;
 }
@@ -18,30 +19,30 @@
 
 .add-btn{
 
-    background:#ffbf00;
-    color:#14213d;
-    border:none;
-    padding:12px 20px;
-    border-radius:10px;
-    font-weight:bold;
+    
+        background: #ffbf00;
+        color: #14213d;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-weight: bold;
 
-}
-.form-group{
-    margin-bottom: 10px;
-}
+    }
 
-.form-label{
-    font-weight:600;
-    color:#14213d;
-}
+    .form-group {
+        margin-bottom: 10px;
+    }
 
-.form-control,
-.form-select{
-    height:45px;
-    border-radius:10px;
-}
+    .form-label {
+        font-weight: 600;
+        color: #14213d;
+    }
 
-
+    .form-control,
+    .form-select {
+        height: 45px;
+        border-radius: 10px;
+    }
 </style>
 
 @endsection
@@ -60,9 +61,9 @@
     <div class="row">
         <div class="col-xl-12">
             <div class="card invoice-container">
-                
+
                 <form id="admin-form">
-                    
+
                     <div class="card-header d-flex align-items-center">
                         <h5>عرض بيانات مشرف</h5>
                         <div class="page-header-right ms-auto">
@@ -74,7 +75,7 @@
                                     </a>
                                 </div>
                                 <div class="buttons">
-                                    
+
                                     <a href="{{ route('admins.index') }}" class="btn btn-info">Go Back</a>
                                 </div>
                             </div>
@@ -88,41 +89,41 @@
 
                     <div class="card-body p-4">
                         <div class="row g-4">
-                            
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label" for="name">ادخل الاسم </label>
                                     <input disabled type="text" id="name" name="name" class="form-control" placeholder="تعديل الاسم ..." value="{{ $admins->name }}">
-                                </div> 
+                                </div>
                             </div>
-                            
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label" for="user_name">اسم المستخدم</label>
                                     <input disabled type="text" id="user_name" name="user_name" class="form-control" placeholder="تعديل اسم المستخدم..." value="{{ $admins->user_name}}">
                                 </div>
                             </div>
-                           
-                          
-                          <div class="col-md-6">
-                    <div class="form-group">
-                   <label class="form-label">الصورة</label>
 
-                  <div>
-          <img src="{{ asset('storage/images/admin/'.$admins->image) }}"
-     width="50"
-     height="50"
-     style="border-radius:10px; object-fit:contain;">
-        </div>
 
-    </div>
-</div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">الصورة</label>
+
+                                    <div>
+                                        <img src="{{ asset('storage/images/admin/'.$admins->image) }}"
+                                            width="50"
+                                            height="50"
+                                            style="border-radius:10px; object-fit:contain;">
+                                    </div>
+
+                                </div>
+                            </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label" for="mobile">ادخل الموبايل</label>
                                     <input disabled type="text" id="mobile" name="mobile" class="form-control" placeholder="تعديل الموبايل..." value="{{ $admins->mobile }}">
-                                </div> 
+                                </div>
                             </div>
 
                             <div class="col-md-6">
@@ -146,8 +147,8 @@
                                 </div>
                             </div>
 
-                            
-    
+
+
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -171,7 +172,9 @@
                                 </div>
                             </div>
 
-                        </div> </div> </form>
+                        </div>
+                    </div>
+                </form>
 
             </div>
         </div>

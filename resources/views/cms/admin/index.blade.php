@@ -396,6 +396,3 @@ data-bs-target="#addCategoryModal">
     }
 </script>
 @endsection
-
-
-

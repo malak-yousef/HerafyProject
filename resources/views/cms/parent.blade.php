@@ -43,7 +43,7 @@
                     <i class="fas fa-chart-pie"></i> الرئيسية
                 </a>
             </li>
-            
+
             <!-- المستخدمين -->
             <li class="nav-item">
                 <a class="nav-link" href="users.html">
@@ -52,10 +52,6 @@
                 </a>
             </li>
 
-            
-           
-
-           
             <!-- الحرفين -->
             <li class="nav-item">
                 <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'craftmenMenu')">
@@ -83,11 +79,11 @@
                     <li><a href="{{ route('portfolios_trashed') }}"> <i class="fas fa-trash"></i> مشاريع الحرفيين المحذوفة</a></li>
                 </ul>
             </li>
-            
+
             <!-- صور مشاريع الحرفين -->
             <li class="nav-item">
                 <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'portfolio_imagesMenu')">
-                    <i class="fas fa-tools"></i>معرض مشاريع الحرفيين 
+                    <i class="fas fa-tools"></i>معرض مشاريع الحرفيين
                     <i class="fas fa-angle-left arrow"></i>
                 </a>
                 <ul class="submenu" id="portfolio_imagesMenu" style="display:none;">
@@ -99,29 +95,13 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="requests.html">
-                    <i class="fas fa-clipboard-list"></i> الطلبات
-                    <span class="badge" id="requestsBadge">0</span>
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="offers.html">
                     <i class="fas fa-handshake"></i> العروض
                     <span class="badge" id="offersBadge">0</span>
                 </a>
             </li>
 
-                  
-
-
-
-          
-
-
-           
-
-           
-
+            <!-- التصنيفات -->
             <li class="nav-item">
                 <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'categoryMenu')">
                     <i class="fas fa-tools"></i> التصنيفات
@@ -134,7 +114,7 @@
                 </ul>
             </li>
 
-
+            <!-- المهن -->
             <li class="nav-item">
                 <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'professionsMenu')">
                     <i class="fas fa-tools"></i> المهن
@@ -147,11 +127,8 @@
                 </ul>
             </li>
 
-
-             
-
-
- <li class="nav-item">
+            <!-- المشرفين -->
+            <li class="nav-item">
                 <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'adminsMenu')">
                     <i class="fas fa-tools"></i> المشرفين
                     <i class="fas fa-angle-left arrow"></i>
@@ -160,15 +137,29 @@
                     <li><a href="{{ route('admins.index') }}"><i class="fas fa-user-shield"></i> عرض المشرفين</a></li>
                     <li><a href="{{ route('admins.create') }}"><i class="fas fa-user-plus"></i> إضافة مشرف</a></li>
                 </ul>
-            </li>  
+            </li>
 
+            <!-- الزبائن -->
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'customersMenu')">
+                    <i class="fas fa-tools"></i> الزبائن
+                    <i class="fas fa-angle-left arrow"></i>
+                </a>
+                <ul class="submenu" id="customersMenu" style="display:none;">
+                    <li><a href="{{ route('customers.index') }}"><i class="fas fa-user-shield"></i> عرض الزبائن</a></li>
+                    <li><a href="{{ route('customers.create') }}"><i class="fas fa-user-plus"></i> إضافة زبون</a></li>
+                </ul>
+            </li>
 
-              <li class="nav-item">
+            <!-- الطلبات -->
+            <li class="nav-item">
                 <a class="nav-link" href="requests.html">
                     <i class="fas fa-clipboard-list"></i> الطلبات
                     <span class="badge" id="requestsBadge">0</span>
                 </a>
             </li>
+
+            <!-- العروض -->
             <li class="nav-item">
                 <a class="nav-link" href="offers.html">
                     <i class="fas fa-handshake"></i> العروض
@@ -176,21 +167,22 @@
                 </a>
             </li>
 
-
-        
-
-
+            <!-- الاعدادات -->
             <li class="nav-item">
                 <a class="nav-link" href="settings.html">
                     <i class="fas fa-cog"></i> الإعدادات
                 </a>
             </li>
+
+            <!-- تعديل سريع -->
             <li class="nav-item">
                 <a class="nav-link text-info" href="#" onclick="quickEdit()">
                     <i class="fas fa-pen-fancy"></i> تعديل سريع
                     <!-- <span class="badge bg-info text-white">جديد</span> -->
                 </a>
             </li>
+
+            <!-- تسجيل الخروج -->
             <li class="nav-item mt-2">
                 <a class="nav-link text-danger" href="#" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
@@ -538,14 +530,12 @@
                 menu.style.display = "block";
                 arrow.style.transform = "rotate(90deg)";
             }
-    
 
-            
-    
+
+
+
 
         }
-   
-            
     </script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -1,254 +1,241 @@
 @extends('cms.parent')
 
-@section('title', 'الحرفيون المحذوفون')
+@section('title', 'الحرفيون')
 
 @section('styles')
 <style>
-/* تنسيق الصورة في الجدول */
-.craftsman-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #FFC107;
-}
-
-.craftsman-avatar-sm {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-/* تنسيق البادجات */
-.badge-status {
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 500;
-}
-
-/* تنسيق أزرار الإجراءات */
-.action-btns {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-}
-
-.action-btn {
-    width: 32px;
-    height: 32px;
-    border: none;
-    border-radius: 8px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    color: #fff;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.action-btn:hover {
-    transform: scale(1.15);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-}
-
-.action-btn.btn-edit {
-    background: #6c5ce7;
-}
-
-.action-btn.btn-edit:hover {
-    background: #5a4bd1;
-}
-
-.action-btn.btn-view {
-    background: #fdcb6e;
-    color: #2d3436;
-}
-
-.action-btn.btn-view:hover {
-    background: #fdcb6e;
-}
-
-.action-btn.btn-toggle {
-    background: #0984e3;
-}
-
-.action-btn.btn-toggle:hover {
-    background: #0770c4;
-}
-
-.action-btn.btn-delete {
-    background: #e17055;
-}
-
-.action-btn.btn-delete:hover {
-    background: #d63031;
-}
-
-/* تنسيق التقييم بالنجوم */
-.stars {
-    color: #fdcb6e;
-    letter-spacing: 2px;
-    font-size: 14px;
-}
-
-.stars .empty {
-    color: #dfe6e9;
-}
-
-/* تنسيق الجدول */
-.table-container {
-    background: #fff;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-}
-
-.table-container .table-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.table-container .table-header input {
-    border-radius: 10px;
-    border: 2px solid #e9ecef;
-    padding: 8px 15px;
-    transition: all 0.3s ease;
-    max-width: 300px;
-}
-
-.table-container .table-header input:focus {
-    border-color: #FFC107;
-    box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
-}
-
-.table-container table th {
-    background: #f8f9fa;
-    color: #2d3436;
-    font-weight: 600;
-    border-bottom: 2px solid #e9ecef;
-    white-space: nowrap;
-    font-size: 13px;
-}
-
-.table-container table td {
-    vertical-align: middle;
-    font-size: 14px;
-}
-
-.table-responsive {
-    max-height: 550px;
-    overflow-y: auto;
-}
-
-.table-responsive::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-
-.table-responsive::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-.table-responsive::-webkit-scrollbar-thumb {
-    background: #FFC107;
-    border-radius: 10px;
-}
-
-/* تنسيق الـ Pagination */
-.card-footer {
-    background: transparent;
-    border-top: 1px solid #e9ecef;
-    padding: 15px 0 0;
-}
-
-.card-footer .pagination {
-    margin-bottom: 0;
-    justify-content: center;
-}
-
-.card-footer .pagination .page-link {
-    border-radius: 8px;
-    margin: 0 3px;
-    color: #2d3436;
-    border: 1px solid #e9ecef;
-    transition: all 0.3s ease;
-}
-
-.card-footer .pagination .page-link:hover {
-    background: #FFC107;
-    border-color: #FFC107;
-    color: #fff;
-}
-
-.card-footer .pagination .active .page-link {
-    background: #FFC107;
-    border-color: #FFC107;
-    color: #fff;
-}
-
-/* تنسيق الجوال */
-@media (max-width: 768px) {
-    .table-container {
-        padding: 15px;
+    /* تنسيق الصورة في الجدول */
+    .craftsman-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #FFC107;
     }
 
-    .table-container .table-header {
-        flex-direction: column;
-        align-items: stretch;
+    .avatar-placeholder {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #FFC107;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 18px;
     }
 
-    .table-container .table-header input {
-        max-width: 100%;
+    /* تنسيق البادجات */
+    .badge-status {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
     }
 
+    /* تنسيق أزرار الإجراءات */
     .action-btns {
-        gap: 3px;
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
     }
 
     .action-btn {
-        width: 28px;
-        height: 28px;
-        font-size: 12px;
+        width: 32px;
+        height: 32px;
+        border: none;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        color: #fff;
+        cursor: pointer;
+        text-decoration: none;
     }
-}
 
-/* تنسيق الصورة الافتراضية */
-.avatar-placeholder {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #FFC107;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-weight: 700;
-    font-size: 18px;
-}
+    .action-btn:hover {
+        transform: scale(1.15);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .action-btn.btn-edit {
+        background: #6c5ce7;
+    }
+
+    .action-btn.btn-edit:hover {
+        background: #5a4bd1;
+    }
+
+    .action-btn.btn-view {
+        background: #fdcb6e;
+        color: #2d3436;
+    }
+
+    .action-btn.btn-view:hover {
+        background: #fdcb6e;
+    }
+
+    .action-btn.btn-toggle {
+        background: #0984e3;
+    }
+
+    .action-btn.btn-toggle:hover {
+        background: #0770c4;
+    }
+
+    .action-btn.btn-delete {
+        background: #e17055;
+    }
+
+    .action-btn.btn-delete:hover {
+        background: #d63031;
+    }
+
+    /* تنسيق الجدول */
+    .table-container {
+        background: #fff;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .table-container .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .table-container .table-header input {
+        border-radius: 10px;
+        border: 2px solid #e9ecef;
+        padding: 8px 15px;
+        transition: all 0.3s ease;
+        max-width: 300px;
+    }
+
+    .table-container .table-header input:focus {
+        border-color: #FFC107;
+        box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+    }
+
+    .table-container table th {
+        background: #f8f9fa;
+        color: #2d3436;
+        font-weight: 600;
+        border-bottom: 2px solid #e9ecef;
+        white-space: nowrap;
+        font-size: 13px;
+    }
+
+    .table-container table td {
+        vertical-align: middle;
+        font-size: 14px;
+    }
+
+    .table-responsive {
+        max-height: 550px;
+        overflow-y: auto;
+    }
+
+    .table-responsive::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    .table-responsive::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: #FFC107;
+        border-radius: 10px;
+    }
+
+    /* تنسيق الـ Pagination */
+    .card-footer {
+        background: transparent;
+        border-top: 1px solid #e9ecef;
+        padding: 15px 0 0;
+    }
+
+    .card-footer .pagination {
+        margin-bottom: 0;
+        justify-content: center;
+    }
+
+    .card-footer .pagination .page-link {
+        border-radius: 8px;
+        margin: 0 3px;
+        color: #2d3436;
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+
+    .card-footer .pagination .page-link:hover {
+        background: #FFC107;
+        border-color: #FFC107;
+        color: #fff;
+    }
+
+    .card-footer .pagination .active .page-link {
+        background: #FFC107;
+        border-color: #FFC107;
+        color: #fff;
+    }
+
+    /* تنسيق الجوال */
+    @media (max-width: 768px) {
+        .table-container {
+            padding: 15px;
+        }
+
+        .table-container .table-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .table-container .table-header input {
+            max-width: 100%;
+        }
+
+        .action-btns {
+            gap: 3px;
+        }
+
+        .action-btn {
+            width: 28px;
+            height: 28px;
+            font-size: 12px;
+        }
+    }
 </style>
 @endsection
 
-@section('main_content', ' الحرفيون المحذوفون')
+@section('main_content', 'الحرفيون')
 
 @section('content')
-<div id="section-craftsmen" class="section-content">
+<div class="section-content">
     <div class="d-flex justify-content-between align-items-center mb-4">
-
+        <div>
+            <h4 class="fw-bold mb-0">🔧 إدارة الحرفيين</h4>
+            <p class="text-muted small">عرض وإدارة جميع الحرفيين المسجلين</p>
+        </div>
         <div class="d-flex gap-2">
             <a href="{{ route('craftmen.create') }}" class="btn btn-success btn-sm">
                 <i class="fas fa-plus"></i> إضافة حرفي
             </a>
-            <a class="btn btn-warning btn-sm" href="{{ route('craftmen_destroy_all') }}">
-                <i class="fas fa-trash-alt"></i> حذف جميع الحرفيون
+            <a class="btn btn-warning btn-sm" href="{{ route('craftmen.index') }}">
+                <i class="fas fa-arrow-left"></i> عودة
             </a>
+            <button onclick="performDestroy()" class="btn btn-danger btn-sm">   
+                <i class="fas fa-trash-alt"></i> حذف نهائي
+            </button>
         </div>
     </div>
 
@@ -262,6 +249,8 @@
                     <option value="all">جميع الحالات</option>
                     <option value="active">فعال</option>
                     <option value="inactive">غير فعال</option>
+                    <option value="pending">قيد التنفيذ</option>
+                    <option value="blocked">محظور</option>
                 </select>
             </div>
             
@@ -276,8 +265,8 @@
                         <th>الاسم</th>
                         <th>الحرفة</th>
                         <th style="width: 80px;">الخبرة</th>
-                        <th style="width: 120px;">التقييم</th>
-                        <th style="width: 100px;">عدد التقييمات</th>
+                        <th style="width: 100px;">رقم الهاتف</th>
+                        <th style="width: 120px;">العنوان</th>
                         <th style="width: 120px;">تاريخ الانضمام</th>
                         <th style="width: 90px;">الحالة</th>
                         <th style="width: 180px;">الإجراءات</th>
@@ -286,75 +275,57 @@
                 <tbody id="craftsmenTableBody">
                     @forelse($craftmen as $craftman)
                     <tr>
-                        <td>{{ $craftman->id }}</td>
+                        <td>{{ $loop->iteration }}</td>
                         <td>
-                            @if($craftman->profile_image)
-                            <img src="{{ asset($craftman->profile_image) }}" alt="{{ $craftman->name }}"
-                                class="craftsman-avatar">
+                            @if($craftman->user && $craftman->user->image)
+                            <img src="{{ asset('storage/images/craftman/' . $craftman->user->image) }}" alt="{{ $craftman->user->name }}" class="craftsman-avatar">
                             @else
                             <span class="avatar-placeholder">
-                                {{ substr($craftman->name, 0, 1) }}
+                                {{ $craftman->user ? substr($craftman->user->name, 0, 1) : '?' }}
                             </span>
                             @endif
                         </td>
                         <td>
-                            <strong>{{ $craftman->name }}</strong>
+                            <strong>{{ $craftman->user->name ?? 'غير محدد' }}</strong>
                             <br>
-                            <small class="text-muted">{{ $craftman->email ?? 'لا يوجد بريد' }}</small>
+                            <small class="text-muted">{{ $craftman->user->email ?? 'لا يوجد بريد' }}</small>
                         </td>
                         <td>
                             <span class="badge bg-warning text-dark">{{ $craftman->craft_name }}</span>
                         </td>
                         <td>{{ $craftman->experience_years ?? 0 }} سنة</td>
-                        <td>
-                            <div class="stars">
-                                @php
-                                $fullStars = floor($craftman->rating ?? 0);
-                                $halfStar = ($craftman->rating ?? 0) - $fullStars >= 0.5 ? 1 : 0;
-                                $emptyStars = 5 - $fullStars - $halfStar;
-                                @endphp
-                                @for($i = 0; $i < $fullStars; $i++) <i class="fas fa-star"></i>
-                                    @endfor
-                                    @if($halfStar)
-                                    <i class="fas fa-star-half-alt"></i>
-                                    @endif
-                                    @for($i = 0; $i < $emptyStars; $i++) <i class="fas fa-star empty"></i>
-                                        @endfor
-                                        <span
-                                            class="text-muted small">({{ number_format($craftman->rating ?? 0, 1) }})</span>
-                            </div>
-                        </td>
-                        <td>{{ $craftman->total_reviews ?? 0 }}</td>
+                        <td>{{ $craftman->user->mobile ?? '-' }}</td>
+                        <td>{{ $craftman->user->address ?? '-' }}</td>
                         <td>{{ $craftman->created_at ? $craftman->created_at->format('Y-m-d') : '-' }}</td>
                         <td>
-                            @if($craftman->is_active)
+                            @if($craftman->user && $craftman->user->status == 'active')
                             <span class="badge bg-success badge-status">✅ فعال</span>
-                            @else
+                            @elseif($craftman->user && $craftman->user->status == 'inactive')
                             <span class="badge bg-danger badge-status">❌ غير فعال</span>
+                            @elseif($craftman->user && $craftman->user->status == 'pending')
+                            <span class="badge bg-warning text-dark badge-status">⏳ قيد التنفيذ</span>
+                            @elseif($craftman->user && $craftman->user->status == 'blocked')
+                            <span class="badge bg-dark badge-status">🚫 محظور</span>
+                            @else
+                            <span class="badge bg-secondary badge-status">غير محدد</span>
                             @endif
                         </td>
                         <td>
                             <div class="action-btns">
                                 {{-- عرض --}}
-                                <a href="{{ route('craftmen.show' , $craftman->id) }}" class="action-btn btn-view"
-                                    title="عرض">
-                                    <button class="action-btn btn-view" title="عرض التفاصيل">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
+                                <a href="{{ route('craftmen.show', $craftman->id) }}" class="action-btn btn-view" title="عرض التفاصيل">
+                                    <i class="fas fa-eye"></i>
                                 </a>
 
-                                {{-- اعادة --}}
-                                <a href="{{ route('craftmen_restore' , $craftman->id) }}" class="action-btn btn-edit"
-                                    title="اعادة">
-                                    <i class="fas fa-undo"></i>
+                                {{-- تعديل --}}
+                                <a href="{{ route('craftmen.edit', $craftman->id) }}" class="action-btn btn-edit" title="تعديل">
+                                    <i class="fas fa-edit"></i>
                                 </a>
 
                                 {{-- حذف --}}
-                                <a href="{{ route('craftmen_force_destroy' , $craftman->id) }}" class="action-btn btn-delete"
-                                    title="حذف بشكل دائم">
+                                <button class="action-btn btn-delete" onclick="performDestroy('{{ $craftman->id }}', this)" title="حذف">
                                     <i class="fas fa-trash-alt"></i>
-                                </a>
-
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -374,90 +345,102 @@
             </table>
         </div>
 
-        <!-- Pagination -->
-       
+        
     </div>
 </div>
 @endsection
 
 @section('scripts')
 <script>
-// ============================================
-// 1. عرض تفاصيل الحرفي
-// ============================================
-function viewCraftsman(id) {
-    // جلب البيانات من الـ API
-    fetch(`/admin/craftsmen/${id}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'خطأ',
-                    text: data.error,
-                    confirmButtonColor: '#FFC107'
-                });
-                return;
+    // ============================================
+    // 2. حذف الحرفي
+    // ============================================
+    function performDestroy(id, reference) {
+        confirmDestroy('/cms/admin/craftmen/' + id, reference);
+    }
+
+    // ============================================
+    // 3. فلترة الجدول
+    // ============================================
+    function filterTable() {
+        const searchText = document.getElementById('searchCraftsmen').value.toLowerCase().trim();
+        const statusFilter = document.getElementById('filterStatus').value;
+        const rows = document.querySelectorAll('#craftsmenTableBody tr');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const name = row.querySelector('td:nth-child(3) strong')?.textContent?.toLowerCase() || '';
+            const craft = row.querySelector('td:nth-child(4) .badge')?.textContent?.toLowerCase() || '';
+            const phone = row.querySelector('td:nth-child(6)')?.textContent?.toLowerCase() || '';
+            const statusBadge = row.querySelector('td:nth-child(9) .badge')?.textContent?.trim() || '';
+
+            let isActive = statusBadge.includes('فعال');
+            let isBlocked = statusBadge.includes('محظور');
+
+            let status = 'active';
+            if (isBlocked) status = 'blocked';
+            else if (statusBadge.includes('غير فعال')) status = 'inactive';
+            else if (statusBadge.includes('قيد التنفيذ')) status = 'pending';
+
+            let show = true;
+
+            if (searchText && !name.includes(searchText) && !craft.includes(searchText) && !phone.includes(searchText)) {
+                show = false;
             }
 
-            // حساب التقييم بالنجوم
-            const rating = data.rating || 0;
-            const fullStars = Math.floor(rating);
-            const hasHalf = rating - fullStars >= 0.5;
-            let starsHTML = '';
-            for (let i = 0; i < fullStars; i++) {
-                starsHTML += '<i class="fas fa-star text-warning"></i>';
-            }
-            if (hasHalf) {
-                starsHTML += '<i class="fas fa-star-half-alt text-warning"></i>';
-            }
-            for (let i = 0; i < 5 - fullStars - (hasHalf ? 1 : 0); i++) {
-                starsHTML += '<i class="fas fa-star text-muted"></i>';
+            if (statusFilter !== 'all' && status !== statusFilter) {
+                show = false;
             }
 
-            Swal.fire({
-                title: `🔧 ${data.name}`,
-                html: `
-                        <div class="text-start">
-                            <div class="text-center mb-3">
-                                ${data.profile_image ? 
-                                    `<img src="{{ asset('') }}${data.profile_image}" style="width:100px;height:100px;border-radius:50%;border:3px solid #FFC107;">` :
-                                    `<div style="width:100px;height:100px;border-radius:50%;background:#FFC107;display:inline-flex;align-items:center;justify-content:center;font-size:40px;color:#fff;font-weight:700;">${data.name.charAt(0)}</div>`
-                                }
-                            </div>
-                            <p><strong>الاسم:</strong> ${data.name}</p>
-                            <p><strong>الحرفة:</strong> <span class="badge bg-warning text-dark">${data.craft_name}</span></p>
-                            <p><strong>سنوات الخبرة:</strong> ${data.experience_years || 0} سنة</p>
-                            <p><strong>التقييم:</strong> ${starsHTML} (${rating.toFixed(1)})</p>
-                            <p><strong>عدد التقييمات:</strong> ${data.total_reviews || 0}</p>
-                            <p><strong>البريد الإلكتروني:</strong> ${data.email || 'غير محدد'}</p>
-                            <p><strong>رقم الهاتف:</strong> ${data.phone || 'غير محدد'}</p>
-                            <p><strong>السعر بالساعة:</strong> ${data.hourly_rate ? data.hourly_rate + ' ₪' : 'غير محدد'}</p>
-                            <p><strong>السعر باليوم:</strong> ${data.daily_rate ? data.daily_rate + ' ₪' : 'غير محدد'}</p>
-                            ${data.description ? `<p><strong>الوصف:</strong> ${data.description}</p>` : ''}
-                            <p><strong>الحالة:</strong> ${data.is_active ? '✅ فعال' : '❌ غير فعال'}</p>
-                            <p><strong>تاريخ الانضمام:</strong> ${new Date(data.created_at).toLocaleDateString('ar')}</p>
-                        </div>
-                    `,
-                confirmButtonColor: '#FFC107',
-                confirmButtonText: 'إغلاق',
-                width: '550px'
-            });
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'خطأ',
-                text: 'حدث خطأ أثناء جلب البيانات',
-                confirmButtonColor: '#FFC107'
-            });
+            row.style.display = show ? '' : 'none';
+            if (show) visibleCount++;
         });
-}
 
+        const noResults = document.getElementById('noResultsMessage');
+        if (visibleCount === 0) {
+            if (!noResults) {
+                const tbody = document.getElementById('craftsmenTableBody');
+                const tr = document.createElement('tr');
+                tr.id = 'noResultsMessage';
+                tr.innerHTML = `
+                    <td colspan="10" class="text-center py-4 text-muted">
+                        <i class="fas fa-search fa-2x mb-2 d-block"></i>
+                        لا توجد نتائج تطابق البحث
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            }
+        } else {
+            if (noResults) noResults.remove();
+        }
+    }
 
-function performDestroy(id, referance) {
-    confirmDestroy('/cms/admin/craftmen/' + id, referance);
-}
+    // ============================================
+    // 4. تصدير البيانات
+    // ============================================
+    function exportData(type) {
+        Swal.fire({
+            icon: 'info',
+            title: 'جاري التصدير',
+            text: 'سيتم تصدير جميع البيانات',
+            timer: 1000,
+            showConfirmButton: false
+        }).then(() => {
+            window.location.href = `/cms/admin/${type}/export`;
+        });
+    }
+
+    // ============================================
+    // 5. إضافة مستمع للأحداث
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('searchCraftsmen')?.addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                filterTable();
+            }
+        });
+
+        console.log('✅ صفحة الحرفيين جاهزة');
+    });
 </script>
 @endsection

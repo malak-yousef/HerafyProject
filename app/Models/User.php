@@ -13,8 +13,13 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
+
     use HasFactory, Notifiable ,SoftDeletes; 
       
+
+    
+
+
     /**
      * The attributes that are mass assignable.
      *
@@ -29,8 +34,8 @@ class User extends Authenticatable
         'gender',
         'status',
         'image',
-           'address',
-            'date',
+        'address',
+        'date',
         'actor_type',
         'actor_id',
     ];
@@ -51,10 +56,11 @@ class User extends Authenticatable
      * @return array<string, string>
      */
     protected $casts = [
-           'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
     ];
-     
+
+
     public function actor(): MorphTo
     {
         return $this->morphTo();

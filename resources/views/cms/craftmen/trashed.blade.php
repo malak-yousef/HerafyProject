@@ -317,9 +317,10 @@
                                     <i class="fas fa-eye"></i>
                                 </a>
 
-                                {{-- تعديل --}}
-                                <a href="{{ route('craftmen.edit', $craftman->id) }}" class="action-btn btn-edit" title="تعديل">
-                                    <i class="fas fa-edit"></i>
+                                {{-- اعادة --}}
+                                <a href="{{ route('craftmen_restore' , $craftman->id) }}" class="action-btn btn-edit"
+                                    title="اعادة">
+                                    <i class="fas fa-undo"></i>
                                 </a>
 
                                 {{-- حذف --}}

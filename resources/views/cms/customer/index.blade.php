@@ -225,9 +225,9 @@
             <a href="{{ route('customers.create') }}" class="btn btn-success btn-sm">
                 <i class="fas fa-plus"></i> إضافة زبون
             </a>
-            <button class="btn btn-warning btn-sm" onclick="exportData('customers')">
-                <i class="fas fa-download"></i> تصدير
-            </button>
+            <a href="{{ route('customers_trashed') }}" class="btn btn-danger btn-sm">
+                <i class="fas fa-trash-alt"></i> المحذوفين
+            </a>
         </div>
     </div>
 
@@ -349,7 +349,7 @@
     // 2. حذف الزبون
     // ============================================
     function performDestroy(id, reference) {
-        confirmDestroy('/cms/customer$customer/customers/' + id, reference);
+        confirmDestroy('/cms/admin/customers/' + id, reference);
     }
 
     // ============================================

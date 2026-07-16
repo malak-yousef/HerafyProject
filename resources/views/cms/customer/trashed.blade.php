@@ -225,8 +225,13 @@
             <a href="{{ route('customers.create') }}" class="btn btn-success btn-sm">
                 <i class="fas fa-plus"></i> إضافة زبون
             </a>
-            <button class="btn btn-warning btn-sm" onclick="performDestroy()">
-                <i class="fas fa-download"></i> حذف الكل 
+
+            <a class="btn btn-warning btn-sm" href="{{ route('customers.index') }}">
+                <i class="fas fa-arrow-left"></i> عودة
+            </a>
+
+            <button class="btn btn-danger btn-sm" onclick="performDestroy()">
+                <i class="fas fa-download"></i> حذف الكل
             </button>
         </div>
     </div>
@@ -306,8 +311,11 @@
                                 <a href="{{ route('customers.show', $customer->id) }}" class="action-btn btn-view" title="عرض">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="{{ route('customers.edit', $customer->id) }}" class="action-btn btn-edit" title="تعديل">
-                                    <i class="fas fa-edit"></i>
+
+                                {{-- اعادة --}}
+                                <a href="{{ route('customers_restore' , $customer->id) }}" class="action-btn btn-edit"
+                                    title="اعادة">
+                                    <i class="fas fa-undo"></i>
                                 </a>
 
                                 <button class="action-btn btn-delete" onclick="performDestroy('{{ $customer->id }}', this)" title="حذف">
@@ -332,12 +340,6 @@
             </table>
         </div>
 
-        <!-- Pagination -->
-        @if($customers->hasPages())
-        <div class="card-footer clearfix">
-            {{ $customers->links() }}
-        </div>
-        @endif
     </div>
 </div>
 @endsection
@@ -432,7 +434,6 @@
         });
 
         console.log('✅ صفحة الزبائن جاهزة');
-        console.log('📊 عدد الزبائن: {{ $customers->total() }}');
     });
 </script>
 @endsection

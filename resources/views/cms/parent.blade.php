@@ -148,6 +148,7 @@
                 <ul class="submenu" id="customersMenu" style="display:none;">
                     <li><a href="{{ route('customers.index') }}"><i class="fas fa-user-shield"></i> عرض الزبائن</a></li>
                     <li><a href="{{ route('customers.create') }}"><i class="fas fa-user-plus"></i> إضافة زبون</a></li>
+                    <li><a href="{{ route('customers_trashed') }}"> <i class="fas fa-trash"></i> عرض الزبائن المحذوفة</a></li>
                 </ul>
             </li>
 

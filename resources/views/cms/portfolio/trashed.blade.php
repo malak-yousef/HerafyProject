@@ -230,6 +230,11 @@
             <a href="{{ route('portfolios.create') }}" class="btn btn-success btn-sm">
                 <i class="fas fa-plus"></i> إضافة معرض
             </a>
+
+            <a class="btn btn-warning btn-sm" href="{{ route('portfolios.index') }}">
+                <i class="fas fa-arrow-left"></i> عودة
+            </a>
+
             <a class="btn btn-warning btn-sm" href="{{ route('portfolios_destroy_all') }}">
                 <i class="fas fa-trash-alt"></i> حذف جميع المعارض
             </a>

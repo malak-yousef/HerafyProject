@@ -189,7 +189,7 @@ class CustomerController extends Controller
     public function trashed()
     {
         $customers = Customer::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
-        return response()->view('cms.customers.trashed', compact('customers'));
+        return response()->view('cms.customer.trashed', compact('customers'));
     }
 
     public function restore($id)

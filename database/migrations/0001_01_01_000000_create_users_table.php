@@ -16,14 +16,15 @@ return new class extends Migration
            $table->string('name');
              $table->string('user_name' ,45 )->unique();
             $table->string('email')->unique();
-             $table->string('email_verified_at')->nullable();
+             $table->timestamp('email_verified_at')->nullable();
              $table->string('password');
              $table->string('mobile');
               $table->enum('gender' , ['male' , 'female']);
             $table->enum('status', ['pending','active','inactive', 'blocked' ])->default('pending');
                 $table->string('image')->nullable();
-                 $table->string('address');
-              $table->date('date');
+              $table->string('address');
+              $table->date('date')->nullable();
+              $table->softDeletes();
                $table->nullableMorphs('actor');
                $table->rememberToken();
             $table->timestamps();

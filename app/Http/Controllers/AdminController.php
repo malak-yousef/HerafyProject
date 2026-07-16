@@ -216,6 +216,31 @@ return response()->json([
     ], $isDeleted ? 200 : 400);
 }
 
+/**public function destroy($id)
+    {
+        $admins = User::destroy($id);
+    } */
 
+    public function trashed()
+    {
+         $admins = User::onlyTrashed()->orderBy('deleted_at' , 'desc')->get();
+        return response()->view('cms.admin.trashed' , compact('admins'));
+    }
 
+    public function restore($id){
+     $admins = User::onlyTrashed()->findOrFail($id)->restore();
+     return back()->with('success' , 'Success');
+    }
+
+    public function force($id){
+      $admins = User::onlyTrashed()->findOrFail($id)->forceDelete();
+     return back()->with('success' , 'Success');
+    }
+
+    public function forceAll(){
+      $admins = User::onlyTrashed()->forceDelete();
+     return back()->with('success' , 'Success');
+    }
 }
+
+

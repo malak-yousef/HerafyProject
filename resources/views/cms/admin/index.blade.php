@@ -147,8 +147,6 @@
 </h3>
 
 
-
-
 <a href="{{ route('admins.create') }} ">
     <button class="add-btn"
 data-bs-toggle="modal"
@@ -158,16 +156,17 @@ data-bs-target="#addadminModal">
 
 </button>
 </a>
-{{-- <a href="{{ route('admins_trashed') }} ">
+
+
+<a href="{{ route('admins_trashed') }} ">
     <button class="btn btn-danger"
 data-bs-toggle="modal"
-data-bs-target="#addadminModal">
+data-bs-target="#addCategoryModal">
 
-سلة المحذوفات للمشرفين
+سلة المحذوفات 
 
 </button>
-</a>  --}}
- 
+</a>
 
 </div>
 
@@ -189,7 +188,7 @@ data-bs-target="#addadminModal">
 <th class="text-center">البريد الالكتروني</th>
 
 <th class="text-center">الموبايل</th>
-<th class="text-center ">العنوان</th>
+
 <th class="text-center">تاريخ الميلاد</th>
 
 <th class="text-center">الحالة</th>
@@ -262,11 +261,7 @@ data-bs-target="#addadminModal">
     </span>
 </td>
 
-<td>
-    <span class="badge rounded-pill bg-light text-dark border">
-        {{ $admin->address ?? "" }}
-    </span>
-</td>
+
 
 <td>
     <span class="badge rounded-pill bg-danger">
@@ -343,17 +338,25 @@ data-bs-target="#addadminModal">
     </a>
 
 
-    <!-- زر الحذف Delete -->
-    <a href="#" onclick="performDestroy({{$admin->id}} , this)"
-  class="avatar-text avatar-md">
-   <i class="fa-solid fa-trash"></i>
-    </a>
+
+ <!-- زر الحذف Delete -->
+    <form action="{{ route('admins.destroy', $admin->id) }}" 
+          method="POST" 
+          style="display:inline-block">
+
+        @csrf
+        @method('DELETE')
+
+        <button type="button" 
+        onclick="performDestroy({{$admin->id}} , this)"
+                class="action-btn delete-btn"
+                title="نقل لسلة المحذوفات">
+            <i class="fa-solid fa-trash"></i>
+        </button>
 
 
 
-
-
-
+</form>
     
 
 </td>

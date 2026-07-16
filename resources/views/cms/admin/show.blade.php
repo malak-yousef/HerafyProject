@@ -5,7 +5,6 @@
 @section('styles' )
 
 <style>
-
 .admin-page{
     padding:30px;
 }
@@ -16,7 +15,6 @@
     border-radius:18px;
     box-shadow:0 5px 25px #00000010;
 }
-
 
 .add-btn{
 

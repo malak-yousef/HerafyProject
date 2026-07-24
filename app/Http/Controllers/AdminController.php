@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller
 {
@@ -23,7 +24,8 @@ class AdminController extends Controller
      */
     public function create()
     {
-        return response()->view('cms.admin.create');
+        $roles = Role::where('guard_name', 'admin')->get();
+        return response()->view('cms.admin.create', compact('roles'));
     }
 
     /**
@@ -32,15 +34,16 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         $validator = validator($request->all(), [
-            'name'  => 'required|string|max:255',
-            'user_name'  => 'required|string|max:255|unique:users,user_name',
-            'email'  => 'required|string|email|max:255|unique:users,email',
+            'name'      => 'required|string|max:255',
+            'user_name' => 'required|string|max:255|unique:users,user_name',
+            'email'     => 'required|string|email|max:255|unique:users,email',
             'password'  => 'nullable|string|min:8',
-            'gender'  => 'nullable|string|in:male,female',
-            'mobile'  => 'nullable|string|max:45',
-            'status'  => 'required|string|in:active,inactive,pending,blocked',
-            'actor_type'  => 'nullable|string|in:craftman,customer,admin',
-            'image'  => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'gender'    => 'nullable|string|in:male,female',
+            'mobile'    => 'nullable|string|max:45',
+            'status'    => 'required|string|in:active,inactive,pending,blocked',
+            'actor_type' => 'nullable|string|in:craftman,customer,admin',
+            'image'     => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'role_name' => 'required|exists:roles,name', 
 
         ]);
         if ($validator->fails()) {
@@ -59,17 +62,20 @@ class AdminController extends Controller
                 $admins->image = $imageName;
             }
 
-            $admins->name = $request->input('name');
+            $admins->name      = $request->input('name');
             $admins->user_name = $request->input('user_name');
-            $admins->email = $request->input('email');
-            $admins->password = Hash::make($request->password);
-            $admins->mobile = $request->input('mobile');
-            $admins->status = $request->input('status');
-            $admins->gender = $request->input('gender');
-            $admins->address = $request->input('address');
-            $admins->date = $request->input('date');
+            $admins->email     = $request->input('email');
+            $admins->password  = Hash::make($request->password);
+            $admins->mobile    = $request->input('mobile');
+            $admins->status    = $request->input('status');
+            $admins->gender    = $request->input('gender');
+            $admins->address   = $request->input('address');
+            $admins->date      = $request->input('date');
             $admins->setAttribute('actor_id', null);
             $admins->setAttribute('actor_type', null);
+            // $admins->assignRole('$request->role_name');
+             $admins->assignRole($request->role_name);
+
             $isSaved = $admins->save();
 
             if ($isSaved) {

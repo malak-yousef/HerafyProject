@@ -4,40 +4,43 @@
 
 @section('styles')
 <style>
-.admins-page{
-    padding:30px;
-}
+    .admins-page {
+        padding: 30px;
+    }
 
-.admin-card{
-    background:white;
-    padding:25px;
-    border-radius:18px;
-    box-shadow:0 5px 25px #00000010;
-}
+    .admin-card {
+        background: white;
+        padding: 25px;
+        border-radius: 18px;
+        box-shadow: 0 5px 25px #00000010;
+    }
 
-.add-btn{
-    background:#ffbf00;
-    color:#14213d;
-    border:none;
-    padding:12px 20px;
-    border-radius:10px;
-    font-weight:bold;
-}
+    .add-btn {
+        background: #ffbf00;
+        color: #14213d;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-weight: bold;
+    }
 
-/* تحسينات إضافية لتناسق الحقول */
-.form-group {
-    margin-bottom: 15px;
-}
-.form-label {
-    font-weight: 600;
-    color: #14213d;
-    margin-bottom: 8px;
-    display: block;
-}
-.form-control, .form-select {
-    height: 45px;
-    border-radius: 10px;
-}
+    /* تحسينات إضافية لتناسق الحقول */
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #14213d;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .form-control,
+    .form-select {
+        height: 45px;
+        border-radius: 10px;
+    }
 </style>
 @endsection
 
@@ -50,9 +53,9 @@
     <div class="row">
         <div class="col-xl-12">
             <div class="card invoice-container">
-                
+
                 <form id="admin-form" onsubmit="event.preventDefault();">
-                    
+
                     <div class="card-header">
                         <h5>اضافة مشرف</h5>
                         <div class="page-header-right ms-auto">
@@ -67,7 +70,7 @@
 
                                 <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
                                     <button type="button" onclick="performStore()" class="btn btn-primary">store</button>
-                                    <a href="{{ route('admins.index') }}" type="submit"  class="btn btn-light-brand">
+                                    <a href="{{ route('admins.index') }}" type="submit" class="btn btn-light-brand">
                                         <i class="feather-rotate-ccw me-2"></i>
                                         <span>Go Back</span>
                                     </a>
@@ -129,26 +132,38 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label class="form-label" for="role_name">Assign Roles :</label>
+                                    <select class="form-control select2" id="role_name" name="role_name"
+                                        style="width: 100%;">
+                                        @foreach($roles as $role)
+                                        <option value="{{$role->name}}">{{$role->name}}</option>
+
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label class="form-label" for="password">كلمة السر</label>
                                     <input type="password" id="password" name="password" class="form-control" placeholder="كلمة السر">
                                 </div>
                             </div>
 
-
-                             <div class="col-md-6">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label" for="password">تاكيد كلمة السر</label>
                                     <input type="password" id="password" name="password" class="form-control" placeholder="تاكيد كلمة السر">
                                 </div>
                             </div>
 
-                               <div class="col-md-6">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label" for="image">الصورة</label>
                                     <input type="file" id="image" name="image" class="form-control" accept="image/*">
                                 </div>
-                            </div>  
-                           
+                            </div>
+
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -173,8 +188,10 @@
                                 </div>
                             </div>
 
-                        </div> </div> </form>
-             </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -182,28 +199,29 @@
 
 @section('scripts')
 <script>
-function performStore(){
+    function performStore() {
 
-    let formData = new FormData();
+        let formData = new FormData();
 
-    formData.append('name', document.getElementById('name').value);
-    formData.append('user_name', document.getElementById('user_name').value);
-    formData.append('email', document.getElementById('email').value);
-    formData.append('mobile', document.getElementById('mobile').value);
-    formData.append('address', document.getElementById('address').value);
-    formData.append('date', document.getElementById('date').value);
-    formData.append('password', document.getElementById('password').value);
-    formData.append('status', document.getElementById('status').value);
-    formData.append('gender', document.getElementById('gender').value);
-    
-    
-    
-       
-      if(document.getElementById('image').files[0]){
-    formData.append('image', document.getElementById('image').files[0]);
-}
+        formData.append('name', document.getElementById('name').value);
+        formData.append('user_name', document.getElementById('user_name').value);
+        formData.append('email', document.getElementById('email').value);
+        formData.append('mobile', document.getElementById('mobile').value);
+        formData.append('address', document.getElementById('address').value);
+        formData.append('date', document.getElementById('date').value);
+        formData.append('password', document.getElementById('password').value);
+        formData.append('status', document.getElementById('status').value);
+        formData.append('gender', document.getElementById('gender').value);
 
-    store('/cms/admin/admins', formData);
-}
+        formData.append('role_name',document.getElementById('role_name').value);
+
+
+
+        if (document.getElementById('image').files[0]) {
+            formData.append('image', document.getElementById('image').files[0]);
+        }
+
+        store('/cms/admin/admins', formData);
+    }
 </script>
 @endsection

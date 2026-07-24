@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -32,6 +33,8 @@ class User extends Authenticatable
         'date',
         'actor_type',
         'actor_id',
+        'role_name',
+
     ];
 
     /**
@@ -58,5 +61,19 @@ class User extends Authenticatable
     public function actor(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    public function isAdmin()
+    {
+        return is_null($this->actor_type);
+    }
+
+    public function isCustomer()
+    {
+        return $this->actor_type === \App\Models\Customer::class;
+    }
+    public function isCraftman()
+    {
+        return $this->actor_type === \App\Models\Craftman::class;
     }
 }

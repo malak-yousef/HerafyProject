@@ -44,6 +44,42 @@
                 </a>
             </li>
 
+            <!-- الصلاحيات و الادوار -->
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'rolesPermissionsMenu')">
+                    <i class="fas fa-tools"></i> الصلاحيات و الادوار
+                    <i class="fas fa-angle-left arrow"></i>
+                </a>
+                <ul class="submenu" id="rolesPermissionsMenu" style="display:none;">
+
+                    <!-- الأدوار -->
+                    <li>
+                        <a href="#" onclick="toggleMenu(event, this, 'rolesSubMenu')">
+                            <i class="fas fa-user-shield"></i> الأدوار
+                            <i class="fas fa-angle-left arrow"></i>
+                        </a>
+                        <ul class="submenu" id="rolesSubMenu" style="display:none;">
+                            <li><a href="{{ route('roles.index') }}"><i class="fas fa-list"></i> عرض الأدوار</a></li>
+                            <li><a href="{{ route('roles.create') }}"><i class="fas fa-plus"></i> إنشاء دور</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- الصلاحيات -->
+                    <li>
+                        <a href="#" onclick="toggleMenu(event, this, 'permissionsSubMenu')">
+                            <i class="fas fa-key"></i> الصلاحيات
+                            <i class="fas fa-angle-left arrow"></i>
+                        </a>
+                        <ul class="submenu" id="permissionsSubMenu" style="display:none;">
+                            <li><a href="{{ route('permissions.index') }}"><i class="fas fa-list"></i> عرض الصلاحيات</a></li>
+                            <li><a href="{{ route('permissions.create') }}"><i class="fas fa-plus"></i> إنشاء صلاحية</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </li>
+
+
             <!-- المستخدمين -->
             <li class="nav-item">
                 <a class="nav-link" href="users.html">
@@ -184,11 +220,13 @@
             </li>
 
             <!-- تسجيل الخروج -->
-            <li class="nav-item mt-2">
-                <a class="nav-link text-danger" href="#" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
-                </a>
-            </li>
+            <form action="{{ route('logout') }}" id="logoutForm" method="post" style="display: none;">
+                @csrf
+            </form>
+            <a href="#" class="nav-link text-danger" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>تسجيل الخروج</span>
+            </a>
         </ul>
         <hr>
         <div class="text-center small">

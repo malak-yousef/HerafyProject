@@ -363,9 +363,4 @@ body {
 .arrow {
     float: right;
     transition: transform 0.3s;
-=======
-.arrow {
-    transition: 0.3s;
-    float: left;
->>>>>>> da7b582f1583a261e15ba612281b161133645675
 }

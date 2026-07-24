@@ -43,7 +43,7 @@ class AdminController extends Controller
             'status'    => 'required|string|in:active,inactive,pending,blocked',
             'actor_type' => 'nullable|string|in:craftman,customer,admin',
             'image'     => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'role_name' => 'required|exists:roles,name', 
+            'role_name' => 'required|exists:roles,name',
 
         ]);
         if ($validator->fails()) {
@@ -74,7 +74,7 @@ class AdminController extends Controller
             $admins->setAttribute('actor_id', null);
             $admins->setAttribute('actor_type', null);
             // $admins->assignRole('$request->role_name');
-             $admins->assignRole($request->role_name);
+            $admins->assignRole($request->role_name);
 
             $isSaved = $admins->save();
 
@@ -173,38 +173,40 @@ class AdminController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    
+
 
     public function destroy($id)
-{
-    $isDeleted = User::destroy($id);
+    {
+        $isDeleted = User::destroy($id);
 
-    return response()->json([
-        'icon' => $isDeleted ? 'success' : 'error',
-        'title' => $isDeleted ? 'تم الحذف بنجاح' : 'فشل الحذف',
-    ], $isDeleted ? 200 : 400);
-}
+        return response()->json([
+            'icon' => $isDeleted ? 'success' : 'error',
+            'title' => $isDeleted ? 'تم الحذف بنجاح' : 'فشل الحذف',
+        ], $isDeleted ? 200 : 400);
+    }
 
 
     public function trashed()
     {
-         $admins = User::onlyTrashed()->orderBy('deleted_at' , 'desc')->get();
-        return response()->view('cms.admin.trashed' , compact('admins'));
+        $admins = User::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
+        return response()->view('cms.admin.trashed', compact('admins'));
     }
 
-    public function restore($id){
-     $admins = User::onlyTrashed()->findOrFail($id)->restore();
-     return back()->with('success' , 'Success');
+    public function restore($id)
+    {
+        $admins = User::onlyTrashed()->findOrFail($id)->restore();
+        return back()->with('success', 'Success');
     }
 
-    public function force($id){
-      $admins = User::onlyTrashed()->findOrFail($id)->forceDelete();
-     return back()->with('success' , 'Success');
+    public function force($id)
+    {
+        $admins = User::onlyTrashed()->findOrFail($id)->forceDelete();
+        return back()->with('success', 'Success');
     }
 
-    public function forceAll(){
-      $admins = User::onlyTrashed()->forceDelete();
-     return back()->with('success' , 'Success');
+    public function forceAll()
+    {
+        $admins = User::onlyTrashed()->forceDelete();
+        return back()->with('success', 'Success');
     }
-
-
+}

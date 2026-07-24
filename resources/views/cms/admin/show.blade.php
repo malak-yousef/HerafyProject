@@ -5,20 +5,21 @@
 @section('styles' )
 
 <style>
-    .admin-page {
-        padding: 30px;
-    }
 
-    .admin-card {
-        background: white;
-        padding: 25px;
-        border-radius: 18px;
-        box-shadow: 0 5px 25px #00000010;
-    }
+.admin-page{
+    padding:30px;
+}
 
+.admin-card{
+    background:white;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 5px 25px #00000010;
+}
 
-    .add-btn {
+.add-btn{
 
+    
         background: #ffbf00;
         color: #14213d;
         border: none;

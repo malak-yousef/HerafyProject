@@ -4,17 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\User;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class CustomerController extends Controller
 {
+
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $customers = Customer::orderBy('id', 'desc')->withoutTrashed()->paginate(4);
+        // $customers = Customer::orderBy('id', 'desc')->withoutTrashed()->paginate(4);
+        // return response()->view('cms.customer.index', compact('customers'));
+        $customers = Customer::with('user', 'orders')
+            ->orderBy('id', 'desc')
+            ->withoutTrashed()
+            ->paginate(4);
         return response()->view('cms.customer.index', compact('customers'));
     }
 
@@ -40,6 +48,7 @@ class CustomerController extends Controller
                 'status'           => 'required |in:pending,active,inactive,blocked,',
                 'address'          => 'nullable |string|min:3|max:255',
                 'gender'           => 'required |in:male,female',
+                'date' => 'nullable|date',
                 'image'            => 'nullable |image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ],
             messages: [
@@ -74,6 +83,7 @@ class CustomerController extends Controller
                 $users->address   = $request->input('address');
                 $users->mobile    = $request->input('mobile');
                 $users->gender    = $request->input('gender');
+                $users->date = $request->input('date');
                 $users->status    = $request->input('status');
                 $users->actor()->associate($customers);
                 $isSaved = $users->save();
@@ -96,11 +106,34 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    /* public function show($id)
     {
         $customers = Customer::findOrFail($id);
         return response()->view('cms.customer.show', compact('customers'));
+
+
+
+    } */
+    public function show($id)
+    {
+        $customers = Customer::with([
+            'user',
+            'orders.city',
+            'orders.area',
+        ])->findOrFail($id);
+
+        return response()->view('cms.customer.show', compact('customers'));
     }
+/*public function show($id)
+    {
+        $orders = Order::all();
+        $cities = City::all();
+        $areas = Area::all();
+        $customers = Customer::findOrFail($id);
+        return response()->view('cms.customer.show', compact('customers', 'orders' , 'cities' , 'areas'));
+    }*/
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -122,7 +155,7 @@ class CustomerController extends Controller
             return response()->json([
                 'icon' => 'error',
                 'title' => 'خطأ',
-                'text' => 'لا يوجد مستخدم مرتبط بهذا الحرفي',
+                'text' => 'لا يوجد مستخدم مرتبط بهذا الزبون',
             ], 400);
         }
         $user_id = $user->id;
@@ -138,6 +171,7 @@ class CustomerController extends Controller
                 'status'           => 'required |in:pending,active,inactive,blocked',
                 'address'          => 'nullable |string|min:3|max:255',
                 'gender'           => 'required |in:male,female',
+                'date' => 'nullable|date',
                 'image'            => 'nullable |image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ],
             messages: [
@@ -169,6 +203,7 @@ class CustomerController extends Controller
         $user->address   = $request->input('address');
         $user->mobile    = $request->input('mobile');
         $user->gender    = $request->input('gender');
+        $user->date = $request->input('date');
         $user->status    = $request->input('status');
         if ($request->filled('password')) {
             $user->password = Hash::make($request->input('password'));
@@ -189,24 +224,34 @@ class CustomerController extends Controller
     public function trashed()
     {
         $customers = Customer::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
-        return response()->view('cms.customer.trashed', compact('customers'));
+        return response()->view('cms.customers.trashed', compact('customers'));
     }
 
     public function restore($id)
     {
         $customers = Customer::onlyTrashed()->findOrFail($id);
         $customers->restore();
-        return redirect()->route('customers_trashed')->with('success', 'تم استعادة الحرفي بنجاح.');
+        return redirect()->route('customers_trashed')->with('success', 'تم استعادة الزبون بنجاح.');
     }
     public function forceDestroy($id)
     {
         $customers = Customer::onlyTrashed()->findOrFail($id);
         $customers->forceDelete();
-        return redirect()->route('customers_trashed')->with('success', 'تم حذف الحرفي بشكل دائم.');
+        return redirect()->route('customer_trashed')->with('success', 'تم حذف الزبون بشكل دائم.');
     }
     public function DestroyAll()
     {
         $customers = Customer::onlyTrashed()->forceDelete();
-        return redirect()->route('customers_trashed')->with('success', 'تم حذف جميع الحرفيين بشكل دائم.');
+        return redirect()->route('customers_trashed')->with('success', 'تم حذف جميع الزبون بشكل دائم.');
+    }
+
+    public function orders(Customer $customer)
+    {
+        $orders = Order::with(['city', 'area'])
+            ->where('customer_id', $customer->id)
+            ->latest()
+            ->paginate(10);
+
+        return view('cms.customer.orders', compact('customer', 'orders'));
     }
 }

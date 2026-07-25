@@ -9,25 +9,25 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Category extends Model
 {
     /** @use HasFactory<\Database\Factories\CategoryFactory> */
-    use HasFactory , SoftDeletes;
+    use HasFactory, SoftDeletes;
 
-    
-    public function professions(){
+
+    public function professions()
+    {
         return $this->hasMany(Profession::class);
     }
 
     protected $fillable = [
-    'name',
-    'description'
-];
+        'name',
+        'description'
+    ];
 
-protected static function boot()
-{
-    parent::boot();
+    protected static function boot()
+    {
+        parent::boot();
 
-    static::deleting(function ($category) {
-        $category->professions()->delete();
-    });
-}
-
+        static::deleting(function ($category) {
+            $category->professions()->delete();
+        });
+    }
 }

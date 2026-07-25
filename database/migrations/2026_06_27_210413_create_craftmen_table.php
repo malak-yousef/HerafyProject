@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('craftmen', function (Blueprint $table) {
             $table->id();
-            $table->string('craft_name');
+           // $table->string('craft_name');
             $table->integer('id_number')->unique();
+            $table->foreignId('profession_id')->constrained()->onDelete('cascade');
+
             $table->unsignedTinyInteger('experience_years');
             $table->text('description')->nullable();
             $table->decimal('rating', 3, 2)->default(0.00);

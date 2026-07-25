@@ -312,11 +312,7 @@
                         </td>
                         <td>
                             <div class="action-btns">
-                                {{-- عرض --}}
-                                <a href="{{ route('portfolios.show', $portfolio->id) }}" class="action-btn btn-view"
-                                    title="عرض التفاصيل">
-                                    <i class="fas fa-eye"></i>
-                                </a>
+                                
 
                                 {{-- اعادة --}}
                                 <a href="{{ route('portfolios_restore' , $portfolio->id) }}" class="action-btn btn-edit"

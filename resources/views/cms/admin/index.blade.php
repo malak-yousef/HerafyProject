@@ -2,397 +2,437 @@
 
 @section('title', 'المشرفين الرئيسية')
 
-
 @section('styles')
-
 <style>
+    .section-content {
+        font-family: 'Cairo', sans-serif;
+    }
 
-.admin-page{
-    padding:30px;
-}
+    /* تنسيق الصورة في الجدول */
+    .admins-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #FFC107;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
 
-.admin-card{
-    background:white;
-    padding:25px;
-    border-radius:18px;
-    box-shadow:0 5px 25px #00000010;
-}
+    .avatar-placeholder {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: #f1f2f6;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #57606f;
+        font-weight: 700;
+        font-size: 16px;
+        border: 2px solid #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
 
+    /* تنسيق البادجات */
+    .badge-status {
+        padding: 6px 14px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+    }
 
-.add-btn{
+    .badge-status.bg-success {
+        background-color: #e8f8f2 !important;
+        color: #1e7e34 !important;
+    }
 
-    background:#ffbf00;
-    color:#14213d;
-    border:none;
-    padding:12px 20px;
-    border-radius:10px;
-    font-weight:bold;
+    .badge-status.bg-warning {
+        background-color: #fef5e7 !important;
+        color: #b7791f !important;
+    }
 
-}
+    .badge-status.bg-danger {
+        background-color: #fde8e8 !important;
+        color: #c53030 !important;
+    }
 
-.action-btn {
-    width: 38px;
-    height: 38px;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    margin: 3px;
-    text-decoration: none;
-    font-size: 17px;
-    transition: .3s;
-    
-}
+    .badge-status.bg-dark {
+        background-color: #edf2f7 !important;
+        color: #4a5568 !important;
+    }
 
+    /* أزرار الإجراءات */
+    .action-btns {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+    }
 
-/* عرض */
-.show-btn {
-    background: #e8f1ff;
-    color: #2563eb;
-}
+    .action-btn {
+        width: 34px;
+        height: 34px;
+        border: none;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.25s ease;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 13px;
+    }
 
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
 
-/* تعديل */
-.edit-btn {
-    background: #fff4dd;
-    color: #f59e0b;
-}
+    .action-btn.btn-view {
+        background: #ebf3fe;
+        color: #3b82f6;
+    }
 
+    .action-btn.btn-view:hover {
+        background: #3b82f6;
+        color: #fff;
+    }
 
-/* حذف */
-.delete-btn {
-    background: #ffe5e5;
-    color: #dc2626;
-    border: none;
-}
+    .action-btn.btn-edit {
+        background: #eafaf1;
+        color: #2ecc71;
+    }
 
+    .action-btn.btn-edit:hover {
+        background: #2ecc71;
+        color: #fff;
+    }
 
-/* Hover */
-.action-btn:hover {
-    transform: translateY(-3px);
-    opacity: .8;
-}
+    .action-btn.btn-delete {
+        background: #fde8e8;
+        color: #e74c3c;
+    }
 
-.description-column{
-    max-width: 350px;
-    white-space: normal;
-    word-wrap: break-word;
-}
+    .action-btn.btn-delete:hover {
+        background: #e74c3c;
+        color: #fff;
+    }
 
-.actions-column{
-    white-space: nowrap;
-    width: 180px;
-}
+    /* تنسيق الجدول */
+    .table-container {
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+        border: 1px solid #f1f2f6;
+    }
 
-.pagination-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 25px;
-}
+    .table-container .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 22px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
 
-.pagination {
-    list-style: none;
-    display: flex;
-    gap: 8px;
-    padding: 0;
-}
+    .table-container .table-header .form-control,
+    .table-container .table-header .form-select {
+        border-radius: 10px;
+        border: 1px solid #e4e7eb;
+        padding: 9px 16px;
+        font-size: 13px;
+        color: #495057;
+        background-color: #fff;
+        transition: all 0.25s ease;
+    }
 
-.pagination li a {
-    text-decoration: none;
-    padding: 8px 14px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    color: #6c63ff;
-    background: white;
-    font-size: 14px;
-}
+    .table-container .table-header .form-control:focus,
+    .table-container .table-header .form-select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        outline: none;
+    }
 
-.pagination li.active a {
-    background: #6c63ff;
-    color: white;
-}
+    /* هيدر الجدول */
+    .table-container table th {
+        background: #fafafa;
+        color: #5a6578;
+        font-weight: 600;
+        border-bottom: 1px solid #f1f2f6;
+        padding: 14px 12px;
+        font-size: 13px;
+        text-align: center;
+    }
 
-.pagination li a:hover {
-    background: #eee;
-}
+    .table-container table th:first-child,
+    .table-container table th:nth-child(3) {
+        text-align: right;
+    }
 
+    .table-container table td {
+        vertical-align: middle;
+        padding: 14px 12px;
+        color: #4e5664;
+        font-size: 13.5px;
+        border-bottom: 1px solid #f8f9fa;
+        text-align: center;
+    }
+
+    .table-container table td:first-child,
+    .table-container table td:nth-child(3) {
+        text-align: right;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #fcfdfe;
+    }
+
+    .table-responsive {
+        max-height: 550px;
+        overflow-y: auto;
+    }
+
+    .table-responsive::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+    }
+
+    .table-responsive::-webkit-scrollbar-track {
+        background: #f8f9fa;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: #ddd;
+        border-radius: 4px;
+    }
+
+    .btn-custom-header {
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: none;
+    }
 </style>
-
 @endsection
 
-
-
-@section('main_content')
-
-المشرفين
-
-@endsection
-
-
+@section('main_content' , 'المشرفين')
 
 @section('content')
+<div class="section-content">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+            <h4 class="fw-bold mb-1" style="color:#2c3e50;">إدارة المشرفين</h4>
+            <p class="text-muted small mb-0">عرض وإدارة جميع المشرفين المسجلين في النظام</p>
+        </div>
 
-
-<div class="container-fluid admin-page">
-
-
-<div class="card admin-card">
-
-
-<div class="d-flex justify-content-between mb-4">
-
-
-<h3>
-إدارة المشرفين
-</h3>
-
-
-<a href="{{ route('admins.create') }} ">
-    <button class="add-btn"
-data-bs-toggle="modal"
-data-bs-target="#addadminModal">
-
-+ إضافة مشرف
-
-</button>
-</a>
-
-
-<a href="{{ route('admins_trashed') }} ">
-    <button class="btn btn-danger"
-data-bs-toggle="modal"
-data-bs-target="#addCategoryModal">
-
-سلة المحذوفات 
-
-</button>
-</a>
-
-</div>
-
-
-
-
-<table class="table table-hover align-middle">
-
-<thead>
-
-<tr>
-
-<th style="width: 15px">الرقم#</th>
- <th class="text-center">الصورة</th> 
-<th class="text-center">الاسم </th>
-
-<th class="text-center">اسم المستخدم</th>
-
-<th class="text-center">البريد الالكتروني</th>
-
-<th class="text-center">الموبايل</th>
-
-<th class="text-center">تاريخ الميلاد</th>
-
-<th class="text-center">الحالة</th>
-<th class="text-center">الجنس</th>
-
-
-
-
-
-
-{{-- ما بنفع نحطها هان لانها مشفرة
-<th class="text-center">كلمة السر</th> --}}
-
-
-
-
-<th class="text-center actions-column">اجراءات</th>
-
- 
-</tr>
-
-</thead>
-
-
-
-<tbody>
-
-
-@foreach($admins as $admin)
-
-
-<tr>
-
-<td>{{ $loop->iteration }}</td>
-
-
-
-<td>
-    <div class="avatar avatar-md">
-   <img src="{{ asset('storage/images/admin/' . $admin->image) }}"
-     alt="user-image"
-     width="50"
-     height="50"
-     class="rounded-circle border">
+        <div class="d-flex gap-2">
+            <a href="{{ route('admins.create') }}" class="btn btn-success btn-custom-header text-white" style="background:#10ac84">
+                <i class="fas fa-plus"></i> إضافة مشرف
+            </a>
+            <a href="{{ route('admins_trashed') }}" class="btn btn-danger btn-custom-header text-white" style="background:#ee5253">
+                <i class="fas fa-trash"></i> المحذوفين
+            </a>
+        </div>
     </div>
-</td>
- 
 
-<td>
-    <span class="badge rounded-pill bg-success">
-        {{ $admin->name ?? "" }}
-    </span>
-</td>
+    <div class="table-container">
+        <div class="table-header">
+            <div class="d-flex gap-2">
+                <input class="form-control" id="searchAdmins" style="width:260px" placeholder="🔍 بحث عن مشرف...">
+                <select class="form-select" id="filterStatus" style="width:150px">
+                    <option value="all">جميع الحالات</option>
+                    <option value="active">فعال</option>
+                    <option value="inactive">غير فعال</option>
+                    <option value="pending">قيد التنفيذ</option>
+                    <option value="blocked">محظور</option>
+                </select>
+            </div>
 
-<td>
-    <span class="badge rounded-pill bg-success">
-        {{ $admin->user_name ?? "" }}
-    </span>
-</td>
+            <div>
+                عدد المشرفين: <strong>{{ $admins->total() }}</strong>
+            </div>
+        </div>
 
-<td>
-    <span class="badge rounded-pill bg-info text-dark">
-        {{ $admin->email }}
-    </span>
-</td>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 15px">#</th>
+                        <th class="text-center">الصورة</th>
+                        <th class="text-right">الاسم</th>
+                        <th class="text-center">اسم المستخدم</th>
+                        <th class="text-center">البريد الإلكتروني</th>
+                        <th class="text-center">الموبايل</th>
+                        <th class="text-center">تاريخ الميلاد</th>
+                        <th class="text-center">الحالة</th>
+                        <th class="text-center">الجنس</th>
+                        <th class="text-center actions-column">إجراءات</th>
+                    </tr>
+                </thead>
 
-<td>
-    <span class="badge rounded-pill bg-dark">
-        {{ $admin->mobile ?? "" }}
-    </span>
-</td>
+                <tbody id="adminsTableBody">
+                    @forelse($admins as $admin)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>
+                            @if($admin->image)
+                            <img src="{{ asset('storage/images/admin/'.$admin->image) }}" class="admins-avatar" alt="{{ $admin->name }}">
+                            @else
+                            <span class="avatar-placeholder">
+                                {{ mb_substr($admin->name, 0, 1, 'UTF-8') }}
+                            </span>
+                            @endif
+                        </td>
+                        <td><strong>{{ $admin->name }}</strong></td>
+                        <td>{{ $admin->user_name }}</td>
+                        <td>{{ $admin->email }}</td>
+                        <td dir="ltr">{{ $admin->mobile }}</td>
+                        <td>{{ $admin->date ?? "---" }}</td>
+                        <td>
+                            @if($admin->status == 'active')
+                            <span class="badge bg-success badge-status">✅ فعال</span>
+                            @elseif($admin->status == 'inactive')
+                            <span class="badge bg-danger badge-status">❌ غير فعال</span>
+                            @elseif($admin->status == 'pending')
+                            <span class="badge bg-warning badge-status">⏳ قيد التنفيذ</span>
+                            @elseif($admin->status == 'blocked')
+                            <span class="badge bg-dark badge-status">🚫 محظور</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($admin->gender == 'male')
+                            ذكر
+                            @else
+                            انثى
+                            @endif
+                        </td>
+                        <td class="text-center actions-column">
+                            <div class="action-btns">
+                                <a href="{{ route('admins.show', $admin->id) }}" class="action-btn btn-view" title="عرض">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ route('admins.edit', $admin->id) }}" class="action-btn btn-edit" title="تعديل">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button class="action-btn btn-delete" onclick="performDestroy({{ $admin->id }}, this)" title="حذف">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr id="emptyRow">
+                        <td colspan="10" class="text-center py-5 text-muted">
+                            <i class="fas fa-users-slash fa-2x mb-2 d-block" style="color: #ccc;"></i>
+                            لا يوجد مشرفين مسجلين حالياً
+                            <br>
+                            <a href="{{ route('admins.create') }}" class="btn btn-sm mt-3 text-white" style="background-color: #10ac84; border-radius: 8px;">
+                                <i class="fas fa-plus"></i> أضف أول مشرف
+                            </a>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
-
-
-<td>
-    <span class="badge rounded-pill bg-danger">
-        {{ $admin->date ?? "" }}
-    </span>
-</td>
-
-<td>
-    @if($admin->status == 'active')
-    <span class="badge rounded-pill bg-success">
-        {{ $admin->status ?? "" }}
-    </span>
-
-@elseif($admin->status == 'inactive')
-    <span class="badge rounded-pill bg-secondary">
-        {{ $admin->status ?? "" }}
-    </span>
-
-@elseif($admin->status == 'pending')
-    <span class="badge rounded-pill bg-warning text-dark">
-        {{ $admin->status ?? "" }}
-    </span>
-
-@elseif($admin->status == 'blocked')
-    <span class="badge rounded-pill bg-danger">
-        {{ $admin->status ?? "" }}
-    </span>
-
-@endif
-</td>
-
-<td>
-    
-    @if($admin->gender == 'male')
-        <span class="badge rounded-pill bg-primary">
-            {{ $admin->gender ?? "" }}
-        </span>
-    @else
-        <span class="badge rounded-pill bg-warning text-dark">
-            {{ $admin->gender ?? "" }}
-        </span>
-    @endif
-</td>
-{{--<td>
-{{ $admin->image }}
-</td>  --}}
-
-{{-- 
-ما بنفع نحطها هان لانها مشفرة
-<td>
-{{ $admin->password }}
-</td> --}}
-
-
-
-
-
-
-<td class="text-center actions-column">
-
-    <!-- زر العرض Show -->
-    <a href="{{ route('admins.show', $admin->id) }}" 
-       class="action-btn show-btn"
-       title="عرض">
-        <i class="fa-solid fa-eye"></i>
-    </a>
-
-
-    <!-- زر التعديل Edit -->
-    <a href="{{ route('admins.edit', $admin->id) }}" 
-       class="action-btn edit-btn"
-       title="تعديل">
-        <i class="fa-solid fa-pen-to-square"></i>
-    </a>
-
-
-
- <!-- زر الحذف Delete -->
-    <form action="{{ route('admins.destroy', $admin->id) }}" 
-          method="POST" 
-          style="display:inline-block">
-
-        @csrf
-        @method('DELETE')
-
-        <button type="button" 
-        onclick="performDestroy({{$admin->id}} , this)"
-                class="action-btn delete-btn"
-                title="نقل لسلة المحذوفات">
-            <i class="fa-solid fa-trash"></i>
-        </button>
-
-
-
-</form>
-    
-
-</td>
-
-</tr>
-
-
-@endforeach
-
-
-
-</tbody>
-
-
-</table>
-
-
-
-{{ $admins->links() }}
-
-
+        <div class="mt-3">
+            {{ $admins->links() }}
+        </div>
+    </div>
 </div>
-
-
-</div>
-
-
-
 @endsection
-
-
 
 @section('scripts')
 <script>
-    function performDestroy(id , reference){
-        confirmDestroy('/cms/admin/admins/'+id , reference);
+    // حذف المشرف
+    function performDestroy(id, reference) {
+        confirmDestroy('/cms/admin/admins/' + id, reference);
     }
+
+    // فلترة وبحث الجدول
+    function filterTable() {
+        const searchText = document.getElementById('searchAdmins').value.toLowerCase().trim();
+        const statusFilter = document.getElementById('filterStatus').value;
+        const rows = document.querySelectorAll('#adminsTableBody tr:not(#noResultsMessage):not(#emptyRow)');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            // توذيع الأعمدة حسب ترتيبها الصحيح في <tr>
+            const name = row.querySelector('td:nth-child(3)')?.textContent?.toLowerCase() || '';
+            const userName = row.querySelector('td:nth-child(4)')?.textContent?.toLowerCase() || '';
+            const email = row.querySelector('td:nth-child(5)')?.textContent?.toLowerCase() || '';
+            const phone = row.querySelector('td:nth-child(6)')?.textContent?.toLowerCase() || '';
+            const statusBadgeText = row.querySelector('td:nth-child(8)')?.textContent?.trim() || '';
+
+            // تحويل نص حالة البادج إلى المفتاح المماثل للـ Select
+            let status = '';
+            if (statusBadgeText.includes('فعال') && !statusBadgeText.includes('غير')) status = 'active';
+            else if (statusBadgeText.includes('غير فعال')) status = 'inactive';
+            else if (statusBadgeText.includes('قيد التنفيذ')) status = 'pending';
+            else if (statusBadgeText.includes('محظور')) status = 'blocked';
+
+            // مطابقة البحث النصي (الاسم، اسم المستخدم، الايميل، الهاتف)
+            let matchesSearch = true;
+            if (searchText) {
+                matchesSearch = name.includes(searchText) ||
+                    userName.includes(searchText) ||
+                    email.includes(searchText) ||
+                    phone.includes(searchText);
+            }
+
+            // مطابقة الحالة
+            let matchesStatus = true;
+            if (statusFilter !== 'all') {
+                matchesStatus = (status === statusFilter);
+            }
+
+            // تطبيق الإظهار/الإخفاء
+            if (matchesSearch && matchesStatus) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        // رسالة عدم وجود نتائج
+        const noResults = document.getElementById('noResultsMessage');
+        if (visibleCount === 0 && rows.length > 0) {
+            if (!noResults) {
+                const tbody = document.getElementById('adminsTableBody');
+                const tr = document.createElement('tr');
+                tr.id = 'noResultsMessage';
+                tr.innerHTML = `
+                    <td colspan="10" class="text-center py-4 text-muted">
+                        <i class="fas fa-search fa-2x mb-2 d-block"></i>
+                        لا توجد نتائج تطابق البحث
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            }
+        } else {
+            if (noResults) noResults.remove();
+        }
+    }
+
+    // ربط الأحداث فور تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchAdmins');
+        const statusSelect = document.getElementById('filterStatus');
+
+        // التصفية أثناء الكتابة مباشرة
+        searchInput?.addEventListener('input', filterTable);
+        // التصفية عند تغيير الحالة
+        statusSelect?.addEventListener('change', filterTable);
+    });
 </script>
 @endsection

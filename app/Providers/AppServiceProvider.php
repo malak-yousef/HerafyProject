@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 
-
+use App\Models\Order;
+use Illuminate\Support\Facades\View;
 use Illuminate\Pagination\Paginator;
 
 use Illuminate\Support\ServiceProvider;
@@ -23,6 +24,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrap();
-         
+        View::share('ordersCount', Order::count());
     }
 }

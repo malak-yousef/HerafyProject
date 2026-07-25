@@ -12,8 +12,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::withCount('professions')->orderBy('id' , 'desc')->withoutTrashed()->paginate(4);
-        return response()->view('cms.category.index' , compact('categories'));
+        $categories = Category::withCount('professions')->orderBy('id', 'desc')->withoutTrashed()->paginate(4);
+        return response()->view('cms.category.index', compact('categories'));
     }
 
     /**
@@ -21,7 +21,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        
+
         return response()->view('cms.category.create');
     }
 
@@ -30,34 +30,32 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator($request->all(),[
-            'name' => 'required|string|min:4|max:20' ,
+        $validator = Validator($request->all(), [
+            'name' => 'required|string|min:4|max:20',
             'description' => 'required|max:100'
-        ] , [
+        ], [
             'name.required' => "هذا الحقل مطلوب",
             'description.required' => "هذا الحقل مطلوب",
             'name.min' => 'لا يقبل اقل من 4 حروف',
-             'name.max' => 'لا يقبل اكثر من 20حرف',
+            'name.max' => 'لا يقبل اكثر من 20حرف',
         ]);
-        if( $validator->fails()){
+        if ($validator->fails()) {
             return response()->json([
-                'icon' => 'error' ,
+                'icon' => 'error',
                 'title' => $validator->getMessageBag()->first(),
-            ] , 400);
-        }
-        else{
-        $categories = new Category();
-        $categories->name = $request->input('name');
-         $categories->description = $request->input('description');
+            ], 400);
+        } else {
+            $categories = new Category();
+            $categories->name = $request->input('name');
+            $categories->description = $request->input('description');
 
-         $isSavaved = $categories->save();
+            $isSavaved = $categories->save();
 
-         return response()->json([
-             'icon' => 'success' ,
+            return response()->json([
+                'icon' => 'success',
                 'title' => 'Created is Successfully',
-         ] , 200);
+            ], 200);
         }
-        
     }
 
     /**
@@ -65,8 +63,8 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-         $categories = Category::findOrFail($id);
-        return response()->view('cms.category.show' , compact('categories'));
+        $categories = Category::findOrFail($id);
+        return response()->view('cms.category.show', compact('categories'));
     }
 
     /**
@@ -75,52 +73,50 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $categories = Category::findOrFail($id);
-        return response()->view('cms.category.edit' , compact('categories'));
+        return response()->view('cms.category.edit', compact('categories'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request , $id)
+    public function update(Request $request, $id)
     {
-         $validator = validator($request->all(),[
-            'name' => 'required|string|min:4|max:20' ,
+        $validator = validator($request->all(), [
+            'name' => 'required|string|min:4|max:20',
             'description' => 'required|max:100'
-        ] , [
+        ], [
             'name.required' => "هذا الحقل مطلوب",
             'description.required' => "هذا الحقل مطلوب",
             'name.min' => 'لا يقبل اقل من4حروف',
-             'name.max' => 'لا يقبل اكثر من 20حرف',
+            'name.max' => 'لا يقبل اكثر من 20حرف',
         ]);
 
         $categories = new Category();
         $categories->name = $request->input('name');
-         $categories->description = $request->input('description');
+        $categories->description = $request->input('description');
 
-        if(! $validator->fails()){
+        if (! $validator->fails()) {
 
             $categories = Category::findOrFail($id);
-              $categories->name = $request->input('name');
-         $categories->description = $request->input('description');
-         $isUpdated = $categories->save();
-         return ['redirect'=>route('categories.index')];
+            $categories->name = $request->input('name');
+            $categories->description = $request->input('description');
+            $isUpdated = $categories->save();
+            return ['redirect' => route('categories.index')];
 
-       //  return response()->json([
-          //   'icon' => 'success' ,
-         //       'title' => 'Updated is Successfully',
-      //   ] , 200);
-        }
-        else{
-        return response()->json([
-                'icon' => 'error' ,
+            //  return response()->json([
+            //   'icon' => 'success' ,
+            //       'title' => 'Updated is Successfully',
+            //   ] , 200);
+        } else {
+            return response()->json([
+                'icon' => 'error',
                 'title' => $validator->getMessageBag()->first(),
-            ] , 400);
+            ], 400);
         }
-        
     }
 
-    
-    
+
+
 
     /**
      * Remove the specified resource from storage.
@@ -132,22 +128,25 @@ class CategoryController extends Controller
 
     public function trashed()
     {
-        $categories = Category::onlyTrashed()->orderBy('deleted_at' , 'desc')->get();
-        return response()->view('cms.category.trashed' , compact('categories'));
+        $categories = Category::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
+        return response()->view('cms.category.trashed', compact('categories'));
     }
 
-    public function restore($id){
-      $categories = Category::onlyTrashed()->findOrFail($id)->restore();
-     return back()->with('success' , 'Success');
+    public function restore($id)
+    {
+        $categories = Category::onlyTrashed()->findOrFail($id)->restore();
+        return back()->with('success', 'Success');
     }
 
-    public function force($id){
-      $categories = Category::onlyTrashed()->findOrFail($id)->forceDelete();
-     return back()->with('success' , 'Success');
+    public function force($id)
+    {
+        $categories = Category::onlyTrashed()->findOrFail($id)->forceDelete();
+        return back()->with('success', 'Success');
     }
 
-    public function forceAll(){
-      $categories = Category::onlyTrashed()->forceDelete();
-     return back()->with('success' , 'Success');
+    public function forceAll()
+    {
+        $categories = Category::onlyTrashed()->forceDelete();
+        return back()->with('success', 'Success');
     }
 }

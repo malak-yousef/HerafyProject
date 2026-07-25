@@ -288,20 +288,20 @@
                             <small class="text-muted">{{ Str::limit($portfolio->description ?? '', 30) }}</small>
                         </td>
                         <td>
-                            <strong>{{ $portfolio->craftman->name ?? 'غير محدد' }}</strong>
+                            <strong>{{ $portfolio->craftman->user->name ?? 'غير محدد' }}</strong>
                         </td>
                         <td>
                             <span
-                                class="badge bg-warning text-dark">{{ $portfolio->craftman->craft_name ?? 'غير محدد' }}</span>
-                        </td>
-                        <td>{{ $portfolio->project_date ? \Carbon\Carbon::parse($portfolio->project_date)->format('Y-m-d') : '-' }}
-                        </td>
+                                class="badge bg-warning text-dark">{{ $portfolio->craftman->profession->name ?? 'غير محدد' }}</span>
+                       <td>
+    {{ $portfolio->project_date ? \Carbon\Carbon::parse($portfolio->project_date)->format('Y-m-d') : '-' }}
+</td>
                         <td>
                             <i class="fas fa-eye text-muted"></i>
                             {{ $portfolio->views_count ?? 0 }}
                         </td>
                         <td>
-                            @if($portfolio->is_active)
+                            @if($portfolio->status)
                             <span class="badge bg-success badge-status">✅ فعال</span>
                             @else
                             <span class="badge bg-danger badge-status">❌ غير فعال</span>
@@ -438,7 +438,7 @@ function filterTable() {
         const craftman = row.querySelector('td:nth-child(4) strong')?.textContent?.toLowerCase() || '';
         const craft = row.querySelector('td:nth-child(5) .badge')?.textContent?.toLowerCase() || '';
         const statusBadge = row.querySelector('td:nth-child(8) .badge')?.textContent?.trim() || '';
-        const isActive = statusBadge.includes('فعال');
+        const isActive = statusBadge === '✅ فعال';
 
         let show = true;
 

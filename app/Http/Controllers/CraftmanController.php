@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Craftman;
+use App\Models\Profession;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -14,7 +15,7 @@ class CraftmanController extends Controller
      */
     public function index()
     {
-        $craftmen = Craftman::orderBy('id', 'desc')->withoutTrashed()->paginate(4);
+        $craftmen = Craftman::with('profession')->orderBy('id', 'desc')->withoutTrashed()->paginate(4);
         return response()->view('cms.craftmen.index', compact('craftmen'));
     }
 
@@ -23,7 +24,8 @@ class CraftmanController extends Controller
      */
     public function create()
     {
-        return response()->view('cms.craftmen.create');
+        $professions = Profession::all();
+        return response()->view('cms.craftmen.create', compact('professions'));
     }
 
     /**
@@ -39,20 +41,23 @@ class CraftmanController extends Controller
                 'user_name'        => 'required |string|min:3|max:50|unique:users,user_name',
                 'id_number'        => 'required |numeric|unique:craftmen,id_number',
                 'mobile'           => 'nullable |numeric',
-                'craft_name'       => 'required |string|min:3|max:50',
+                //'craft_name'       => 'required |string|min:3|max:50',
+                'profession_id'    => 'required',
                 'email'            => 'required |email|unique:users,email',
                 'password'         => 'required |string|min:3|max:50',
                 'experience_years' => 'required |numeric',
                 'description'      => 'nullable |string|min:3|max:255',
                 'hourly_rate'      => 'required |numeric',
                 'daily_rate'       => 'required |numeric',
-                'status'           => 'required |in:pending,active,inactive,blocked,',
+                'status'           => 'required |in:pending,active,inactive,blocked',
                 'address'          => 'nullable |string|min:3|max:255',
                 'gender'           => 'required |in:male,female',
                 'image'            => 'nullable |image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ],
             messages: [
                 'required' => 'هذا الحقل مطلوب',
+                'profession_id.required' => 'يرجى اختيار الحرفة.',
+                'profession_id.exists' => 'الحرفة المختارة غير موجود.',
             ]
         );
 
@@ -64,7 +69,8 @@ class CraftmanController extends Controller
         } else {
             $craftmen = new Craftman();
             $craftmen->id_number        = $request->input('id_number');
-            $craftmen->craft_name       = $request->input('craft_name');
+            //$craftmen->craft_name       = $request->input('craft_name');
+            $craftmen->profession_id       = $request->input('profession_id');
             $craftmen->experience_years = $request->input('experience_years');
             $craftmen->description      = $request->input('description');
             $craftmen->hourly_rate      = $request->input('hourly_rate');
@@ -133,8 +139,9 @@ class CraftmanController extends Controller
      */
     public function show($id)
     {
+        $professions = Profession::all();
         $craftmen = Craftman::findOrFail($id);
-        return response()->view('cms.craftmen.show', compact('craftmen'));
+        return response()->view('cms.craftmen.show', compact('craftmen', 'professions'));
     }
 
     /**
@@ -142,8 +149,9 @@ class CraftmanController extends Controller
      */
     public function edit($id)
     {
+        $professions = Profession::all();
         $craftmen = Craftman::findOrFail($id);
-        return response()->view('cms.craftmen.edit', compact('craftmen'));
+        return response()->view('cms.craftmen.edit', compact('craftmen', 'professions'));
     }
 
     /**
@@ -168,7 +176,8 @@ class CraftmanController extends Controller
                 'user_name'        => 'required|string|min:3|max:50|unique:users,user_name,' . $user_id,
                 'id_number'        => 'required|numeric|unique:craftmen,id_number,' . $id,
                 'mobile'           => 'nullable|numeric',
-                'craft_name'       => 'required|string|min:3|max:50',
+                //  'craft_name'       => 'required|string|min:3|max:50',
+                'profession_id' => 'sometimes|required',
                 'email'            => 'required|email|unique:users,email,' . $user_id,
                 'password'         => 'nullable|string|min:3|max:50',
                 'experience_years' => 'required|numeric',
@@ -193,7 +202,8 @@ class CraftmanController extends Controller
             ], 400);
         }
         $craftmen->id_number        = $request->input('id_number');
-        $craftmen->craft_name       = $request->input('craft_name');
+        //  $craftmen->craft_name       = $request->input('craft_name');
+        $craftmen->profession_id       = $request->input('profession_id');
         $craftmen->experience_years = $request->input('experience_years');
         $craftmen->description      = $request->input('description');
         $craftmen->hourly_rate      = $request->input('hourly_rate');
@@ -221,7 +231,7 @@ class CraftmanController extends Controller
                 $request->input('password')
             );
         }
-        
+
         $user->save();
 
         return [

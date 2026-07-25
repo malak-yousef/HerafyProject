@@ -12,10 +12,16 @@ class PortfolioController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $portfolios = Portfolio::with('craftman')->orderBy('id', 'desc')->paginate(4);
-        return response()->view('cms.portfolio.index', compact('portfolios'));
-    }
+{
+    $portfolios = Portfolio::with([
+        'craftman.user',
+        'craftman.profession'
+    ])
+    ->orderBy('id','desc')
+    ->paginate(4);
+
+    return response()->view('cms.portfolio.index', compact('portfolios'));
+}
 
     /**
      * Show the form for creating a new resource.
@@ -51,7 +57,7 @@ class PortfolioController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'icon' => 'خطأ في البيانات',
-                'titel' => $validator->getMessageBag()->first(),
+                'title' => $validator->getMessageBag()->first(),
             ], 400);
         } else {
             $portfolios = new Portfolio();
@@ -68,6 +74,8 @@ class PortfolioController extends Controller
             $portfolios->location = $request->input('location');
             $portfolios->status = $request->input('status');
             $portfolios->craftman_id = $request->input('craftman_id');
+            $portfolios->project_date = now();
+$portfolios->views_count = 0;
             $isSaved = $portfolios->save();
             return response()->json([
                 'icon' => 'success',
@@ -79,13 +87,18 @@ class PortfolioController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
-    {
-        $portfolios = Portfolio::findOrFail($id);
-        $craftmen   = Craftman::all();
-        return response()->view('cms.portfolio.show', compact('portfolios', 'craftmen'));
-    }
+   public function show($id)
+{
+    $portfolios = Portfolio::with([
+        'craftman.user',
+        'craftman.profession'
+    ])->findOrFail($id);
 
+    // 🟢 زيادة عداد المشاهدات بمقدار 1
+    $portfolios->increment('views_count');
+
+    return view('cms.portfolio.show', compact('portfolios'));
+}
     /**
      * Show the form for editing the specified resource.
      */
@@ -109,6 +122,7 @@ class PortfolioController extends Controller
                 // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'location' => 'nullable|string|max:255',
                 'craftman_id' => 'required',
+                'status' => 'required',
             ],
             [
                 'required' => 'هذا الحقل مطلوب.',
@@ -131,7 +145,7 @@ class PortfolioController extends Controller
             $image->move('storage/images/portfolio', $imageName);
             $portfolios->portfolioCover_image = $imageName;
         }
-        
+
         if (! $portfolios) {
             return response()->json([
                 'icon'  => 'خطاء في البيانات',

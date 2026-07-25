@@ -21,6 +21,8 @@ class Portfolio extends Model
         'status',
         'portfolioCover_image',
         'craftman_id',
+        'project_date',
+        'views_count'
     ];
 
     protected $casts = [

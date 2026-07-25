@@ -202,15 +202,11 @@ select.form-control[disabled] {
                                     <i class="fas fa-user text-warning"></i> اسم الحرفي
                                     <span class="text-danger">*</span>
                                 </label>
-                                <select name="craftsman_id" id="craftsman_id" class="form-control select2"
-                                    style="width:100%;" disabled>
-                                    @foreach ($craftmen as $craftman)
-                                        <option @if ($craftman->id == $portfolios->craftman_id) selected @endif
-                                            value="{{ $craftman->id }}">
-                                            {{ $craftman->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <select class="form-control" disabled>
+    <option selected>
+        {{ $portfolios->craftman->user->name }}
+    </option>
+</select>
                             </div>
 
                             <!-- ===== العنوان ===== -->
@@ -237,7 +233,7 @@ select.form-control[disabled] {
                                 <label for="project_date" class="form-label">
                                     <i class="fas fa-calendar-check text-warning"></i> تاريخ المشروع
                                 </label>
-                                <input type="text" class="form-control" id="project_date" name="project_date" disabled readonly
+                                <input type="date" class="form-control" id="project_date" name="project_date" disabled readonly
                                     value="{{ $portfolios->project_date ? \Carbon\Carbon::parse($portfolios->project_date)->format('Y-m-d') : '-' }}">
                             </div>
 

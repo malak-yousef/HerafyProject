@@ -4,118 +4,118 @@
 
 @section('styles')
 <style>
-.form-card {
-    background: #fff;
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-}
-
-.form-card .form-label {
-    font-weight: 600;
-    color: #2d3436;
-}
-
-.form-card .form-control,
-.form-card .form-select {
-    border-radius: 10px;
-    border: 2px solid #e9ecef;
-    padding: 10px 15px;
-    transition: all 0.3s ease;
-}
-
-.form-card .form-control:focus,
-.form-card .form-select:focus {
-    border-color: #FFC107;
-    box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
-}
-
-.form-card .form-control.is-invalid {
-    border-color: #e17055;
-}
-
-.form-card .form-control.is-valid {
-    border-color: #00b894;
-}
-
-.form-card .invalid-feedback {
-    font-size: 13px;
-    color: #e17055;
-}
-
-.form-card .btn-submit {
-    padding: 12px 40px;
-    border-radius: 10px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.form-card .btn-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
-}
-
-.form-card .btn-back {
-    padding: 12px 30px;
-    border-radius: 10px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.form-card .btn-back:hover {
-    transform: translateY(-2px);
-}
-
-.image-preview {
-    width: 150px;
-    height: 150px;
-    border-radius: 10px;
-    border: 2px dashed #e9ecef;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    overflow: hidden;
-    background: #f8f9fa;
-}
-
-.image-preview:hover {
-    border-color: #FFC107;
-    background: #fffdf5;
-}
-
-.image-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.image-preview .placeholder {
-    color: #adb5bd;
-    text-align: center;
-}
-
-.image-preview .placeholder i {
-    font-size: 2rem;
-    display: block;
-    margin-bottom: 5px;
-}
-
-.image-preview .placeholder span {
-    font-size: 12px;
-}
-
-@media (max-width: 768px) {
     .form-card {
-        padding: 20px;
+        background: #fff;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-card .form-label {
+        font-weight: 600;
+        color: #2d3436;
+    }
+
+    .form-card .form-control,
+    .form-card .form-select {
+        border-radius: 10px;
+        border: 2px solid #e9ecef;
+        padding: 10px 15px;
+        transition: all 0.3s ease;
+    }
+
+    .form-card .form-control:focus,
+    .form-card .form-select:focus {
+        border-color: #FFC107;
+        box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+    }
+
+    .form-card .form-control.is-invalid {
+        border-color: #e17055;
+    }
+
+    .form-card .form-control.is-valid {
+        border-color: #00b894;
+    }
+
+    .form-card .invalid-feedback {
+        font-size: 13px;
+        color: #e17055;
+    }
+
+    .form-card .btn-submit {
+        padding: 12px 40px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .form-card .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+    }
+
+    .form-card .btn-back {
+        padding: 12px 30px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .form-card .btn-back:hover {
+        transform: translateY(-2px);
     }
 
     .image-preview {
-        width: 120px;
-        height: 120px;
+        width: 150px;
+        height: 150px;
+        border-radius: 10px;
+        border: 2px dashed #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        overflow: hidden;
+        background: #f8f9fa;
     }
-}
+
+    .image-preview:hover {
+        border-color: #FFC107;
+        background: #fffdf5;
+    }
+
+    .image-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .image-preview .placeholder {
+        color: #adb5bd;
+        text-align: center;
+    }
+
+    .image-preview .placeholder i {
+        font-size: 2rem;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .image-preview .placeholder span {
+        font-size: 12px;
+    }
+
+    @media (max-width: 768px) {
+        .form-card {
+            padding: 20px;
+        }
+
+        .image-preview {
+            width: 120px;
+            height: 120px;
+        }
+    }
 </style>
 @endsection
 
@@ -159,7 +159,7 @@
                             <img id="imagePreview" style="display: none;" alt="صورة الزبون">
                         </div>
                         <input type="file" class="form-control d-none" id="image" name="image"
-                            accept="image/*" >
+                            accept="image/*">
                         <small class="text-muted">صورة شخصية (اختياري)</small>
                     </div>
 
@@ -167,7 +167,7 @@
                     <div class="col-md-9">
                         <div class="row g-3">
 
-                        <!-- الاسم -->
+                            <!-- الاسم -->
                             <div class="col-md-6">
                                 <label for="name" class="form-label">
                                     <i class="fas fa-user text-warning"></i> الاسم الكامل <span class="text-danger">*</span>
@@ -195,7 +195,7 @@
                             </div>
 
                             <!-- رقم الهوية -->
-                              <div class="col-md-6">
+                            <div class="col-md-6">
                                 <label for="id_number" class="form-label">
                                     <i class="fas fa-id-card text-warning"></i> رقم الهوية <span
                                         class="text-danger">*</span>

@@ -170,8 +170,10 @@
                                 <select name="craftman_id" id="craftman_id" class="form-control select2"
                                     style="width:100%;">
                                     @foreach ($craftmen as $craftman)
-                                    <option value="{{ $craftman->id }}">{{ $craftman->name }}</option>
-                                    @endforeach
+    <option value="{{ $craftman->id }}">
+        {{ $craftman->user->name }}
+    </option>
+@endforeach
 
                                 </select>
                             </div>
@@ -185,7 +187,10 @@
                                 <input type="text" class="form-control" id="title" name="title"
                                     placeholder="مثال: خزانة ملابس خشب زان" value="{{ old('title') }}" required>
                             </div>
-
+                             <input
+    type="date"
+    name="project_date"
+    class="form-control">
                             <!-- الموقع -->
                             <div class="col-md-6">
                                 <label for="location" class="form-label">

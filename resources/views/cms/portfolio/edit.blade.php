@@ -176,7 +176,7 @@
                                     style="width:100%;">
                                     @foreach ($craftmen as $craftman)
                                     <option @if ($craftman->id == $portfolios->craftman_id)selected @endif
-                                        value="{{ $craftman->id }}">{{ $craftman->name }} </option>
+                                        value="{{ $craftman->id }}">{{ $craftman->user->name }} </option>
                                     @endforeach
 
                                 </select>

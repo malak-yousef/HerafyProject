@@ -7,28 +7,36 @@
 <style>
     .form-card {
         background: #fff;
-        border-radius: 15px;
-        padding: 30px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid #f1f2f6;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, .02);
     }
 
     .form-card .form-label {
         font-weight: 600;
-        color: #2d3436;
+        color: #495057;
+        font-size: 13px;
+        margin-bottom: 8px;
     }
 
     .form-card .form-control,
     .form-card .form-select {
         border-radius: 10px;
-        border: 2px solid #e9ecef;
-        padding: 10px 15px;
-        transition: all 0.3s ease;
+        border: 1px solid #e4e7eb;
+        padding: 10px 14px;
+        font-size: 13px;
+        transition: .25s;
     }
 
     .form-card .form-control:focus,
     .form-card .form-select:focus {
-        border-color: #FFC107;
-        box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, .1);
+    }
+
+    textarea.form-control {
+        resize: none;
     }
 
     .form-card .form-control.is-invalid {
@@ -53,7 +61,7 @@
 
     .form-card .btn-submit:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
     }
 
     .form-card .btn-back {
@@ -70,41 +78,27 @@
     .image-preview {
         width: 150px;
         height: 150px;
-        border-radius: 10px;
-        border: 2px dashed #e9ecef;
+        border: 3px dashed #D4AF37;
+        border-radius: 50%;
+        background: #fafafa;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: all 0.3s ease;
         overflow: hidden;
-        background: #f8f9fa;
+        transition: .25s;
     }
 
     .image-preview:hover {
-        border-color: #FFC107;
-        background: #fffdf5;
+        border-color: #f1c40f;
+        background: #fcfdfe;
     }
 
     .image-preview img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-    }
-
-    .image-preview .placeholder {
-        color: #adb5bd;
-        text-align: center;
-    }
-
-    .image-preview .placeholder i {
-        font-size: 2rem;
-        display: block;
-        margin-bottom: 5px;
-    }
-
-    .image-preview .placeholder span {
-        font-size: 12px;
+        border-radius: 50%;
     }
 
     @media (max-width: 768px) {
@@ -112,10 +106,36 @@
             padding: 20px;
         }
 
-        .image-preview {
-            width: 120px;
-            height: 120px;
-        }
+
+
+    }
+
+    .btn-custom {
+        padding: 8px 18px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        transition: .25s;
+    }
+
+    .btn-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+    }
+
+    .alert {
+        border-radius: 10px;
+        border: none;
+        font-size: 13px;
+    }
+
+    .btn-back {
+        min-width: 110px;
+    }
+
+    .form-control:hover,
+    .form-select:hover {
+        border-color: #f4b400;
     }
 </style>
 @endsection
@@ -129,9 +149,12 @@
             <!-- عنوان الصفحة -->
             <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
                 <div>
-                    <h5 class="fw-bold mb-0">
-                        <i class="fas fa-user-plus text-warning"></i> عرض بيانات حرفي
-                    </h5>
+                    <h4 class="fw-bold mb-1" style="color:#2c3e50;">
+                        <i class="fas fa-user-edit" style="color:#f1c40f;"></i>
+                        عرض بيانات الحرفي
+                    </h4>
+
+
                     <!-- <p class="text-muted small mb-0">أدخل بيانات الحرفي الجديد لإضافته إلى المنصة</p> -->
                 </div>
                 <a href="{{ route('craftmen.index') }}" class="btn btn-outline-secondary btn-back">
@@ -143,33 +166,35 @@
             <form id="createCraftsmanForm" action="#" method="POST" enctype="multipart/form-data">
                 @csrf
 
-                <div class="row g-4">
+                <div class="row">
 
                     <!-- الصورة الشخصية -->
-                    <div class="col-md-3">
-                        <label class="form-label">الصورة الشخصية</label>
-                        <div class="image-preview" onclick="document.getElementById('profile_image').click()">
-                            @if($craftmen->user && $craftmen->user->image)
-                            <img id="imagePreview" src="{{ asset('storage/images/craftman/' . $craftmen->user->image) }}"
-                                alt="صورة الحرفي" style="width:100%; height:100%; object-fit:cover;">
-                            @else
-                            <div class="placeholder" id="imagePlaceholder">
-                                <i class="fas fa-camera"></i>
-                                <span>عدل صورة</span>
+                    <div class="col-12 mb-4">
+                        <label class="form-label d-block text-center">الصورة الشخصية</label>
+                        <div class="d-flex justify-content-center">
+                            <div class="image-preview" onclick="document.getElementById('profile_image').click()">
+                                @if($craftmen->user && $craftmen->user->image)
+                                <img id="imagePreview" src="{{ asset('storage/images/craftman/' . $craftmen->user->image) }}"
+                                    alt="صورة الحرفي" style="width:100%; height:100%; object-fit:cover;">
+                                @else
+                                <div class="placeholder" id="imagePlaceholder">
+                                    <i class="fas fa-camera"></i>
+                                    <span>عدل صورة</span>
+                                </div>
+                                <img id="imagePreview" style="display: none;" alt="صورة الحرفي">
+                                @endif
                             </div>
-                            <img id="imagePreview" style="display: none;" alt="صورة الحرفي">
-                            @endif
+                            <input type="file" class="form-control d-none" id="profile_image" name="profile_image" accept="image/*" disabled readonly>
                         </div>
-                        <input type="file" class="form-control d-none" id="profile_image" name="profile_image" accept="image/*" disabled readonly>
                     </div>
-
                     <!-- باقي الحقول -->
-                    <div class="col-md-9">
+                    <div class="col-12">
                         <div class="row g-3">
+
                             <!-- الاسم الكامل -->
                             <div class="col-md-6">
                                 <label for="name" class="form-label">
-                                    <i class="fas fa-user text-warning"></i> الاسم الكامل <span
+                                    <i class="fas fa-user" style="color:#f1c40f;"></i> الاسم الكامل <span
                                         class="text-danger">*</span>
                                 </label>
                                 <input type="text" class="form-control" id="name" name="name"
@@ -179,7 +204,7 @@
                             <!-- اسم المستخدم -->
                             <div class="col-md-6">
                                 <label for="user_name" class="form-label">
-                                    <i class="fas fa-user text-warning"></i> اسم المستخدم <span
+                                    <i class="fas fa-user" style="color:#f1c40f;"></i> اسم المستخدم <span
                                         class="text-danger">*</span>
                                 </label>
                                 <input type="text" class="form-control" id="user_name" name="user_name"
@@ -189,7 +214,7 @@
                             <!-- رقم الهوية -->
                             <div class="col-md-6">
                                 <label for="id_number" class="form-label">
-                                    <i class="fas fa-id-card text-warning"></i> رقم الهوية <span
+                                    <i class="fas fa-id-card" style="color:#f1c40f;"></i> رقم الهوية <span
                                         class="text-danger">*</span>
                                 </label>
                                 <input type="text" class="form-control" id="id_number" name="id_number"
@@ -199,16 +224,16 @@
                             <!-- الحرفة -->
                             <div class="col-md-6">
                                 <label for="craft_name" class="form-label">
-                                    <i class="fas fa-tools text-warning"></i> الحرفة <span class="text-danger">*</span>
+                                    <i class="fas fa-tools" style="color:#f1c40f;"></i> الحرفة <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" class="form-control" id="craft_name" name="craft_name"
-                                    placeholder="مثال: نجارة" value="{{ $craftmen->craft_name}}" required readonly disabled>
+                                    placeholder="مثال: نجارة" value="{{ $craftmen->profession->name}}" required readonly disabled>
                             </div>
 
                             <!-- البريد الإلكتروني -->
                             <div class="col-md-6">
                                 <label for="email" class="form-label">
-                                    <i class="fas fa-envelope text-warning"></i> البريد الإلكتروني
+                                    <i class="fas fa-envelope" style="color:#f1c40f;"></i> البريد الإلكتروني
                                 </label>
                                 <input type="email" class="form-control" id="email" name="email"
                                     placeholder="example@email.com" value="{{ $craftmen->user->email }}" readonly disabled>
@@ -217,7 +242,7 @@
                             <!-- رقم الهاتف -->
                             <div class="col-md-6">
                                 <label for="mobile" class="form-label">
-                                    <i class="fas fa-mobile text-warning"></i> رقم الهاتف
+                                    <i class="fas fa-mobile" style="color:#f1c40f;"></i> رقم الهاتف
                                 </label>
                                 <input type="text" class="form-control" id="mobile" name="mobile"
                                     placeholder="0599 123 456" value="{{ $craftmen->user->mobile }}" readonly disabled>
@@ -226,7 +251,7 @@
                             <!-- كلمة المرور  -->
                             <div class="col-md-6">
                                 <label for="password" class="form-label">
-                                    <i class="fas fa-lock text-warning"></i> كلمة المرور
+                                    <i class="fas fa-lock" style="color:#f1c40f;"></i> كلمة المرور
                                 </label>
                                 <input type="password" id="password" name="password" class="form-control" placeholder="لا يمكن عرض كلمة المرور" readonly disabled>
                             </div>
@@ -234,7 +259,7 @@
                             <!-- العنوان -->
                             <div class="col-md-6">
                                 <label for="address" class="form-label">
-                                    <i class="fas fa-map-marker-alt text-warning"></i> العنوان
+                                    <i class="fas fa-map-marker-alt" style="color:#f1c40f;"></i> العنوان
                                 </label>
                                 <input type="text" class="form-control" id="address" name="address"
                                     placeholder="مثال: شارع فلسطين، غزة" value="{{ $craftmen->user->address }}" readonly disabled>
@@ -243,7 +268,7 @@
                             <!-- سنوات الخبرة -->
                             <div class="col-md-4">
                                 <label for="experience_years" class="form-label">
-                                    <i class="fas fa-star text-warning"></i> سنوات الخبرة
+                                    <i class="fas fa-star" style="color:#f1c40f;"></i> سنوات الخبرة
                                 </label>
                                 <input type="number" class="form-control" id="experience_years" name="experience_years"
                                     placeholder="8" min="0" value="{{ $craftmen->experience_years }}" readonly disabled>
@@ -252,7 +277,7 @@
                             <!-- السعر بالساعة -->
                             <div class="col-md-4">
                                 <label for="hourly_rate" class="form-label">
-                                    <i class="fas fa-clock text-warning"></i> السعر بالساعة (₪)
+                                    <i class="fas fa-clock" style="color:#f1c40f;"></i> السعر بالساعة (₪)
                                 </label>
                                 <input type="number" class="form-control" id="hourly_rate" name="hourly_rate" readonly disabled
                                     placeholder="50" min="0" step="0.5" value="{{ $craftmen->hourly_rate }}">
@@ -261,7 +286,7 @@
                             <!-- السعر باليوم -->
                             <div class="col-md-4">
                                 <label for="daily_rate" class="form-label">
-                                    <i class="fas fa-calendar-day text-warning"></i> السعر باليوم (₪)
+                                    <i class="fas fa-calendar-day" style="color:#f1c40f;"></i> السعر باليوم (₪)
                                 </label>
                                 <input type="number" class="form-control" id="daily_rate" name="daily_rate" readonly disabled
                                     placeholder="350" min="0" step="0.5" value="{{ $craftmen->daily_rate }}">
@@ -294,7 +319,7 @@
                             <!-- الوصف -->
                             <div class="col-12">
                                 <label for="description" class="form-label">
-                                    <i class="fas fa-align-left text-warning"></i> الوصف
+                                    <i class="fas fa-align-left" style="color:#f1c40f;"></i> الوصف
                                 </label>
                                 <textarea class="form-control" id="description" name="description" rows="4"
                                     placeholder="اكتب وصفاً عن الحرفي وخبراته ومهاراته..." readonly disabled>{{ $craftmen->description }}</textarea>
@@ -305,7 +330,7 @@
                 </div>
 
                 <!-- أزرار الإجراء -->
-                <div class="d-flex gap-3 mt-4 pt-3 border-top">
+                <div class="d-flex justify-content-end gap-2 mt-4 pt-4 border-top">
                     <a href="{{ route('craftmen.edit', $craftmen->id) }}" class="btn btn-warning btn-submit">
                         <i class="fas fa-save"></i> تعديل
                     </a>

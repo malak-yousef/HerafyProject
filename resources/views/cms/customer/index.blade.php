@@ -228,6 +228,7 @@
             <a href="{{ route('customers_trashed') }}" class="btn btn-danger btn-sm">
                 <i class="fas fa-trash-alt"></i> المحذوفين
             </a>
+
         </div>
     </div>
 
@@ -260,6 +261,7 @@
                         <th>رقم الهاتف</th>
                         <th>الجنس</th>
                         <th style="width: 90px;">الحالة</th>
+                        <th>عدد الطلبات</th>
                         <th style="width: 120px;">تاريخ الإضافة</th>
                         <th style="width: 180px;">الإجراءات</th>
                     </tr>
@@ -302,11 +304,22 @@
                             <span class="badge bg-dark badge-status">🚫 محظور</span>
                             @endif
                         </td>
+                        <td>
+                            {{$customer->orders->count()}}
+                        </td>
+
                         <td>{{ $customer->created_at ? $customer->created_at->format('Y-m-d') : '-' }}</td>
                         <td>
                             <div class="action-btns">
                                 <a href="{{ route('customers.show', $customer->id) }}" class="action-btn btn-view" title="عرض">
                                     <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ route('customers.orders',$customer->id) }}"
+                                    class="action-btn btn-view"
+                                    title="طلبات الزبون">
+
+                                    <i class="fas fa-clipboard-list"></i>
+
                                 </a>
                                 <a href="{{ route('customers.edit', $customer->id) }}" class="action-btn btn-edit" title="تعديل">
                                     <i class="fas fa-edit"></i>
@@ -327,6 +340,7 @@
                             <a href="{{ route('customers.create') }}" class="btn btn-warning btn-sm mt-2">
                                 <i class="fas fa-plus"></i> أضف أول زبون
                             </a>
+
                         </td>
                     </tr>
                     @endforelse

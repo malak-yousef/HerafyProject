@@ -26,7 +26,6 @@ return new class extends Migration
             $table->date('date')->nullable();
             $table->softDeletes();
             $table->nullableMorphs('actor');
-            $table->rememberToken();
             $table->timestamps();
         });
 

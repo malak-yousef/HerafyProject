@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('professions', function (Blueprint $table) {
-           $table->id();
+            $table->id();
             $table->string('name');
             $table->text('description');
-            $table->enum('status',['active','in_active'])->default('in_active');
+            $table->enum('status', ['active', 'in_active'])->default('in_active');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

@@ -9,9 +9,15 @@ use App\Http\Controllers\{
     ProfessionController,
     PortfolioImageController,
     CustomerController,
+
     AuthController,
     RoleController,
     PermissionController,
+
+    AreaController,
+    CityController,
+    OrderController,
+
 };
 
 //use App\Models\Category;
@@ -73,16 +79,41 @@ Route::prefix('cms/admin')->middleware('auth:admin,craftman,customer')->group(fu
 
     Route::resource('customers', CustomerController::class);
     Route::post('customers_update/{id}', [CustomerController::class, 'update'])->name('customers_update');
+    Route::get('customers/{customer}/orders', [CustomerController::class, 'orders'])
+        ->name('customers.orders');
     Route::get('customers_trashed', [CustomerController::class, 'trashed'])->name('customers_trashed');
     Route::get('customers_restore/{id}', [CustomerController::class, 'restore'])->name('customers_restore');
-    Route::get('customers_force_destroy/{id}', [CustomerController::class, 'forceDestroy'])->name('customers_force_destroy');
-    Route::get('customers_destroy_all', [CustomerController::class, 'DestroyAll'])->name('customers_destroy_all');
+    Route::get('customers_force/{id}', [CustomerController::class, 'force'])->name('customers_force');
+    Route::get('customers_forceAll', [CustomerController::class, 'forceAll'])->name('customers_forceAll');
+
 
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
 
     Route::get('roles/{id}/permissions', [RoleController::class, 'editRolePermissions'])->name('roles.edit-permissions');
     Route::post('roles/{id}/permissions', [RoleController::class, 'updateRolePermissions'])->name('roles.update-permissions');
+
+    Route::resource('areas', AreaController::class);
+    Route::post('areas_update/{id}', [AreaController::class, 'update'])->name('areas_update');
+    Route::get('areas_trashed', [AreaController::class, 'trashed'])->name('areas_trashed');
+    Route::get('areas_restore/{id}', [AreaController::class, 'restore'])->name('areas_restore');
+    Route::get('areas_force/{id}', [AreaController::class, 'force'])->name('areas_force');
+    Route::get('areas_forceAll', [AreaController::class, 'forceAll'])->name('areas_forceAll');
+
+    Route::resource('cities', CityController::class);
+    Route::post('cities_update/{id}', [CityController::class, 'update'])->name('cities_update');
+    Route::get('cities_trashed', [CityController::class, 'trashed'])->name('cities_trashed');
+    Route::get('cities_restore/{id}', [CityController::class, 'restore'])->name('cities_restore');
+    Route::get('cities_force/{id}', [CityController::class, 'force'])->name('cities_force');
+    Route::get('cities__forceAll', [CityController::class, 'forceAll'])->name('cities_forceAll');
+
+    Route::resource('orders', OrderController::class);
+    Route::post('orders_update/{id}', [OrderController::class, 'update'])->name('orders_update');
+    Route::get('orders_trashed', [OrderController::class, 'trashed'])->name('orders_trashed');
+    Route::get('orders_restore/{id}', [OrderController::class, 'restore'])->name('orders_restore');
+    Route::get('orders_force/{id}', [OrderController::class, 'force'])->name('orders_force');
+    Route::get('orders_forceAll', [OrderController::class, 'forceAll'])->name('orders_forceAll');
+
 });
 
 

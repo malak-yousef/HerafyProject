@@ -112,6 +112,7 @@
         .form-card {
             padding: 20px;
         }
+
         .image-display {
             max-width: 100%;
             height: 200px;
@@ -133,7 +134,6 @@
                     <h5 class="fw-bold mb-0">
                         <i class="fas fa-user-circle text-warning"></i> عرض زبون
                     </h5>
-                    <p class="text-muted small mb-0">{{ $customers->user->name ?? 'غير محدد' }}</p>
                 </div>
                 <div class="d-flex gap-2">
                     <a href="{{ route('customers.edit', $customers->id) }}" class="btn btn-warning btn-sm">
@@ -157,12 +157,12 @@
                     <label class="form-label fw-bold">الصورة الشخصية</label>
                     <div class="image-display">
                         @if($customers->user && $customers->user->image)
-                            <img src="{{ asset('storage/images/customer/' . $customers->user->image) }}" alt="{{ $customers->user->name }}">
+                        <img src="{{ asset('storage/images/customer/' . $customers->user->image) }}" alt="{{ $customers->user->name }}">
                         @else
-                            <div class="no-image">
-                                <i class="fas fa-user"></i>
-                                <span>لا توجد صورة</span>
-                            </div>
+                        <div class="no-image">
+                            <i class="fas fa-user"></i>
+                            <span>لا توجد صورة</span>
+                        </div>
                         @endif
                     </div>
 
@@ -236,50 +236,171 @@
                             <label class="form-label"><i class="fas fa-toggle-on text-warning"></i> حالة الحساب</label>
                             <div>
                                 @if($customers->user && $customers->user->status == 'active')
-                                    <span class="badge bg-success badge-status">✅ فعال</span>
+                                <span class="badge bg-success badge-status">✅ فعال</span>
                                 @elseif($customers->user && $customers->user->status == 'inactive')
-                                    <span class="badge bg-danger badge-status">❌ غير فعال</span>
+                                <span class="badge bg-danger badge-status">❌ غير فعال</span>
                                 @elseif($customers->user && $customers->user->status == 'pending')
-                                    <span class="badge bg-warning text-dark badge-status">⏳ قيد التنفيذ</span>
+                                <span class="badge bg-warning text-dark badge-status">⏳ قيد التنفيذ</span>
                                 @elseif($customers->user && $customers->user->status == 'blocked')
-                                    <span class="badge bg-dark badge-status">🚫 محظور</span>
+                                <span class="badge bg-dark badge-status">🚫 محظور</span>
                                 @else
-                                    <span class="badge bg-secondary badge-status">غير محدد</span>
+                                <span class="badge bg-secondary badge-status">غير محدد</span>
                                 @endif
                             </div>
                         </div>
 
+
                     </div>
                 </div>
-            </div>
+                <hr class="my-4">
 
-            <!-- أزرار الإجراء -->
-            <div class="d-flex gap-3 mt-4 pt-3 border-top">
-                <a href="{{ route('customers.edit', $customers->id) }}" class="btn btn-warning btn-submit">
-                    <i class="fas fa-edit"></i> تعديل
-                </a>
-                <button class="btn btn-danger btn-submit" onclick="performDestroy('{{ $customers->id }}', this)">
-                    <i class="fas fa-trash-alt"></i> حذف
-                </button>
-                <a href="{{ route('customers.index') }}" class="btn btn-outline-secondary btn-back ms-auto">
-                    <i class="fas fa-arrow-right"></i> العودة إلى القائمة
-                </a>
-            </div>
 
+                <h5 class="fw-bold mb-3">
+                    <i class="fas fa-list text-warning"></i>
+                    طلبات الزبون
+                </h5>
+
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle text-center">
+                        <thead>
+
+                            <tr>
+
+                                <th>العنوان</th>
+                                <th>المدينة</th>
+                                <th>الميزانية</th>
+                                <th>الحالة</th>
+                                <th>التاريخ</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+
+                            @forelse($customers->orders as $order)
+
+                            <tr>
+
+                                <td>
+                                    {{ $order->title }}
+                                </td>
+
+
+                                <td>
+                                    {{ $order->city->name ?? '-' }}
+                                </td>
+
+                                <td>
+                                    {{ $order->budget ? number_format($order->budget) . ' ₪' : '-' }}
+                                </td>
+
+                                <td>
+
+                                    @if($order->status == 'pending')
+
+                                    <span class="badge bg-warning text-dark">
+                                        قيد الانتظار
+                                    </span>
+
+
+                                    @elseif($order->status == 'accepted')
+
+                                    <span class="badge bg-success">
+                                        تم القبول
+                                    </span>
+
+
+                                    @elseif($order->status == 'in_progress')
+
+                                    <span class="badge bg-info">
+                                        قيد التنفيذ
+                                    </span>
+
+
+                                    @elseif($order->status == 'completed')
+
+                                    <span class="badge bg-primary">
+                                        مكتمل
+                                    </span>
+
+
+                                    @else
+
+                                    <span class="badge bg-danger">
+                                        ملغي
+                                    </span>
+
+
+                                    @endif
+
+
+                                </td>
+
+
+                                <td>
+                                    {{ $order->created_at->format('Y-m-d') }}
+                                </td>
+
+
+                            </tr>
+
+
+                            @empty
+
+                            <tr>
+
+                                <td colspan="5" class="text-center text-muted">
+
+                                    لا يوجد طلبات لهذا الزبون
+
+                                </td>
+
+                            </tr>
+
+
+                            @endforelse
+
+
+                        </tbody>
+
+
+                    </table>
+
+                </div>
+
+
+                <!-- أزرار الإجراء -->
+                <div class="d-flex gap-3 mt-4 pt-3 border-top">
+                    <a href="{{ route('customers.edit', $customers->id) }}" class="btn btn-warning btn-submit">
+                        <i class="fas fa-edit"></i> تعديل
+                    </a>
+                    <button class="btn btn-danger btn-submit" onclick="performDestroy('{{ $customers->id }}', this)">
+                        <i class="fas fa-trash-alt"></i> حذف
+                    </button>
+                    <a href="{{ route('customers.index') }}" class="btn btn-outline-secondary btn-back ms-auto">
+                        <i class="fas fa-arrow-right"></i> العودة إلى القائمة
+                    </a>
+                </div>
+
+            </div>
         </div>
     </div>
-</div>
-@endsection
+    @endsection
 
-@section('scripts')
-<script>
-    // ============================================
-    // حذف الزبون
-    // ============================================
-    function performDestroy(id, reference) {
-        confirmDestroy('/cms/admin/customers/' + id, reference);
-    }
+    @section('scripts')
+    <script>
+        // ============================================
+        // حذف الزبون
+        // ============================================
+        function performDestroy(id, reference) {
+            confirmDestroy('/cms/admin/customers/' + id, reference);
+        }
 
-    console.log('✅ صفحة عرض الزبون جاهزة');
-</script>
-@endsection
+        console.log('✅ صفحة عرض الزبون جاهزة');
+    </script>
+    @endsection

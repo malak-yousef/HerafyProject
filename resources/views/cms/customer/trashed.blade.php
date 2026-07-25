@@ -349,7 +349,7 @@
     // 2. حذف الزبون
     // ============================================
     function performDestroy(id, reference) {
-        confirmDestroy('/cms/customer$customer/customers/' + id, reference);
+        confirmDestroy('/cms/admin/customers/' + id, reference);
     }
 
     // ============================================
@@ -409,19 +409,7 @@
     }
 
     // ============================================
-    // 4. تصدير البيانات
-    // ============================================
-    function exportData(type) {
-        Swal.fire({
-            icon: 'info',
-            title: 'جاري التصدير',
-            text: 'سيتم تصدير جميع البيانات',
-            timer: 1000,
-            showConfirmButton: false
-        }).then(() => {
-            window.location.href = `/cms/customer$customer/${type}/export`;
-        });
-    }
+
 
     // ============================================
     // 5. إضافة مستمع للأحداث

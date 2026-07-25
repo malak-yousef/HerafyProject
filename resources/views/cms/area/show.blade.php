@@ -1,0 +1,197 @@
+@extends('cms.parent')
+
+@section('title', 'عرض منطقة')
+
+
+@section('styles')
+<style>
+    .form-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid #f1f2f6;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, .02);
+    }
+
+    .form-card .form-label {
+        font-weight: 600;
+        color: #495057;
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .form-card .form-control,
+    .form-card .form-select {
+        border-radius: 10px;
+        border: 1px solid #e4e7eb;
+        padding: 10px 14px;
+        font-size: 13px;
+        transition: .25s;
+    }
+
+    .form-card .form-control:focus,
+    .form-card .form-select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, .1);
+    }
+
+    textarea.form-control {
+        resize: none;
+    }
+
+    .form-card .form-control.is-invalid {
+        border-color: #e17055;
+    }
+
+    .form-card .form-control.is-valid {
+        border-color: #00b894;
+    }
+
+    .form-card .invalid-feedback {
+        font-size: 13px;
+        color: #e17055;
+    }
+
+    .form-card .btn-submit {
+        padding: 12px 40px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .form-card .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+    }
+
+    .form-card .btn-back {
+        padding: 12px 30px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .form-card .btn-back:hover {
+        transform: translateY(-2px);
+
+
+    }
+
+    .btn-custom {
+        padding: 8px 18px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        transition: .25s;
+    }
+
+    .btn-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+    }
+
+    .alert {
+        border-radius: 10px;
+        border: none;
+        font-size: 13px;
+    }
+
+    .btn-back {
+        min-width: 110px;
+    }
+
+    .form-control:hover,
+    .form-select:hover {
+        border-color: #f4b400;
+    }
+</style>
+@endsection
+
+@section('main_content' , 'عرض منطقة')
+
+@section('content')
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="form-card">
+            <!-- عنوان الصفحة -->
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <div>
+                    <h4 class="fw-bold mb-1" style="color:#2c3e50;">
+                        <i class="fas fa-map-marked-alt text-warning"></i> عرض بيانات المنطقة
+                    </h4>
+
+
+
+                </div>
+                <a href="{{ route('areas.index') }}" class="btn btn-outline-secondary btn-back">
+                    <i class="fas fa-arrow-right"></i> العودة
+                </a>
+            </div>
+
+            <!-- نموذج الإضافة -->
+
+
+            <div class="row">
+
+
+                <!-- باقي الحقول -->
+                <div class="col-12">
+                    <div class="row g-3">
+
+                        <!-- الاسم الكامل -->
+                        <div class="col-md-6">
+                            <label for="name" class="form-label">
+                                <i class="fas fa-map-marker-alt text-warning"></i> اسم المنطقة <span
+                                    class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                placeholder="مثال: الرمال" value="{{ $areas->name }}" required readonly disabled>
+                        </div>
+
+
+
+                        <!-- المدينة -->
+                        <div class="col-md-6">
+                            <label for="city_id" class="form-label">
+                                <label for="city_id" class="form-label">
+                                    <i class="fas fa-city text-warning"></i>
+                                    المدينة
+                                </label><span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="city_id" name="city_id"
+                                placeholder="مثال: نجارة" value="{{ $areas->city->name}}" required readonly disabled>
+                        </div>
+
+
+
+
+
+                        <!-- أزرار الإجراء -->
+
+                        <div class="d-flex justify-content-end gap-2 mt-4 pt-4 border-top">
+
+                            <a href="{{ route('areas.edit',$areas->id) }}"
+                                class="btn btn-warning btn-custom">
+
+                                <i class="fas fa-edit"></i>
+                                تعديل
+
+                            </a>
+
+                            <a href="{{ route('areas.index') }}"
+                                class="btn btn-outline-secondary btn-custom">
+
+                                <i class="fas fa-arrow-right"></i>
+                                رجوع
+
+                            </a>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            @endsection
+
+            @section('scripts')
+            @endsection

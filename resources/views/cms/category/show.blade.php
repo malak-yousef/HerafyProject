@@ -5,31 +5,28 @@
 @section('styles' )
 
 <style>
+    .categories-page {
+        padding: 30px;
+    }
 
-.categories-page{
-    padding:30px;
-}
-
-.category-card{
-    background:white;
-    padding:25px;
-    border-radius:18px;
-    box-shadow:0 5px 25px #00000010;
-}
-
-
-.add-btn{
-
-    background:#ffbf00;
-    color:#14213d;
-    border:none;
-    padding:12px 20px;
-    border-radius:10px;
-    font-weight:bold;
-
-}
+    .category-card {
+        background: white;
+        padding: 25px;
+        border-radius: 18px;
+        box-shadow: 0 5px 25px #00000010;
+    }
 
 
+    .add-btn {
+
+        background: #ffbf00;
+        color: #14213d;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-weight: bold;
+
+    }
 </style>
 
 @endsection
@@ -47,9 +44,9 @@
     <div class="row">
         <div class="col-xl-12">
             <div class="card invoice-container">
-                
+
                 <form id="category-form">
-                    
+
                     <div class="card-header">
                         <h5>عرض تصنيف</h5>
                         <div class="page-header-right ms-auto">
@@ -65,8 +62,8 @@
                                         <i class="feather-rotate-ccw me-2"></i>
                                         <span>Go Back</span>
                                     </a>
-                                    
-                       {{-- <button class="btn btn-warning" type="button" >Update</button> --}}     
+
+                                    {{-- <button class="btn btn-warning" type="button" >Update</button> --}}
                                 </div>
                             </div>
                             <div class="d-md-none d-flex align-items-center">
@@ -78,60 +75,60 @@
                     </div>
 
                     <div class="card-body p-0">
-                      <div class="px-4 pt-4">
-    <div class="row align-items-center">
-        
-       
-        <div class="col-md-9">
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label" for="name">ادخل اسم التصنيف</label>
-                        <input id="name" name="name" class="form-control" placeholder="  اسم التصنيف..." value="{{ $categories->name }}" disabled>
-                        
-                    </div>
-                </div>
+                        <div class="px-4 pt-4">
+                            <div class="row align-items-center">
 
-                
 
-               
-            </div>
-        </div>
+                                <div class="col-md-9">
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="form-label" for="name">ادخل اسم التصنيف</label>
+                                                <input id="name" name="name" class="form-control" placeholder="  اسم التصنيف..." value="{{ $categories->name }}" disabled>
 
-    </div>
-</div>
+                                            </div>
+                                        </div>
+
+
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                         <hr class="border-dashed">
-                       
 
-                        
-                        
-                        <div class="px-4 row justify-content-between" >
+
+
+
+                        <div class="px-4 row justify-content-between">
                             <div class="form-group row">
-                                <label for="description" class="col-sm-3 col-form-label" > وصف التصنيف</label>
+                                <label for="description" class="col-sm-3 col-form-label"> وصف التصنيف</label>
                                 <div class="col-sm-9">
-                                    
-                                    <textarea rows="5" class="form-control" id="description" name="description" placeholder="ادخل وصفك" disabled >{{ old('description', $categories->description) }}</textarea>
+
+                                    <textarea rows="5" class="form-control" id="description" name="description" placeholder="ادخل وصفك" disabled>{{ old('description', $categories->description) }}</textarea>
                                 </div>
                             </div>
                         </div>
 
                         <hr class="border-dashed">
                     </div>
-                    
+
 
                     <div class="row">
                         <div class="form-group col-md-12">
                             @foreach ($categories->professions as $profession)
                             <input type="text" value="{{$profession->name ?? null}}"
-                            class="form-control-solid" disabled />
+                                class="form-control-solid" disabled />
                             <span> </span>
-@endforeach
+                            @endforeach
                         </div>
                     </div>
 
 
 
-                </form> 
+                </form>
             </div>
         </div>
     </div>

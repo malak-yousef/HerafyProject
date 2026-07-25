@@ -78,4 +78,5 @@ class User extends Authenticatable
     {
         return $this->actor_type === \App\Models\Craftman::class;
     }
+
 }

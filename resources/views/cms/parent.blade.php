@@ -82,24 +82,57 @@
 
             <!-- المستخدمين -->
             <li class="nav-item">
-                <a class="nav-link" href="users.html">
+                <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'usersMenu')">
                     <i class="fas fa-users"></i> المستخدمون
-                    <span class="badge" id="usersBadge">0</span>
-                </a>
-            </li>
-
-            <!-- الحرفين -->
-            <li class="nav-item">
-                <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'craftmenMenu')">
-                    <i class="fas fa-tools"></i> الحرفيون
                     <i class="fas fa-angle-left arrow"></i>
                 </a>
-                <ul class="submenu" id="craftmenMenu" style="display:none;">
-                    <li><a href="{{ route('craftmen.index') }}"><i class="fas fa-list"></i> عرض الحرفيين</a></li>
-                    <li><a href="{{ route('craftmen.create') }}"> <i class="fas fa-plus-circle"></i> إضافة حرفي</a></li>
-                    <li><a href="{{ route('craftmen_trashed') }}"> <i class="fas fa-trash"></i> الحرفيين المحذوفين</a></li>
+                <ul class="submenu" id="usersMenu" style="display:none;">
+
+                    <!-- المشرفين -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'adminsMenu')">
+                            <i class="fas fa-tools"></i> المشرفين
+                            <i class="fas fa-angle-left arrow"></i>
+                        </a>
+                        <ul class="submenu" id="adminsMenu" style="display:none;">
+                            <li><a href="{{ route('admins.index') }}"><i class="fas fa-user-shield"></i> عرض المشرفين</a></li>
+                            <li><a href="{{ route('admins.create') }}"><i class="fas fa-user-plus"></i> إضافة مشرف</a></li>
+                            <li><a href="{{ route('admins_trashed') }}"> <i class="fas fa-trash"></i>المشرفين المحذوفيين</a></li>
+                        </ul>
+                    </li>
+
+
+                    <!-- الزبائن -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'customersMenu')">
+                            <i class="fas fa-tools"></i> الزبائن
+                            <i class="fas fa-angle-left arrow"></i>
+                        </a>
+                        <ul class="submenu" id="customersMenu" style="display:none;">
+                            <li><a href="{{ route('customers.index') }}"><i class="fas fa-user-shield"></i> عرض الزبائن</a></li>
+                            <li><a href="{{ route('customers.create') }}"><i class="fas fa-user-plus"></i> إضافة زبون</a></li>
+                            <li><a href="{{ route('customers_trashed') }}"> <i class="fas fa-trash"></i> عرض الزبائن المحذوفة</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- الحرفين -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'craftmenMenu')">
+                            <i class="fas fa-tools"></i> الحرفيون
+                            <i class="fas fa-angle-left arrow"></i>
+                        </a>
+                        <ul class="submenu" id="craftmenMenu" style="display:none;">
+                            <li><a href="{{ route('craftmen.index') }}"><i class="fas fa-list"></i> عرض الحرفيين</a></li>
+                            <li><a href="{{ route('craftmen.create') }}"> <i class="fas fa-plus-circle"></i> إضافة حرفي</a></li>
+                            <li><a href="{{ route('craftmen_trashed') }}"> <i class="fas fa-trash"></i> الحرفيين المحذوفين</a></li>
+                        </ul>
+                    </li>
+
+
                 </ul>
             </li>
+
+
 
             <!-- مشاريع الحرفين -->
             <li class="nav-item">
@@ -130,12 +163,7 @@
                 </ul>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="offers.html">
-                    <i class="fas fa-handshake"></i> العروض
-                    <span class="badge" id="offersBadge">0</span>
-                </a>
-            </li>
+
 
             <!-- التصنيفات -->
             <li class="nav-item">
@@ -146,78 +174,79 @@
                 <ul class="submenu" id="categoryMenu" style="display:none;">
                     <li><a href="{{ route('categories.index') }}"><i class="fas fa-list"></i> عرض التصنيفات</a></li>
                     <li><a href="{{ route('categories.create') }}"> <i class="fas fa-plus-circle"></i> إضافة تصنيف</a>
-                    </li>
-                </ul>
+                    <li><a href="{{ route('categories_trashed') }}"> <i class="fas fa-trash"></i>  التصنيفات المحذوفة</a></li>
             </li>
+        </ul>
+        </li>
 
-            <!-- المهن -->
-            <li class="nav-item">
-                <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'professionsMenu')">
-                    <i class="fas fa-tools"></i> المهن
-                    <i class="fas fa-angle-left arrow"></i>
-                </a>
-                <ul class="submenu" id="professionsMenu" style="display:none;">
-                    <li><a href="{{ route('professions.index') }}"><i class="fas fa-list"></i> عرض المهن</a></li>
-                    <li><a href="{{ route('professions.create') }}"> <i class="fas fa-plus-circle"></i> إضافة مهنة</a>
-                    </li>
-                </ul>
-            </li>
+        <!-- المهن -->
+        <li class="nav-item">
+            <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'professionsMenu')">
+                <i class="fas fa-tools"></i> المهن
+                <i class="fas fa-angle-left arrow"></i>
+            </a>
+            <ul class="submenu" id="professionsMenu" style="display:none;">
+                <li><a href="{{ route('professions.index') }}"><i class="fas fa-list"></i> عرض المهن</a></li>
+                <li><a href="{{ route('professions.create') }}"> <i class="fas fa-plus-circle"></i> إضافة مهنة</a>
+                <li><a href="{{ route('professions_trashed') }}"> <i class="fas fa-trash"></i> المهن  المحذوفة</a></li>
+        </li>
+        </ul>
+        </li>
 
-            <!-- المشرفين -->
-            <li class="nav-item">
-                <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'adminsMenu')">
-                    <i class="fas fa-tools"></i> المشرفين
-                    <i class="fas fa-angle-left arrow"></i>
-                </a>
-                <ul class="submenu" id="adminsMenu" style="display:none;">
-                    <li><a href="{{ route('admins.index') }}"><i class="fas fa-user-shield"></i> عرض المشرفين</a></li>
-                    <li><a href="{{ route('admins.create') }}"><i class="fas fa-user-plus"></i> إضافة مشرف</a></li>
-                </ul>
-            </li>
 
-            <!-- الزبائن -->
-            <li class="nav-item">
-                <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'customersMenu')">
-                    <i class="fas fa-tools"></i> الزبائن
-                    <i class="fas fa-angle-left arrow"></i>
-                </a>
-                <ul class="submenu" id="customersMenu" style="display:none;">
-                    <li><a href="{{ route('customers.index') }}"><i class="fas fa-user-shield"></i> عرض الزبائن</a></li>
-                    <li><a href="{{ route('customers.create') }}"><i class="fas fa-user-plus"></i> إضافة زبون</a></li>
-                    <li><a href="{{ route('customers_trashed') }}"> <i class="fas fa-trash"></i> عرض الزبائن المحذوفة</a></li>
-                </ul>
-            </li>
+        <!-- المدن -->
+        <li class="nav-item">
+            <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'citiesMenu')">
+                <i class="fas fa-city"></i>
+                المدن
+                <i class="fas fa-angle-left arrow"></i>
+            </a>
 
-            <!-- الطلبات -->
-            <li class="nav-item">
-                <a class="nav-link" href="requests.html">
-                    <i class="fas fa-clipboard-list"></i> الطلبات
-                    <span class="badge" id="requestsBadge">0</span>
-                </a>
-            </li>
+            <ul class="submenu" id="citiesMenu" style="display:none;">
+                <li>
+                    <a href="{{ route('cities.index') }}">
+                        <i class="fas fa-list"></i>
+                        عرض المدن
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('cities.create') }}">
+                        <i class="fas fa-plus-circle"></i>
+                        إضافة مدينة
+                    </a>
+                </li>
 
-            <!-- العروض -->
-            <li class="nav-item">
-                <a class="nav-link" href="offers.html">
-                    <i class="fas fa-handshake"></i> العروض
-                    <span class="badge" id="offersBadge">0</span>
-                </a>
-            </li>
+                <li>
+                    <a href="{{ route('cities_trashed') }}">
+                        <i class="fas fa-trash-alt"></i>
+                        المدن المحذوفة
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-            <!-- الاعدادات -->
-            <li class="nav-item">
-                <a class="nav-link" href="settings.html">
-                    <i class="fas fa-cog"></i> الإعدادات
-                </a>
-            </li>
+        <!-- المناطق -->
+        <li class="nav-item">
+            <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'areasMenu')">
+                <i class="fas fa-map-marked-alt"></i>
+                المناطق
+                <i class="fas fa-angle-left arrow"></i>
+            </a>
 
-            <!-- تعديل سريع -->
-            <li class="nav-item">
-                <a class="nav-link text-info" href="#" onclick="quickEdit()">
-                    <i class="fas fa-pen-fancy"></i> تعديل سريع
-                    <!-- <span class="badge bg-info text-white">جديد</span> -->
-                </a>
-            </li>
+            <ul class="submenu" id="areasMenu" style="display:none;">
+                <li>
+                    <a href="{{ route('areas.index') }}">
+                        <i class="fas fa-list"></i>
+                        عرض المناطق
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('areas.create') }}">
+                        <i class="fas fa-plus-circle"></i>
+                        إضافة منطقة
+                    </a>
+                </li>
+
 
             <!-- تسجيل الخروج -->
             <form action="{{ route('logout') }}" id="logoutForm" method="post" style="display: none;">
@@ -227,6 +256,84 @@
                 <i class="fas fa-sign-out-alt"></i>
                 <span>تسجيل الخروج</span>
             </a>
+
+                <li>
+                    <a href="{{ route('areas_trashed') }}">
+                        <i class="fas fa-trash-alt"></i>
+                        المناطق المحذوفة
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- الطلبات -->
+        <li class="nav-item">
+            <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'ordersMenu')">
+                <i class="fas fa-clipboard-list"></i>
+                الطلبات
+
+                <span class="badge ms-auto me-2">
+                    {{ $ordersCount }}
+                </span>
+                <i class="fas fa-angle-left arrow"></i>
+            </a>
+
+            <ul class="submenu" id="ordersMenu" style="display:none;">
+                <li>
+                    <a href="{{ route('orders.index') }}">
+                        <i class="fas fa-eye"></i>
+                        عرض الطلبات
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('orders.create') }}">
+                        <i class="fas fa-plus-circle"></i>
+                        إضافة طلب
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('orders_trashed') }}">
+                        <i class="fas fa-trash-alt"></i>
+                        الطلبات المحذوفة
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+
+        <!-- العروض -->
+        <li class="nav-item">
+            <a class="nav-link" href="offers.html">
+                <i class="fas fa-handshake"></i> العروض
+                <span class="badge" id="offersBadge">0</span>
+            </a>
+        </li>
+
+
+        <!-- الاعدادات -->
+        <li class="nav-item">
+            <a class="nav-link" href="settings.html">
+                <i class="fas fa-cog"></i> الإعدادات
+            </a>
+        </li>
+
+        <!-- تعديل سريع -->
+        <li class="nav-item">
+            <a class="nav-link text-info" href="#" onclick="quickEdit()">
+                <i class="fas fa-pen-fancy"></i> تعديل سريع
+                <!-- <span class="badge bg-info text-white">جديد</span> -->
+            </a>
+        </li>
+
+        <!-- تسجيل الخروج -->
+        <li class="nav-item mt-2">
+            <a class="nav-link text-danger" href="#" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </a>
+        </li>
+
         </ul>
         <hr>
         <div class="text-center small">
@@ -242,17 +349,23 @@
         <!-- ===== HEADER ===== -->
         <div class="page-header">
             <div>
-                <h4 class="fw-bold mb-0">📊 لوحة التحكم @yield('main_content') </h4>
+                <h4 class="fw-bold mb-0"><span style="color:#D4AF37;">❖</span>لوحة تحكم @yield('main_content')</h4>
                 <p class="text-muted small">نظرة عامة على أداء المنصة</p>
             </div>
-            <div>
-                <span class="badge bg-success">
-                    <i class="fas fa-circle"></i> النظام يعمل
+            <div class="d-flex align-items-center gap-2">
+                <div class="status-display-box">
+                    <i class="fas fa-circle  text-success"></i>
+                    <span>النظام يعمل</span>
+                </div>
                 </span>
-                <span class="badge bg-info text-white" id="lastUpdate">
-                    <i class="fas fa-clock"></i> الآن
-                </span>
+                <!-- صندوق الساعة الجديد والمميز -->
+
+                <div class="time-display-box me-2">
+                    <i class="fas fa-clock" style="color: #f1c40f;"></i>
+                    <span id="live-clock">00:00:00</span>
+                </div>
             </div>
+        </div>
         </div>
 
         <!-- ===== STATISTICS ===== -->
@@ -570,11 +683,32 @@
                 arrow.style.transform = "rotate(90deg)";
             }
 
-
-
-
-
         }
+
+        // دالة تشغيل الساعة الفورية
+        // ============================================
+        function updateClock() {
+            const clockElement = document.getElementById('live-clock');
+            if (clockElement) {
+                const now = new Date();
+                let hours = now.getHours();
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                const ampm = hours >= 12 ? 'مساءً' : 'صباحاً';
+
+                // تحويل إلى نظام 12 ساعة
+                hours = hours % 12;
+                hours = hours ? hours : 12;
+                const formattedHours = String(hours).padStart(2, '0');
+
+                clockElement.textContent = `${formattedHours}:${minutes}:${seconds} ${ampm}`;
+            }
+        }
+
+        // تشغيل فوري عند قراءة المتصفح للكود وبدون انتظار
+        updateClock();
+        // تحديث مستمر كل ثانية
+        setInterval(updateClock, 1000);
     </script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

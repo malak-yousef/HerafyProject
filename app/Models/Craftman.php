@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\{
     Portfolio,
     User,
+    Profession,
 };
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -22,6 +23,7 @@ class Craftman extends Model
         'description',
         'hourly_rate',
         'daily_rate',
+        'profession_id',
     ];
 
     protected $casts = [
@@ -33,7 +35,10 @@ class Craftman extends Model
     {
         return $this->hasMany(Portfolio::class);
     }
-
+    public function profession()
+    {
+        return $this->belongsTo(Profession::class);
+    }
     public function user()
     {
         return $this->morphOne(User::class, 'actor', 'actor_type', 'actor_id', 'id');

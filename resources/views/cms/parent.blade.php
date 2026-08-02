@@ -174,7 +174,7 @@
                 <ul class="submenu" id="categoryMenu" style="display:none;">
                     <li><a href="{{ route('categories.index') }}"><i class="fas fa-list"></i> عرض التصنيفات</a></li>
                     <li><a href="{{ route('categories.create') }}"> <i class="fas fa-plus-circle"></i> إضافة تصنيف</a>
-                    <li><a href="{{ route('categories_trashed') }}"> <i class="fas fa-trash"></i>  التصنيفات المحذوفة</a></li>
+                    <li><a href="{{ route('categories_trashed') }}"> <i class="fas fa-trash"></i> التصنيفات المحذوفة</a></li>
             </li>
         </ul>
         </li>
@@ -188,7 +188,7 @@
             <ul class="submenu" id="professionsMenu" style="display:none;">
                 <li><a href="{{ route('professions.index') }}"><i class="fas fa-list"></i> عرض المهن</a></li>
                 <li><a href="{{ route('professions.create') }}"> <i class="fas fa-plus-circle"></i> إضافة مهنة</a>
-                <li><a href="{{ route('professions_trashed') }}"> <i class="fas fa-trash"></i> المهن  المحذوفة</a></li>
+                <li><a href="{{ route('professions_trashed') }}"> <i class="fas fa-trash"></i> المهن المحذوفة</a></li>
         </li>
         </ul>
         </li>
@@ -248,14 +248,14 @@
                 </li>
 
 
-            <!-- تسجيل الخروج -->
-            <form action="{{ route('logout') }}" id="logoutForm" method="post" style="display: none;">
-                @csrf
-            </form>
-            <a href="#" class="nav-link text-danger" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>تسجيل الخروج</span>
-            </a>
+                <!-- تسجيل الخروج -->
+                <form action="{{ route('logout') }}" id="logoutForm" method="post" style="display: none;">
+                    @csrf
+                </form>
+                <a href="#" class="nav-link text-danger" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>تسجيل الخروج</span>
+                </a>
 
                 <li>
                     <a href="{{ route('areas_trashed') }}">
@@ -663,8 +663,7 @@
                 cancelButtonText: 'إلغاء'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    localStorage.removeItem('currentUser');
-                    window.location.href = '../index.html';
+                    document.getElementById('logoutForm').submit();
                 }
             });
         }

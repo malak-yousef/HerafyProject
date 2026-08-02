@@ -12,258 +12,366 @@
     <!-- <link rel="stylesheet" href="{{ asset('cms/css/style.css') }}"> -->
 
     <style>
-        /* ===== تنسيق الصفحة ===== */
-        .auth-section {
-            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-            min-height: 90vh;
-            display: flex;
-            align-items: center;
+        /* ===== تصميم حرفي - تنسيقات فقط ===== */
+        :root {
+            --primary: #FFC107;
+            --primary-dark: #e5a900;
+            --dark: #252525;
+            --muted: #777;
+            --border: #eeeeee;
+            --soft: #fffaf0;
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #fff;
+            color: var(--dark);
+            font-family: "Tajawal", "Cairo", Arial, sans-serif;
+        }
+
+        /* ===== Navbar ===== */
+        .navbar {
+            min-height: 70px;
+            background: rgba(255, 255, 255, .96) !important;
+            border-bottom: 1px solid #f2f2f2;
+            box-shadow: 0 4px 22px rgba(0, 0, 0, .04) !important;
+            position: relative;
+            z-index: 10;
+        }
+
+        .navbar .navbar-brand {
+            color: var(--dark);
+            font-size: 1.55rem !important;
+            letter-spacing: -.5px;
+        }
+
+        .navbar .navbar-brand i {
+            color: var(--primary) !important;
+        }
+
+        .navbar .nav-link {
+            color: #444;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 9px 14px !important;
+            border-radius: 10px;
+            transition: .25s ease;
+        }
+
+        .navbar .nav-link:hover,
+        .navbar .nav-link.active {
+            color: #b47c00;
+            background: #fff8df;
+        }
+
+        .navbar .btn-warning,
+        .navbar .btn-outline-warning {
+            border-radius: 9px;
+            font-weight: 700;
+            padding: 7px 15px;
+            transition: .25s ease;
+        }
+
+        .navbar .btn-warning {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #222;
+        }
+
+        .navbar .btn-outline-warning {
+            border: 1px solid var(--primary);
+            color: #9a6b00;
+        }
+
+        .navbar .btn-warning:hover,
+        .navbar .btn-outline-warning:hover {
+            background: #ffca28;
+            border-color: #ffca28;
+            color: #222;
+            transform: translateY(-1px);
+        }
+
+        /* ===== Login Section ===== */
+        .auth-section {
+            min-height: calc(100vh - 130px);
+            padding: 55px 0 !important;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 13% 35%, rgba(255, 193, 7, .08) 0 100px, transparent 101px),
+                radial-gradient(circle at 86% 72%, rgba(255, 193, 7, .07) 0 150px, transparent 151px),
+                linear-gradient(135deg, #fff 0%, #fffdf8 100%);
+        }
+
+        .auth-section:before {
+            content: "";
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            border: 35px solid rgba(255, 193, 7, .055);
+            border-radius: 50%;
+            left: -120px;
+            top: 80px;
+        }
+
+        .auth-section .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-section .row {
+            min-height: 650px !important;
+            gap: 10px 0;
+        }
+
+        /* ===== Login Card ===== */
         .auth-section .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: none;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-            border-radius: 20px;
+            border: 1px solid #f0f0f0 !important;
+            border-radius: 24px !important;
+            background: rgba(255, 255, 255, .98);
+            box-shadow: 0 18px 55px rgba(0, 0, 0, .09) !important;
+            padding: 38px 40px !important;
+            max-width: 500px;
+            margin: auto;
+            transition: .3s ease;
+        }
+
+        .auth-section .card:hover {
+            box-shadow: 0 22px 65px rgba(0, 0, 0, .12) !important;
         }
 
         .auth-section .card .auth-icon {
-            background: linear-gradient(135deg, #FFC107, #e6a800);
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            color: #2d3436;
-            transition: all 0.3s ease;
+            width: 68px !important;
+            height: 68px !important;
+            background: #fff3c4 !important;
+            color: #222 !important;
+            border: 5px solid #fff8df;
+            font-size: 1.65rem !important;
+            box-shadow: 0 8px 20px rgba(255, 193, 7, .18);
         }
 
-        .auth-section .card .auth-icon:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(255, 193, 7, 0.4);
+        .auth-section .card h3 {
+            font-size: 1.65rem;
+            color: #222;
+            margin-bottom: 7px;
         }
 
-        /* ===== تنسيق الحقول ===== */
+        .auth-section .card .text-muted {
+            color: #888 !important;
+            font-size: 13px;
+        }
+
+        /* ===== Labels & Inputs ===== */
+        .auth-section .form-label {
+            color: #333;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .auth-section .form-label i {
+            margin-left: 4px;
+        }
+
         .auth-section .form-control {
-            border-radius: 12px;
-            border: 2px solid #e9ecef;
-            padding: 12px 18px;
-            transition: all 0.3s ease;
-            font-size: 15px;
+            height: 48px;
+            border: 1px solid #e4e4e4;
+            border-radius: 10px !important;
+            background: #fff;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #333;
+            box-shadow: none;
+            transition: .2s ease;
+        }
+
+        .auth-section .form-control::placeholder {
+            color: #b5b5b5;
         }
 
         .auth-section .form-control:focus {
-            border-color: #FFC107;
-            box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
-        }
-
-        .auth-section .form-control-lg {
-            height: 52px;
-        }
-
-        .auth-section .input-group .btn-outline-secondary {
-            border-radius: 0 12px 12px 0;
-            border: 2px solid #e9ecef;
-            border-left: none;
-            background: #fff;
-            transition: all 0.3s ease;
-        }
-
-        .auth-section .input-group .btn-outline-secondary:hover {
-            background: #f8f9fa;
-            border-color: #FFC107;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, .13);
         }
 
         .auth-section .input-group .form-control {
-            border-radius: 12px 0 0 12px;
-            border-right: none;
+            border-radius: 10px 0 0 10px !important;
         }
 
-        .auth-section .input-group .form-control:focus {
-            border-color: #FFC107;
+        .auth-section .input-group .btn-outline-secondary {
+            width: 48px;
+            border: 1px solid #e4e4e4;
+            border-right: 0;
+            border-radius: 0 10px 10px 0;
+            background: #fff;
+            color: #888;
         }
 
-        .auth-section .input-group .form-control:focus+.btn-outline-secondary {
-            border-color: #FFC107;
+        .auth-section .input-group .btn-outline-secondary:hover {
+            color: #555;
+            background: #fffaf0;
+            border-color: var(--primary);
         }
 
-        /* ===== تنسيق الأزرار ===== */
+        /* ===== Main Login Button ===== */
         .auth-section .btn-warning {
-            background: #FFC107;
-            border: none;
-            border-radius: 12px;
-            padding: 14px;
-            font-weight: 700;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            color: #2d3436;
+            height: 48px;
+            background: var(--primary);
+            border: 0;
+            border-radius: 10px;
+            color: #222;
+            font-size: 14px;
+            font-weight: 800;
+            box-shadow: 0 7px 18px rgba(255, 193, 7, .18);
+            transition: .25s ease;
         }
 
         .auth-section .btn-warning:hover {
-            background: #e6a800;
+            background: var(--primary-dark);
+            color: #fff;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 193, 7, 0.4);
+            box-shadow: 0 10px 24px rgba(255, 193, 7, .28);
         }
 
+        .auth-section .form-check-label,
+        .auth-section .small {
+            font-size: 12px !important;
+        }
+
+        .auth-section .form-check-input {
+            border-color: #d5d5d5;
+            width: 16px;
+            height: 16px;
+        }
+
+        .auth-section .form-check-input:checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .auth-section .text-warning {
+            color: #d99a00 !important;
+            font-weight: 700;
+        }
+
+        /* ===== Social Buttons ===== */
         .auth-section .btn-outline-danger,
         .auth-section .btn-outline-primary {
-            border-radius: 10px;
-            padding: 10px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            border-width: 2px;
+            height: 42px;
+            border-radius: 9px;
+            background: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            border-width: 1px;
+            transition: .25s ease;
         }
 
         .auth-section .btn-outline-danger:hover,
         .auth-section .btn-outline-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 14px rgba(0, 0, 0, .07);
         }
 
-        /* ===== تنسيق الروابط ===== */
-        .auth-section .form-check-label {
-            font-size: 14px;
-            color: #6c757d;
+        .auth-section .btn-outline-danger:hover {
+            background: #fff7f7;
         }
 
-        .auth-section .form-check-input:checked {
-            background-color: #FFC107;
-            border-color: #FFC107;
+        .auth-section .btn-outline-primary:hover {
+            background: #f7faff;
         }
 
-        .auth-section .text-warning {
-            color: #FFC107 !important;
-            transition: all 0.3s ease;
+        /* ===== Side Illustration ===== */
+        .auth-section .col-lg-5:last-child {
+            padding: 25px 35px;
         }
 
-        .auth-section .text-warning:hover {
-            color: #e6a800 !important;
-        }
-
-        /* ===== تنسيق الصورة الجانبية ===== */
         .auth-image {
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 500px;
+            max-height: 440px;
+            object-fit: contain;
+            border-radius: 22px !important;
+            box-shadow: none !important;
+            transition: .3s ease;
         }
 
         .auth-image:hover {
-            transform: scale(1.02);
-            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
         }
 
-        /* ===== تنسيق الجوال ===== */
-        @media (max-width: 768px) {
+        .auth-section .col-lg-5:last-child h4 {
+            font-size: 22px;
+            color: #252525;
+            margin-top: 8px;
+        }
+
+        .auth-section .col-lg-5:last-child p {
+            font-size: 13px;
+            color: #888 !important;
+        }
+
+        /* ===== Footer ===== */
+        footer {
+            background: #22272b !important;
+            padding: 17px 0 !important;
+        }
+
+        footer p {
+            color: rgba(255, 255, 255, .55) !important;
+            font-size: 11px;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 991px) {
             .auth-section {
-                min-height: auto;
-                padding: 40px 0;
+                padding: 35px 0 !important;
+            }
+
+            .auth-section .row {
+                min-height: auto !important;
             }
 
             .auth-section .card {
-                padding: 20px !important;
-                margin: 0 10px;
+                max-width: 560px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .auth-section {
+                min-height: auto;
+                padding: 35px 12px !important;
             }
 
-            .auth-section .card .auth-icon {
-                width: 60px;
-                height: 60px;
-                font-size: 2rem;
+            .auth-section .card {
+                padding: 28px 22px !important;
+                border-radius: 18px !important;
             }
 
-            .auth-section .form-control-lg {
-                height: 45px;
-                font-size: 14px;
+            .auth-section .card h3 {
+                font-size: 1.4rem;
             }
 
-            .auth-section .btn-warning {
-                padding: 12px;
-                font-size: 15px;
+            .navbar .nav-link {
+                text-align: center;
             }
         }
 
         @media (max-width: 480px) {
             .auth-section .card {
-                padding: 15px !important;
+                padding: 24px 18px !important;
             }
 
             .auth-section .d-flex.justify-content-between {
-                flex-direction: column;
-                gap: 10px;
-                align-items: flex-start !important;
+                gap: 8px;
             }
-        }
 
-        /* ===== تنسيق الـ Navbar ===== */
-        .navbar {
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05) !important;
-        }
-
-        .navbar .navbar-brand {
-            color: #2d3436;
-        }
-
-        .navbar .navbar-brand i {
-            color: #FFC107;
-        }
-
-        .navbar .nav-link {
-            color: #2d3436;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            padding: 8px 16px;
-            border-radius: 8px;
-        }
-
-        .navbar .nav-link:hover {
-            color: #FFC107;
-            background: rgba(255, 193, 7, 0.1);
-        }
-
-        .navbar .nav-link.active {
-            color: #FFC107;
-            background: rgba(255, 193, 7, 0.1);
-        }
-
-        .navbar .btn-warning {
-            background: #FFC107;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            color: #2d3436;
-        }
-
-        .navbar .btn-warning:hover {
-            background: #e6a800;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
-        }
-
-        .navbar .btn-outline-warning {
-            border: 2px solid #FFC107;
-            border-radius: 8px;
-            font-weight: 600;
-            color: #FFC107;
-            transition: all 0.3s ease;
-        }
-
-        .navbar .btn-outline-warning:hover {
-            background: #FFC107;
-            color: #2d3436;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
-        }
-
-        /* ===== تنسيق الفوتر ===== */
-        footer {
-            background: #1a1a2e !important;
-        }
-
-        footer p {
-            color: rgba(255, 255, 255, 0.5) !important;
+            .auth-section .col-lg-5:last-child {
+                padding: 15px;
+            }
         }
     </style>
 </head>
@@ -286,8 +394,8 @@
                     <li class="nav-item"><a class="nav-link" href="index.html#craftsmen">الحرفيون</a></li>
                 </ul>
                 <div class="d-flex gap-2">
-                    <a href="login.html" class="btn btn-warning btn-sm">دخول</a>
-                    <a href="register.html" class="btn btn-outline-warning btn-sm">انضم الآن</a>
+                    <a href="#" class="btn btn-warning btn-sm">دخول</a>
+                    <a href="{{ route('register') }}" class="btn btn-outline-warning btn-sm">انضم الآن</a>
                 </div>
             </div>
         </div>
@@ -368,7 +476,7 @@
                             <div class="text-center mt-3">
                                 <p class="mb-0 small">
                                     ليس لديك حساب؟
-                                    <a href="register.html" class="text-warning fw-bold">انضم الآن</a>
+                                    <a href="{{ route('register') }}" class="text-warning fw-bold">انضم الآن</a>
                                 </p>
                             </div>
 
@@ -377,13 +485,14 @@
                 </div>
 
                 <div class="col-lg-5 d-none d-lg-block text-center">
-                    <img src="https://via.placeholder.com/500x500/FFC107/FFFFFF?text=حرفي"
-                        alt="تسجيل الدخول"
-                        class="img-fluid rounded-4 shadow-lg">
-                    <div class="mt-4">
+                    <div class="auth-side-content">
                         <h4 class="fw-bold">أهلاً بك في <span class="text-warning">حرفي</span></h4>
                         <p class="text-muted">منصتك الموثوقة للوصول إلى أفضل الحرفيين</p>
                     </div>
+
+                    <img src="{{ asset('cms/img/login.png') }}"
+                        alt="تسجيل الدخول"
+                        class="auth-image">
                 </div>
             </div>
         </div>
@@ -409,7 +518,6 @@
     <script src="{{ asset('cms/js/main.js') }}"></script>
 
     <script>
-
         // ============================================
         // تسجيل الدخول
         // ============================================
@@ -417,10 +525,12 @@
             axios.post('login', {
                     email: document.getElementById('email').value,
                     password: document.getElementById('password').value,
-                    remember: document.getElementById('remember').checked
+                    // remember: document.getElementById('remember').checked
                 })
                 .then(function(response) {
                     window.location.href = response.data.redirect;
+                    // window.location.href = route('cms/admin');
+
                 })
                 .catch(function(error) {
                     if (error.response.data.errors !== undefined) {

@@ -21,6 +21,14 @@ use App\Http\Controllers\{
 //use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
+// صفحات المشروع
+Route::prefix('herafy')->group(function () {
+    Route::view('main', 'herafy.parent')->name('main');
+    Route::view('index', 'herafy.index')->name('index');
+    Route::view('showCraftsmen', 'herafy.craftsmen')->name('showCraftsmen');
+    Route::view('request', 'herafy.request')->name('request');
+});
+
 // تسجيل الدخول
 Route::middleware('guest:admin,craftman,customer,web')->group(function () {
     Route::get('login', [AuthController::class, 'showLogin'])->name('login');

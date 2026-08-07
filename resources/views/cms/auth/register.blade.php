@@ -44,53 +44,64 @@
         }
 
         .navbar {
-            min-height: 74px;
-            border-bottom: 1px solid rgba(0, 0, 0, .04);
-            backdrop-filter: blur(10px);
+            min-height: 70px;
+            background: rgba(255, 255, 255, .96) !important;
+            border-bottom: 1px solid #f2f2f2;
+            box-shadow: 0 4px 22px rgba(0, 0, 0, .04) !important;
+            position: relative;
+            z-index: 10;
         }
 
-        .navbar-brand {
+        .navbar .navbar-brand {
+            color: var(--dark);
+            font-size: 1.55rem !important;
             letter-spacing: -.5px;
-            transition: transform .25s ease;
         }
 
-        .navbar-brand:hover {
-            transform: translateY(-1px);
+        .navbar .navbar-brand i {
+            color: var(--primary) !important;
         }
 
-        .navbar-brand i {
-            filter: drop-shadow(0 4px 7px rgba(255, 193, 7, .25));
-        }
-
-        .nav-link {
-            font-weight: 500;
-            color: #4b5563 !important;
-            margin: 0 4px;
-            padding: 10px 13px !important;
+        .navbar .nav-link {
+            color: #444;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 9px 14px !important;
             border-radius: 10px;
-            transition: all .25s ease;
+            transition: .25s ease;
         }
 
-        .nav-link:hover {
-            color: #111827 !important;
-            background: rgba(255, 193, 7, .10);
+        .navbar .nav-link:hover,
+        .navbar .nav-link.active {
+            color: #b47c00;
+            background: #fff8df;
         }
 
-        .navbar .btn {
-            border-radius: 10px;
-            padding: 8px 17px;
+        .navbar .btn-warning,
+        .navbar .btn-outline-warning {
+            border-radius: 9px;
             font-weight: 700;
-            transition: all .25s ease;
+            padding: 7px 15px;
+            transition: .25s ease;
         }
 
-        .navbar .btn-warning:hover {
-            background: var(--herafy-yellow-dark);
-            border-color: var(--herafy-yellow-dark);
-            transform: translateY(-1px);
+        .navbar .btn-warning {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #222;
         }
 
+        .navbar .btn-outline-warning {
+            border: 1px solid var(--primary);
+            color: #9a6b00;
+        }
+
+        .navbar .btn-warning:hover,
         .navbar .btn-outline-warning:hover {
-            color: #212529;
+            background: #ffca28;
+            border-color: #ffca28;
+            color: #222;
+            transform: translateY(-1px);
         }
 
         .auth-section {
@@ -531,6 +542,7 @@
         }
     </style>
 
+
 </head>
 
 <body>
@@ -548,9 +560,9 @@
             </button>
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="{{ url('/') }}">الرئيسية</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url('/') }}#about">من نحن</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url('/') }}#craftsmen">الحرفيون</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('index') }}">الرئيسية</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('index') }}#about">من نحن</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('showCraftsmen') }}#craftsmen">الحرفيون</a></li>
                 </ul>
                 <div class="d-flex gap-2">
                     <a href="{{ route('login') }}" class="btn btn-warning btn-sm">دخول</a>

@@ -1,0 +1,162 @@
+/* ============================================ */
+/* التنسيقات العامة */
+/* ============================================ */
+:root {
+    --primary-color: #FFC107;
+    --primary-dark: #e6a800;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    scroll-behavior: smooth;
+}
+
+/* ============================================ */
+/* NAVBAR */
+/* ============================================ */
+.navbar {
+    min-height: 70px;
+    background: rgba(255, 255, 255, .96) !important;
+    border-bottom: 1px solid #f2f2f2;
+    box-shadow: 0 4px 22px rgba(0, 0, 0, .04) !important;
+    position: relative;
+    z-index: 10;
+}
+
+.navbar .navbar-brand {
+    color: var(--dark);
+    font-size: 1.55rem !important;
+    letter-spacing: -.5px;
+}
+
+.navbar .nav-link {
+    color: #444;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 9px 14px !important;
+    border-radius: 10px;
+    transition: .25s ease;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+    color: #b47c00;
+    background: #fff8df;
+}
+
+.navbar .btn-warning,
+.navbar .btn-outline-warning {
+    border-radius: 9px;
+    font-weight: 700;
+    padding: 7px 15px;
+    transition: .25s ease;
+}
+
+.navbar .btn-outline-warning {
+    border: 1px solid var(--primary);
+    color: #9a6b00;
+}
+
+.navbar .btn-warning:hover,
+.navbar .btn-outline-warning:hover {
+    background: #ffca28;
+    border-color: #ffca28;
+    color: #222;
+    transform: translateY(-1px);
+}
+
+/* ============================================ */
+/* HERO SECTION */
+/* ============================================ */
+.hero-section {
+    background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+}
+
+.min-vh-75 {
+    min-height: 75vh;
+}
+
+.hero-section h1 .text-warning {
+    position: relative;
+}
+
+/* ============================================ */
+/* HOVER EFFECT للبطاقات */
+/* ============================================ */
+.hover-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+.hover-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* ============================================ */
+/* STEP ICON (كيف تعمل المنصة) */
+/* ============================================ */
+.step-icon {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.step-icon:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 30px rgba(255, 193, 7, 0.4);
+}
+
+/* ============================================ */
+/* COUNTER (إحصائيات) */
+/* ============================================ */
+.counter {
+    font-weight: 700;
+}
+
+/* ============================================ */
+/* SOCIAL ICONS */
+/* ============================================ */
+.social-icons a {
+    transition: color 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+}
+
+.social-icons a:hover {
+    color: var(--primary-color) !important;
+    transform: translateY(-3px);
+}
+
+/* ============================================ */
+/* روابط الفوتر */
+/* ============================================ */
+footer a {
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: var(--primary-color) !important;
+}
+
+/* ============================================ */
+/* تحسينات للجوال */
+/* ============================================ */
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: auto;
+        padding: 60px 0;
+    }
+
+    .hero-section h1 {
+        font-size: 2.2rem;
+    }
+
+    .counter {
+        font-size: 2rem !important;
+    }
+}

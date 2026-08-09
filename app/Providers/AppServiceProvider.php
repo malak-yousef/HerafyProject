@@ -21,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
+    
     public function boot(): void
     {
         Paginator::useBootstrap();
@@ -37,4 +38,5 @@ class AppServiceProvider extends ServiceProvider
             View::share('ordersCount', 0);
         }
     }
+        
 }

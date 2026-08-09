@@ -15,7 +15,11 @@ use App\Http\Controllers\{
     RegisterController,
     AreaController,
     CityController,
+    OfferController,
     OrderController,
+
+    OrderImageController,
+
 };
 
 //use App\Models\Category;
@@ -127,7 +131,7 @@ Route::prefix('cms/admin')->middleware('auth:admin,craftman,customer')->group(fu
     Route::get('cities_trashed', [CityController::class, 'trashed'])->name('cities_trashed');
     Route::get('cities_restore/{id}', [CityController::class, 'restore'])->name('cities_restore');
     Route::get('cities_force/{id}', [CityController::class, 'force'])->name('cities_force');
-    Route::get('cities__forceAll', [CityController::class, 'forceAll'])->name('cities_forceAll');
+    Route::get('cities_forceAll', [CityController::class, 'forceAll'])->name('cities_forceAll');
 
     // الطلبات
     Route::resource('orders', OrderController::class);
@@ -136,6 +140,24 @@ Route::prefix('cms/admin')->middleware('auth:admin,craftman,customer')->group(fu
     Route::get('orders_restore/{id}', [OrderController::class, 'restore'])->name('orders_restore');
     Route::get('orders_force/{id}', [OrderController::class, 'force'])->name('orders_force');
     Route::get('orders_forceAll', [OrderController::class, 'forceAll'])->name('orders_forceAll');
+
+
+    
+
+      Route::resource('order_images', OrderImageController::class);
+    Route::post('order_images_update/{id}', [OrderImageController::class, 'update'])->name('order_images_update');
+    Route::get('order_images_trashed', [OrderImageController::class, 'trashed'])->name('order_images_trashed');
+    Route::get('order_images_restore/{id}', [OrderImageController::class, 'restore'])->name('order_images_restore');
+    Route::get('order_images_force_destroy/{id}', [OrderImageController::class, 'forceDestroy'])->name('order_images_force_destroy');
+    Route::get('order_images_destroy_all', [OrderImageController::class, 'DestroyAll'])->name('order_images_destroy_all');
+
+    Route::resource('offers', OfferController::class);
+    Route::post('offers_update/{id}', [OfferController::class, 'update'])->name('offers_update');
+    Route::get('offers_trashed', [OfferController::class, 'trashed'])->name('offers_trashed');
+    Route::get('offers_restore/{id}', [OfferController::class, 'restore'])->name('offers_restore');
+    Route::get('offers_force/{id}', [OfferController::class, 'force'])->name('offers_force');
+    Route::get('offers_forceAll', [OfferController::class, 'forceAll'])->name('offers_forceAll');
+
 });
 
 

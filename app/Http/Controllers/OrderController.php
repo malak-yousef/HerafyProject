@@ -19,6 +19,7 @@ class OrderController extends Controller
             'customer.user',
             'city',
             'area'
+
         ])
             ->latest()
             ->paginate(10);
@@ -32,7 +33,8 @@ class OrderController extends Controller
      */
     public function create()
     {
-        $customers = Customer::with('user')->get();
+      //  $users = Customer::with('admin')->get();
+      $customers = Customer::with('user')->get();
         $cities = City::all();
         $areas = Area::all();
 

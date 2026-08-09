@@ -302,14 +302,60 @@
             </ul>
         </li>
 
+      <!-- صور الطلبات  -->
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'order_imagesMenu')">
+                    <i class="fas fa-tools"></i>صورالطلب  
+                    <i class="fas fa-angle-left arrow"></i>
+                </a>
+                <ul class="submenu" id="order_imagesMenu" style="display:none;">
+                    <li><a href="{{ route('order_images.index') }}"><i class="fas fa-list"></i> عرض  صور الطلبات </a>
+                    </li>
+                    <li><a href="{{ route('order_images.create') }}"> <i class="fas fa-plus-circle"></i> إضافة  صورة </a></li>
+                    <li><a href="{{ route('order_images_trashed') }}"> <i class="fas fa-trash"></i>  صور الطلبات المحذوفة</a></li>
+                </ul>
+            </li>
+
+
+
+
 
         <!-- العروض -->
         <li class="nav-item">
-            <a class="nav-link" href="offers.html">
-                <i class="fas fa-handshake"></i> العروض
-                <span class="badge" id="offersBadge">0</span>
+            <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'offersMenu')">
+                <i class="fas fa-clipboard-list"></i>
+                العروض
+
+               {{--  <span class="badge ms-auto me-2">
+                    {{ $offersCount }}
+                </span> --}}
+                <i class="fas fa-angle-left arrow"></i>
             </a>
+
+            <ul class="submenu" id="offersMenu" style="display:none;">
+                <li>
+                    <a href="{{ route('offers.index') }}">
+                        <i class="fas fa-eye"></i>
+                        عرض العروض
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('offers.create') }}">
+                        <i class="fas fa-plus-circle"></i>
+                        إضافة عرض
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('offers_trashed') }}">
+                        <i class="fas fa-trash-alt"></i>
+                        العروض المحذوفة
+                    </a>
+                </li>
+            </ul>
         </li>
+
 
 
         <!-- الاعدادات -->

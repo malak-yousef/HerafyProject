@@ -340,6 +340,11 @@
                     <a href="{{ route('craftmen.index') }}" class="btn btn-outline-danger btn-back ms-auto">
                         <i class="fas fa-times"></i> إلغاء
                     </a>
+                    <a href="{{ route('offers.index') }}"
+   class="btn btn-info btn-sm">
+    <i class="fa-solid fa-list"></i>
+    العروض
+</a>
                 </div>
             </form>
         </div>

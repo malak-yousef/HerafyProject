@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Customer;
 use App\Models\City;
 use App\Models\Area;
+use App\Models\Offer;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -45,4 +46,16 @@ class Order extends Model
     {
         return $this->belongsTo(Area::class);
     }
+    
+     public function images()
+{
+    return $this->hasMany(OrderImage::class);
+}
+
+public function offers()
+{
+    return $this->hasMany(Offer::class);
+}
+
+
 }

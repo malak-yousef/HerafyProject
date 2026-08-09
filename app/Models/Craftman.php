@@ -8,6 +8,7 @@ use App\Models\{
     Portfolio,
     User,
     Profession,
+    Offer,
 };
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -43,4 +44,9 @@ class Craftman extends Model
     {
         return $this->morphOne(User::class, 'actor', 'actor_type', 'actor_id', 'id');
     }
+
+    public function offers()
+{
+    return $this->hasMany(Offer::class);
+}
 }

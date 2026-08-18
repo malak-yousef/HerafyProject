@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\City;
 use App\Models\Area;
 use App\Models\Offer;
+use App\Models\ServiceJob;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -57,5 +58,8 @@ public function offers()
     return $this->hasMany(Offer::class);
 }
 
-
+public function serviceJob()
+{
+    return $this->hasOne(ServiceJob::class);
+}
 }

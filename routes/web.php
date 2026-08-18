@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Http\Controllers\{
     AdminController,
     CategoryController,
@@ -19,12 +18,80 @@ use App\Http\Controllers\{
     OrderController,
 
     OrderImageController,
-
+    ServiceJobController,
+    VerificationController,
+    SettingController,
+ReportController,
+CraftmanOrderController,
 };
 
 //use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
+// ===============================
+// Verifications - Craftman
+// ===============================
+Route::prefix('herafy')->name('herafy.')->group(function () {
+
+    Route::resource('offers', OfferController::class);
+
+});
+Route::middleware('auth:craftman')->group(function () {
+
+    Route::get(
+        'herafy/verification/create',
+        [VerificationController::class, 'create']
+    )->name('herafy.verification.create');
+
+    Route::post(
+        'herafy/verifications',
+        [VerificationController::class, 'store']
+    )->name('herafy.verification.store');
+
+    Route::get(
+        'herafy/verification',
+        [VerificationController::class, 'myVerification']
+    )->name('herafy.verification.show');
+
+    // Orders - Craftman
+    // =========================
+
+    Route::get(
+        'herafy/orders',
+        [CraftmanOrderController::class, 'index']
+    )->name('herafy.order.index');
+
+    Route::get(
+        'herafy/orders/{order}',
+        [CraftmanOrderController::class, 'show']
+    )->name('herafy.order.show');
+
+
+    // =========================
+    // Offers - Craftman
+    // =========================
+
+    Route::get(
+        'herafy/offers',
+        [OfferController::class, 'craftmanOffers']
+    )->name('herafy.offer.index');
+
+    Route::get(
+        'herafy/offers/create/{order}',
+        [OfferController::class, 'craftmanCreate']
+    )->name('herafy.offer.create');
+
+    Route::post(
+        'herafy/orders/{order}/offers',
+        [OfferController::class, 'craftmanStore']
+    )->name('herafy.offer.store');
+
+    Route::get(
+        'herafy/offers/{offer}',
+        [OfferController::class, 'craftmanShow']
+    )->name('herafy.offer.show');
+
+});
 // صفحات المشروع
 Route::prefix('herafy')->group(function () {
     Route::view('main', 'herafy.parent')->name('main');
@@ -33,8 +100,9 @@ Route::prefix('herafy')->group(function () {
     Route::view('request', 'herafy.request')->name('request');
 });
 
+
 // تسجيل الدخول
-Route::middleware('guest:admin,craftman,customer,web')->group(function () {
+Route::middleware('guest:admin,customer')->group(function () {
     Route::get('login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('login', [AuthController::class, 'login']);
 });
@@ -47,7 +115,7 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth:admin,craftman,customer');
 
 // الصفحة الرئيسية
-Route::prefix('cms/admin')->middleware('auth:admin,craftman,customer')->group(function () {
+Route::prefix('cms/admin')->middleware('auth:admin,customer')->group(function () {
     Route::view('', 'cms.parent');
     Route::view('temp', 'cms.temp')->name('main');
 
@@ -158,10 +226,79 @@ Route::prefix('cms/admin')->middleware('auth:admin,craftman,customer')->group(fu
     Route::get('offers_force/{id}', [OfferController::class, 'force'])->name('offers_force');
     Route::get('offers_forceAll', [OfferController::class, 'forceAll'])->name('offers_forceAll');
 
+ Route::get('service-jobs/trashed', 
+    [ServiceJobController::class, 'trashed']
+)->name('service-jobs.trashed');
+Route::resource('service-jobs', ServiceJobController::class);
+    Route::post('service-jobs_update/{id}', [ServiceJobController::class, 'update'])->name('service-jobs_update');
+
+  
+Route::post('service-jobs/{id}/restore', [
+    ServiceJobController::class,
+    'restore'
+])->name('service-jobs.restore');
+
+Route::delete('service-jobs/{id}/force-delete', [
+    ServiceJobController::class,
+    'forceDelete'
+])->name('service-jobs.force-delete');
+
+    Route::resource('settings', SettingController::class);
+
+    Route::get('settings-trashed', [SettingController::class, 'trashed'])
+        ->name('settings.trashed');
+
+    Route::patch('settings/{id}/restore', [SettingController::class, 'restore'])
+        ->name('settings.restore');
+
+    Route::delete('settings/{id}/force-delete', [SettingController::class, 'forceDelete'])
+        ->name('settings.forceDelete');
+
+      Route::resource('reports', ReportController::class);
+
+    Route::get(
+        'reports-trashed',
+        [ReportController::class, 'trashed']
+    )->name('reports.trashed');
+
+    Route::put(
+        'reports/{id}/restore',
+        [ReportController::class, 'restore']
+    )->name('reports.restore');
+
+    
+Route::delete('reports/{id}/force-delete', [ReportController::class, 'forceDelete'])
+    ->name('reports.forceDelete');
+    Route::post(
+    'reports/user-store',
+    [ReportController::class, 'userStore']
+)->name('reports.user_store');
+// Verifications - Admin
+Route::get('verifications', [VerificationController::class, 'index'])
+    ->name('verifications.index');
+
+Route::get('verifications/trashed', [VerificationController::class, 'trashed'])
+    ->name('verifications.trashed');
+
+Route::get('verifications/{verification}', [VerificationController::class, 'show'])
+    ->name('verifications.show');
+
+Route::get('verifications/{verification}/edit', [VerificationController::class, 'edit'])
+    ->name('verifications.edit');
+
+Route::put('verifications/{verification}', [VerificationController::class, 'update'])
+    ->name('verifications.update');
+
+Route::delete('verifications/{verification}', [VerificationController::class, 'destroy'])
+    ->name('verifications.destroy');
+
+Route::post('verifications/{id}/restore', [VerificationController::class, 'restore'])
+    ->name('verifications.restore');
+
+   
+
 });
 
-
-
-Route::get('/', function () {
+ Route::get('/', function () {
     return view('welcome');
 });

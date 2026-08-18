@@ -3,54 +3,70 @@
 namespace Database\Seeders;
 
 use App\Models\Craftman;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Profession;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class CraftmanSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Craftman::factory(5)->create();
-        
-// طريقة تانية لانشاء سيدر بتعمل استدعاء بنفس الطريقة 
-        // $craftman1 =Craftman::create([
-        //     'name' =>'John',
-        //     'craft_name' => 'Craftman 1',
-        //     'experience_years'=> 5,
-        //     'description'=> 'Craftman 1 description',
-        //     'rating'=> 4.5,
-        //     'total_reviews'=> 100,
-        //     'is_active'=> true,  
-        //     'profile_image'=> 'craftman1.jpg', 
-        // ]);
-        // $craftman2 =Craftman::create([
-        //     'name' =>'Ali',
-        //     'craft_name' => 'Craftman 2',
-        //     'email' => 'Httttt7o@example.com',
-        //     'password'=> bcrypt('password'),
-        //     'experience_years'=> 5,
-        //     'description'=> 'Craftman 2 description',
-        //     'rating'=> 4.5,
-        //     'total_reviews'=> 100,
-        //     'is_active'=> true,    
-        //     'profile_image'=> 'craftman2.jpg',
-        // ]);
-        // $craftman3 =Craftman::create([
-        //     'name' =>'Ahmed',
-        //     'craft_name' => 'Craftman 3',
-        //     'email' => 'ssss7o@example.com',
-        //     'password'=> bcrypt('password'),
-        //     'experience_years'=> 7,
-        //     'description'=> 'Craftman 3 description',
-        //     'rating'=> 2.5,
-        //     'total_reviews'=> 20,
-        //     'is_active'=> true,  
-        //     'profile_image'=> 'craftman3.jpg',  
-        // ]);
+        $profession = Profession::first();
 
-        
+        if (!$profession) {
+            $this->command->error('لا يوجد Profession في قاعدة البيانات.');
+            return;
+        }
+
+        // إنشاء بيانات الحرفي
+        $craftman = Craftman::create([
+            'id_number' => '987654321',
+            'profession_id' => $profession->id,
+            'experience_years' => 5,
+            'description' => 'حرفي تجريبي لاختبار تسجيل الدخول',
+            'rating' => 4.50,
+            'total_reviews' => 10,
+            'hourly_rate' => 50,
+            'daily_rate' => 200,
+        ]);
+
+        // إنشاء حساب المستخدم وربطه بالحرفي
+        User::create([
+            'name' => 'Craftman Test',
+            'user_name' => 'craftman1',
+            'email' => 'craftman1@gmail.com',
+            'password' => Hash::make('12345678'),
+            'mobile' => '0599000000',
+            'gender' => 'male',
+            'status' => 'active',
+            'address' => 'Gaza',
+            'actor_type' => Craftman::class,
+            'actor_id' => $craftman->id,
+        ]);
+         User::create([
+            'name' => 'Craftman Test2',
+            'user_name' => 'craftman2',
+            'email' => 'craftman2@gmail.com',
+            'password' => Hash::make('123456788'),
+            'mobile' => '0599000000',
+            'gender' => 'male',
+            'status' => 'active',
+            'address' => 'Gaza',
+            'actor_type' => Craftman::class,
+            'actor_id' => $craftman->id,
+        ]);
+        User::create([
+            'name' => 'Craftman Test3',
+            'user_name' => 'craftman3',
+            'email' => 'craftman3@gmail.com',
+            'password' => Hash::make('123456789'),
+            'mobile' => '0599000000',
+            'gender' => 'male',
+            'status' => 'active',
+            'address' => 'Gaza',
+            'actor_type' => Craftman::class,
+            'actor_id' => $craftman->id,
+        ]); 
     }
 }

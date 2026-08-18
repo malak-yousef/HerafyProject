@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\ServiceJob;
 
 class offer extends Model
 {
@@ -35,4 +36,8 @@ class offer extends Model
     {
         return $this->belongsTo(Craftman::class);
     }
+    public function serviceJob()
+{
+    return $this->hasOne(ServiceJob::class);
+}
 }

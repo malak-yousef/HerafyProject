@@ -3,32 +3,61 @@
 namespace Database\Factories;
 
 use App\Models\Craftman;
+use App\Models\Profession;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
 
-/**
- * @extends Factory<Craftman>
- */
 class CraftmanFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = Craftman::class;
+
     public function definition(): array
     {
         return [
-            // 'name' => fake()->name(),
-            // 'craft_name' => fake()->name(),
-            // 'id_number' => fake()->unique()->regexify('[A-Z]{3}[0-9]{6}'),
-            // 'experience_years'=> fake()->numberBetween(1, 30),
-            // 'description'=> fake()->text(),
-            // 'rating'=> fake()->randomFloat(2, 0, 5),
-            // 'total_reviews'=> fake()->numberBetween(0, 1000),
-            // 'hourly_rate'=> fake()->numberBetween(0, 1000),
-            // 'daily_rate'=> fake()->numberBetween(0, 1000),
-            // 'profile_image'=> fake()->imageUrl(),
+            'profession_id' => Profession::factory(),
+
+            'id_number' => fake()->unique()->numerify('##########'),
+
+            'experience_years' => fake()->numberBetween(1, 20),
+
+            'description' => fake()->paragraph(),
+
+            'rating' => fake()->randomFloat(2, 0, 5),
+
+            'total_reviews' => fake()->numberBetween(0, 500),
+
+            'hourly_rate' => fake()->numberBetween(50, 500),
+
+            'daily_rate' => fake()->numberBetween(200, 2000),
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (Craftman $craftman) {
+
+            $craftman->user()->create([
+                'name' => fake()->name(),
+
+                'user_name' => fake()->unique()->userName(),
+
+                'email' => fake()->unique()->safeEmail(),
+
+                'password' => 'password',
+
+                'mobile' => fake()->numerify('059########'),
+
+                'gender' => fake()->randomElement([
+                    'male',
+                    'female',
+                ]),
+
+                'status' => 'active',
+
+                'address' => fake()->address(),
+
+                'date' => now(),
+            ]);
+
+        });
     }
 }

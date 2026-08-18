@@ -175,7 +175,7 @@ class AuthController extends Controller
                     'title' => 'حسابك غير مفعل'
                 ], 403);
             }
-
+           /*
             if ($user->isCraftman()) {
                 Auth::guard('craftman')->login($user, $request->filled('remember'));
             } elseif ($user->isCustomer()) {
@@ -189,6 +189,38 @@ class AuthController extends Controller
                 'title' => 'تم تسجيل الدخول بنجاح',
                 'redirect' => url('cms/admin')
             ], 200);
+            */
+            if ($user->isCraftman()) {
+
+    Auth::guard('craftman')->login(
+        $user,
+        $request->filled('remember')
+    );
+
+    $redirect = url('herafy/main');
+
+} elseif ($user->isCustomer()) {
+
+    Auth::guard('customer')->login(
+        $user,
+        $request->filled('remember')
+    );
+
+    $redirect = url('herafy/main');
+
+} else {
+
+    Auth::guard('admin')->login(
+        $user,
+        $request->filled('remember')
+    );
+
+    $redirect = url('cms/admin');
+}return response()->json([
+    'icon' => 'success',
+    'title' => 'تم تسجيل الدخول بنجاح',
+    'redirect' => $redirect
+], 200);
         }
         return response()->json([
             'icon' => 'error',

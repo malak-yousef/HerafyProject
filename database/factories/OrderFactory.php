@@ -33,7 +33,7 @@ class OrderFactory extends Factory
 
         'budget' => fake()->numberBetween(50,1000),
 
-        'preferred_date' => fake()->dateTimeBetween('now','+2 months'),
+        'service_date' => fake()->dateTimeBetween('now','+2 months'),
 
         'status' => fake()->randomElement([
             'pending',

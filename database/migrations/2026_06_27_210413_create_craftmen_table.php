@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('craftmen', function (Blueprint $table) {
             $table->id();
            // $table->string('craft_name');
-            $table->integer('id_number')->unique();
+          //  $table->integer('id_number')->unique();
+          $table->string('id_number')->unique();
             $table->foreignId('profession_id')->constrained()->onDelete('cascade');
 
             $table->unsignedTinyInteger('experience_years');

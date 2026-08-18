@@ -173,7 +173,31 @@
         </div>
 
     </div>
+@if($offer->serviceJob)
+    <div class="card mt-4">
 
+        <div class="card-header">
+            <h5>الخدمة المرتبطة بالعرض</h5>
+        </div>
+
+        <div class="card-body">
+
+            <p>
+                <strong>حالة الخدمة:</strong>
+                {{ $offer->serviceJob->status }}
+            </p>
+
+            <a href="{{ route('service-jobs.show', $offer->serviceJob) }}"
+               class="btn btn-info btn-sm">
+
+                عرض الخدمة
+
+            </a>
+
+        </div>
+
+    </div>
+@endif
 </div>
 
 @endsection

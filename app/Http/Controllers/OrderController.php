@@ -85,19 +85,16 @@ class OrderController extends Controller
      * Display the specified resource.
      */
     public function show(Order $order)
-    {
+{
+    $order->load([
+        'customer.user',
+        'city',
+        'area',
+        'offers.craftman.user',
+    ]);
 
-        $order->load([
-            'customer.user',
-            'city',
-            'area'
-        ]);
-
-
-        return view('cms.order.show', compact('order'));
-    }
-
-
+    return view('herafy.order.show', compact('order'));
+}
 
 
     /**
@@ -196,4 +193,29 @@ class OrderController extends Controller
         $orders = Order::onlyTrashed()->forceDelete();
         return back()->with('success', 'Success');
     }
+
+    public function craftmanOrders()
+{
+    $orders = Order::with([
+        'customer.user',
+        'city',
+        'area'
+    ])
+    ->where('status', 'pending')
+    ->latest()
+    ->paginate(10);
+
+    return view('herafy.order.index', compact('orders'));
+}
+public function craftmanShow($id)
+{
+    $order = Order::with([
+        'customer.user',
+        'city',
+        'area',
+        'offers'
+    ])->findOrFail($id);
+
+    return view('herafy.order.show', compact('order'));
+}
 }

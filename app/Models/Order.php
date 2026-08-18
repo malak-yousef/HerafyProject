@@ -45,4 +45,9 @@ class Order extends Model
     {
         return $this->belongsTo(Area::class);
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

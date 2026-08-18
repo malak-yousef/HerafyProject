@@ -303,6 +303,39 @@
         </li>
 
 
+        <!-- التقييمات -->
+        <li class="nav-item">
+            <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'reviewsMenu')">
+                <i class="fas fa-star"></i>
+                التقييمات
+                <i class="fas fa-angle-left arrow"></i>
+            </a>
+
+            <ul class="submenu" id="reviewsMenu" style="display:none;">
+                <li>
+                    <a href="{{ route('reviews.index') }}">
+                        <i class="fas fa-eye"></i>
+                        عرض التقييمات
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('reviews.create') }}">
+                        <i class="fas fa-plus-circle"></i>
+                        إضافة تقييم
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('reviews_trashed') }}">
+                        <i class="fas fa-trash-alt"></i>
+                        التقييمات المحذوفة
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+
         <!-- العروض -->
         <li class="nav-item">
             <a class="nav-link" href="offers.html">

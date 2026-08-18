@@ -1,9 +1,11 @@
-# TODO - تنسيقات مجلد herafy
+# TODO - نظام التقييمات (Reviews)
 
-## الخطوات
-
-- [x] قراءة وتحليل ملفات مجلد herafy
-- [x] ضبط تنسيق `public/herafy/css/style.css` (مسافة بادئة موحدة في قسم النافبار)
-- [x] إزالة وسم Bootstrap JS المكرر خارج الأقسام في `craftsmen.blade.php`
-- [x] مراجعة نهائية للتحقق من التنسيقات ✅
-
+- [x] إنشاء ملف الـ Migration لجدول `reviews`
+- [x] إنشاء ملف الـ Model `app/Models/Review.php`
+- [x] إضافة علاقات `reviews()` في نماذج `Craftman`, `Customer`, `Order`
+- [x] إنشاء `ReviewController` بدعم CRUD كامل + سلة المحذوفات
+- [x] إنشاء صفحات العرض `cms/review/` (index, create, edit, show, trashed)
+- [x] إنشاء `ReviewFactory` و `ReviewSeeder`
+- [x] إضافة Routes في `routes/web.php`
+- [x] إضافة قائمة "التقييمات" في `cms/parent.blade.php`
+- [x] تشغيل `php artisan migrate` (تم بنجاح)

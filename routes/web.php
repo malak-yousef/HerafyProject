@@ -16,6 +16,7 @@ use App\Http\Controllers\{
     AreaController,
     CityController,
     OrderController,
+    ReviewController,
 };
 
 //use App\Models\Category;
@@ -129,13 +130,21 @@ Route::prefix('cms/admin')->middleware('auth:admin,craftman,customer')->group(fu
     Route::get('cities_force/{id}', [CityController::class, 'force'])->name('cities_force');
     Route::get('cities__forceAll', [CityController::class, 'forceAll'])->name('cities_forceAll');
 
-    // الطلبات
+// الطلبات
     Route::resource('orders', OrderController::class);
     Route::post('orders_update/{id}', [OrderController::class, 'update'])->name('orders_update');
     Route::get('orders_trashed', [OrderController::class, 'trashed'])->name('orders_trashed');
     Route::get('orders_restore/{id}', [OrderController::class, 'restore'])->name('orders_restore');
     Route::get('orders_force/{id}', [OrderController::class, 'force'])->name('orders_force');
     Route::get('orders_forceAll', [OrderController::class, 'forceAll'])->name('orders_forceAll');
+
+    // التقييمات
+    Route::resource('reviews', ReviewController::class);
+    Route::post('reviews_update/{id}', [ReviewController::class, 'update'])->name('reviews_update');
+    Route::get('reviews_trashed', [ReviewController::class, 'trashed'])->name('reviews_trashed');
+    Route::get('reviews_restore/{id}', [ReviewController::class, 'restore'])->name('reviews_restore');
+    Route::get('reviews_force/{id}', [ReviewController::class, 'force'])->name('reviews_force');
+    Route::get('reviews_forceAll', [ReviewController::class, 'forceAll'])->name('reviews_forceAll');
 });
 
 

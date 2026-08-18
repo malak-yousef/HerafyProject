@@ -41,8 +41,8 @@
                 </div>
             </div>
             <div class="col-lg-6 mt-4 mt-lg-0 text-center">
-                <img src="https://via.placeholder.com/600x400/FFC107/FFFFFF?text=حرفي" alt="حرفي"
-                    class="img-fluid rounded-4 shadow-lg">
+                <img src="{{ asset('herafy/img/hero.png') }}" alt="حرفي"
+                    class="img-fluid rounded-4 ">
             </div>
         </div>
     </div>
@@ -70,7 +70,7 @@
                 </ul>
             </div>
             <div class="col-lg-6 order-lg-1 text-center">
-                <img src="https://via.placeholder.com/500x350/FFFFFF/FFC107?text=من+نحن" alt="من نحن"
+                <img src="{{ asset('herafy/img/hero1.png') }}" alt="من نحن"
                     class="img-fluid rounded-4 shadow">
             </div>
         </div>

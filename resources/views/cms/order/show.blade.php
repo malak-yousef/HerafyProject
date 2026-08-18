@@ -425,7 +425,36 @@
 
                     </span>
 
+@if($order->serviceJob)
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5>الخدمة</h5>
+        </div>
 
+        <div class="card-body">
+
+            <p>
+                <strong>حالة الخدمة:</strong>
+
+                @if($order->serviceJob->status === 'pending')
+                    <span class="badge bg-warning">قيد الانتظار</span>
+                @elseif($order->serviceJob->status === 'in_progress')
+                    <span class="badge bg-primary">قيد التنفيذ</span>
+                @elseif($order->serviceJob->status === 'completed')
+                    <span class="badge bg-success">مكتملة</span>
+                @elseif($order->serviceJob->status === 'cancelled')
+                    <span class="badge bg-danger">ملغاة</span>
+                @endif
+            </p>
+
+            <a href="{{ route('service-jobs.show', $order->serviceJob) }}"
+               class="btn btn-info btn-sm">
+                عرض الخدمة
+            </a>
+
+        </div>
+    </div>
+@endif
 
                 </div>
 

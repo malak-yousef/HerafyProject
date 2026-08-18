@@ -340,7 +340,84 @@
                     <a href="{{ route('craftmen.index') }}" class="btn btn-outline-danger btn-back ms-auto">
                         <i class="fas fa-times"></i> إلغاء
                     </a>
+                    <a href="{{ route('offers.index') }}"
+   class="btn btn-info btn-sm">
+    <i class="fa-solid fa-list"></i>
+    العروض
+</a>
                 </div>
+                <div class="card mt-4">
+
+    <div class="card-header">
+        <h5>
+            <i class="fas fa-briefcase"></i>
+            الخدمات التي ينفذها الحرفي
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered text-center">
+
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>الطلب</th>
+                    <th>الزبون</th>
+                    <th>الحالة</th>
+                    <th>الإجراء</th>
+                </tr>
+            </thead>
+
+            <tbody>
+     
+            @forelse($craftmen->serviceJobs as $job)
+
+                <tr>
+
+                    <td>{{ $job->id }}</td>
+
+                    <td>#{{ $job->order_id }}</td>
+
+                    <td>
+                        {{ $job->customer->user->name ?? '-' }}
+                    </td>
+
+                    <td>
+                        {{ $job->status }}
+                    </td>
+
+                    <td>
+
+                        <a href="{{ route('service-jobs.show', $job) }}"
+                           class="btn btn-info btn-sm">
+
+                            <i class="fas fa-eye"></i>
+                            عرض
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+            @empty
+
+                <tr>
+                    <td colspan="5">
+                        لا توجد خدمات لهذا الحرفي.
+                    </td>
+                </tr>
+
+            @endforelse
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
             </form>
         </div>
     </div>

@@ -236,6 +236,12 @@
 
 
                         <td>
+              <!--عند الضغط عليه، يفتح صفحة إنشاء عرض لهذا الطلب -->    
+    <a href="{{ route('offers.create', ['order_id' => $order->id]) }}"
+       class="btn btn-success btn-sm">
+        <i class="fa-solid fa-hand-holding-dollar"></i>
+        إضافة عرض
+    </a>
 
 
                             <a href="{{route('orders.show',$order->id)}}"

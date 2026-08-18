@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\ServiceJob;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
@@ -30,8 +31,14 @@ class Customer extends Model
         return $this->hasMany(Order::class);
     }
 
+
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function serviceJobs()
+    {
+        return $this->hasMany(ServiceJob::class, 'customer_id');
     }
 }

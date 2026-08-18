@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\{
     PortfolioImage,
-    Portfolio
+    Portfolio,
+    Setting
 };
 use Illuminate\Http\Request;
 
@@ -31,6 +32,7 @@ class PortfolioImageController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    /*
     public function store(Request $request)
     {
         $validator = validator(
@@ -76,7 +78,75 @@ class PortfolioImageController extends Controller
             ], 200);
         }
     }
+*/
+public function store(Request $request)
+{
+    $validator = validator(
+        $request->all(),
+        [
+            'image_name' => 'required|string|max:200',
+            'image_description' => 'nullable|string',
+            'image_path' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'portfolio_id' => 'required|exists:portfolios,id',
+        ],
+        [
+            'required' => 'هذا الحقل مطلوب.',
+            'string' => 'يجب أن يكون هذا الحقل نصًا.',
+            'max' => 'تجاوز الحد الأقصى للطول المسموح به.',
+            'exists' => 'المعرض المحدد غير موجود.',
+        ]
+    );
 
+    if ($validator->fails()) {
+        return response()->json([
+            'icon' => 'error',
+            'title' => $validator->getMessageBag()->first(),
+        ], 400);
+    }
+
+    // جلب الحد الأقصى للصور من جدول settings
+    $maxImages = (int) Setting::where('key', 'max_project_images')
+        ->value('value');
+
+    // عدد الصور الموجودة حاليًا داخل هذا المعرض
+    $currentImages = PortfolioImage::where(
+        'portfolio_id',
+        $request->portfolio_id
+    )->count();
+
+    // التحقق من الحد
+    if ($currentImages >= $maxImages) {
+        return response()->json([
+            'icon' => 'error',
+            'title' => "لا يمكن إضافة المزيد من الصور. الحد الأقصى هو {$maxImages} صور لهذا المعرض.",
+        ], 400);
+    }
+
+    $portfolio_images = new PortfolioImage();
+
+    if ($request->hasFile('image_path')) {
+        $image = $request->file('image_path');
+        $imageName = time() . '_' . $image->getClientOriginalName();
+
+        $image->move(
+            'storage/images/portfolio_images',
+            $imageName
+        );
+
+        $portfolio_images->image_path = $imageName;
+    }
+
+    $portfolio_images->image_name = $request->input('image_name');
+    $portfolio_images->image_description = $request->input('image_description');
+    $portfolio_images->portfolio_id = $request->input('portfolio_id');
+
+    $portfolio_images->save();
+
+    return response()->json([
+        'icon' => 'success',
+        'title' => 'تم إضافة صورة المعرض بنجاح',
+    ], 200);
+}
     /**
      * Display the specified resource.
      */

@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Models\Customer;
 use App\Models\City;
 use App\Models\Area;
+use App\Models\Offer;
+use App\Models\ServiceJob;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -49,5 +51,21 @@ class Order extends Model
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+
+    public function images()
+    {
+        return $this->hasMany(OrderImage::class);
+    }
+
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
+    }
+
+    public function serviceJob()
+    {
+        return $this->hasOne(ServiceJob::class);
     }
 }

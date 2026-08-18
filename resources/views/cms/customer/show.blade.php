@@ -372,7 +372,84 @@
                     </table>
 
                 </div>
+<div class="card mt-4">
 
+    <div class="card-header">
+        <h5>
+            <i class="fas fa-briefcase"></i>
+            خدمات الزبون
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered text-center">
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>الطلب</th>
+                        <th>الحرفي</th>
+                        <th>الحالة</th>
+                        <th>الإجراء</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                @forelse($customers->serviceJobs as $job)
+
+                    <tr>
+
+                        <td>{{ $job->id }}</td>
+
+                        <td>
+                            #{{ $job->order_id }}
+                        </td>
+
+                        <td>
+                            {{ $job->craftman->user->name ?? '-' }}
+                        </td>
+
+                        <td>
+                            {{ $job->status }}
+                        </td>
+
+                        <td>
+
+                            <a href="{{ route('service-jobs.show', $job) }}"
+                               class="btn btn-info btn-sm">
+
+                                <i class="fas fa-eye"></i>
+                                عرض
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                @empty
+
+                    <tr>
+                        <td colspan="5">
+                            لا توجد خدمات لهذا الزبون.
+                        </td>
+                    </tr>
+
+                @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
 
                 <!-- أزرار الإجراء -->
                 <div class="d-flex gap-3 mt-4 pt-3 border-top">

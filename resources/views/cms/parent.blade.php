@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
+    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -302,6 +302,23 @@
             </ul>
         </li>
 
+      <!-- صور الطلبات  -->
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'order_imagesMenu')">
+                    <i class="fas fa-tools"></i>صورالطلب  
+                    <i class="fas fa-angle-left arrow"></i>
+                </a>
+                <ul class="submenu" id="order_imagesMenu" style="display:none;">
+                    <li><a href="{{ route('order_images.index') }}"><i class="fas fa-list"></i> عرض  صور الطلبات </a>
+                    </li>
+                    <li><a href="{{ route('order_images.create') }}"> <i class="fas fa-plus-circle"></i> إضافة  صورة </a></li>
+                    <li><a href="{{ route('order_images_trashed') }}"> <i class="fas fa-trash"></i>  صور الطلبات المحذوفة</a></li>
+                </ul>
+            </li>
+
+
+
+
 
         <!-- التقييمات -->
         <li class="nav-item">
@@ -338,19 +355,118 @@
 
         <!-- العروض -->
         <li class="nav-item">
-            <a class="nav-link" href="offers.html">
-                <i class="fas fa-handshake"></i> العروض
-                <span class="badge" id="offersBadge">0</span>
+            <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'offersMenu')">
+                <i class="fas fa-clipboard-list"></i>
+                العروض
+
+               {{--  <span class="badge ms-auto me-2">
+                    {{ $offersCount }}
+                </span> --}}
+                <i class="fas fa-angle-left arrow"></i>
             </a>
+
+            <ul class="submenu" id="offersMenu" style="display:none;">
+                <li>
+                    <a href="{{ route('offers.index') }}">
+                        <i class="fas fa-eye"></i>
+                        عرض العروض
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('offers.create') }}">
+                        <i class="fas fa-plus-circle"></i>
+                        إضافة عرض
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('offers_trashed') }}">
+                        <i class="fas fa-trash-alt"></i>
+                        العروض المحذوفة
+                    </a>
+                </li>
+            </ul>
         </li>
 
+      <!-- اتفاق العمل -->
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'service-jobsMenu')">
+                    <i class="fas fa-tools"></i>  اتفاق العمل 
+                    <i class="fas fa-angle-left arrow"></i>
+                </a>
+                <ul class="submenu" id="service-jobsMenu" style="display:none;">
+                    <li><a href="{{ route('service-jobs.index') }}"><i class="fas fa-list"></i> عرض </a></li>
+                    <li><a href="{{ route('service-jobs.create') }}"> <i class="fas fa-plus-circle"></i> إضافة </a>
+                    <li><a href="{{ route('service-jobs.trashed') }}"> <i class="fas fa-trash"></i>  المحذوفة</a></li>
+            </li>
+        </ul>
+        </li>
 
         <!-- الاعدادات -->
+       
         <li class="nav-item">
-            <a class="nav-link" href="settings.html">
-                <i class="fas fa-cog"></i> الإعدادات
+            <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'settingsMenu')">
+                <i class="fas fa-tools"></i> الاعدادات
+                <i class="fas fa-angle-left arrow"></i>
+            </a>
+            <ul class="submenu" id="settingsMenu" style="display:none;">
+                <li><a href="{{ route('settings.index') }}"><i class="fas fa-list"></i> عرض الاعدادات</a></li>
+                <li><a href="{{ route('settings.create') }}"> <i class="fas fa-plus-circle"></i> إضافة الاعدادات</a>
+                <li><a href="{{ route('settings.trashed') }}"> <i class="fas fa-trash"></i> الاعدادات المحذوفة</a></li>
+        </li>
+        </ul>
+        </li>
+
+<!--  reports  -->
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="toggleMenu(event, this, 'reportsMenu')">
+                    <i class="fas fa-tools"></i>البلاغات  
+                    <i class="fas fa-angle-left arrow"></i>
+                </a>
+                <ul class="submenu" id="reportsMenu" style="display:none;">
+                    <li><a href="{{ route('reports.index') }}"><i class="fas fa-list"></i> عرض البلاغات </a>
+                    </li>
+                    <li><a href="{{ route('reports.create') }}"> <i class="fas fa-plus-circle"></i>  إضافة بلاغ   report </a></li>
+                    <li><a href="{{ route('reports.trashed') }}"> <i class="fas fa-trash"></i>   البلاغات المحذوفة</a></li>
+                </ul>
+            </li>
+
+            <!-- التوثيقات -->
+<li class="nav-item">
+
+    <a class="nav-link"
+       href="#"
+       onclick="toggleMenu(event, this, 'verificationsMenu')">
+
+        <i class="fas fa-user-check"></i>
+        التوثيقات
+
+        <i class="fas fa-angle-left arrow"></i>
+
+    </a>
+
+    <ul class="submenu"
+        id="verificationsMenu"
+        style="display:none;">
+
+        <li>
+            <a href="{{ route('verifications.index') }}">
+                <i class="fas fa-list"></i>
+                عرض التوثيقات
             </a>
         </li>
+
+        <li>
+            <a href="{{ route('verifications.trashed') }}">
+                <i class="fas fa-trash"></i>
+                التوثيقات المحذوفة
+            </a>
+        </li>
+
+    </ul>
+
+</li>
 
         <!-- تعديل سريع -->
         <li class="nav-item">

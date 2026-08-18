@@ -78,5 +78,14 @@ class User extends Authenticatable
     {
         return $this->actor_type === \App\Models\Craftman::class;
     }
+    public function reportsMade()
+{
+    return $this->hasMany(Report::class, 'reporter_id');
+}
+
+public function reportsReceived()
+{
+    return $this->hasMany(Report::class, 'reported_id');
+}
 
 }

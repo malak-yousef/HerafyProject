@@ -36,13 +36,112 @@
 
             <!-- روابط النافبار -->
             <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link active" href="{{ route('index') }}">الرئيسية</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('showCraftsmen') }}">الحرفيون</a></li>
+                
+                  <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 
-                    @yield('nav-links')
-                    
-                    </ul>
+    <!-- الرئيسية -->
+    <li class="nav-item">
+        <a class="nav-link active" href="{{ route('index') }}">
+            الرئيسية
+        </a>
+    </li>
+
+    <!-- الحرفيون -->
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('showCraftsmen') }}">
+            الحرفيون
+        </a>
+    </li>
+
+    <!-- التوثيق -->
+    <li class="nav-item">
+        <a class="nav-link"
+           href="#"
+           onclick="toggleMenu(event, this, 'verificationsMenu')">
+
+            <i class="fas fa-clipboard-list"></i>
+            التوثيق
+            <i class="fas fa-angle-left arrow"></i>
+
+        </a>
+
+        <ul class="submenu" id="verificationsMenu" style="display:none;">
+
+            <li>
+                <a href="{{ route('herafy.verification.create') }}">
+                    <i class="fas fa-plus"></i>
+                    إضافة توثيق
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ route('herafy.verification.show') }}">
+                    <i class="fas fa-eye"></i>
+                    عرض التوثيق
+                </a>
+            </li>
+
+        </ul>
+    </li>
+
+
+    <!-- العروض -->
+    <li class="nav-item">
+
+        <a class="nav-link"
+           href="#"
+           onclick="toggleMenu(event, this, 'offersMenu')">
+
+            <i class="fas fa-file-invoice-dollar"></i>
+            العروض
+            <i class="fas fa-angle-left arrow"></i>
+
+        </a>
+
+        <ul class="submenu" id="offersMenu" style="display:none;">
+
+            <li>
+                <a href="{{ route('herafy.offer.index') }}">
+                    <i class="fas fa-eye"></i>
+                    عرض جميع العروض
+                </a>
+            </li>
+
+        </ul>
+
+    </li>
+
+
+    <!-- الطلبات -->
+    <li class="nav-item">
+
+        <a class="nav-link"
+           href="#"
+           onclick="toggleMenu(event, this, 'ordersMenu')">
+
+            <i class="fas fa-clipboard-list"></i>
+            الطلبات
+            <i class="fas fa-angle-left arrow"></i>
+
+        </a>
+
+        <ul class="submenu" id="ordersMenu" style="display:none;">
+
+            <li>
+                <a href="{{ route('herafy.order.index') }}">
+                    <i class="fas fa-eye"></i>
+                    عرض جميع الطلبات
+                </a>
+            </li>
+
+        </ul>
+
+    </li>
+
+
+    @yield('nav-links')
+
+</ul>
 
                 <!-- أزرار تسجيل الدخول / الاشتراك -->
                 <div class="d-flex gap-2">
@@ -52,6 +151,8 @@
             </div>
         </div>
     </nav>
+
+    
 
     @yield('content')
 
@@ -105,7 +206,23 @@
             </p>
         </div>
     </footer>
+   <script>
+    function toggleMenu(event, element, menuId) {
+            event.preventDefault();
 
+            let menu = document.getElementById(menuId);
+            let arrow = element.querySelector('.arrow');
+
+            if (menu.style.display === "block") {
+                menu.style.display = "none";
+                arrow.style.transform = "rotate(0deg)";
+            } else {
+                menu.style.display = "block";
+                arrow.style.transform = "rotate(90deg)";
+            }
+
+        }
+   </script>
     <!-- ============================================ -->
     <!-- Bootstrap JS -->
     <!-- ============================================ -->

@@ -251,7 +251,8 @@
         </div>
 
         <div class="table-responsive">
-            <table class="table table-hover">
+            <form method="GET" class="row g-2 mb-3 align-items-end"><div class="col-md-4"><label class="form-label">بحث</label><input name="search" value="{{ request('search') }}" class="form-control" maxlength="100"></div><div class="col-md-3"><label class="form-label">الحالة</label><select name="account_status" class="form-select"><option value="">الكل</option>@foreach(['active','inactive','blocked'] as $status)<option value="{{ $status }}" @selected(request('account_status') === $status)>{{ $status }}</option>@endforeach</select></div><div class="col-md-2"><button class="btn btn-primary" type="submit">بحث</button></div><div class="col-md-3"><a href="{{ route('customers.index') }}">إعادة ضبط</a></div></form>
+            <div class="mb-3"><form method="GET" class="row g-2"><div class="col-md-3"><input type="date" name="date_from" value="{{ request('date_from') }}" class="form-control" aria-label="من تاريخ"></div><div class="col-md-3"><input type="date" name="date_to" value="{{ request('date_to') }}" class="form-control" aria-label="إلى تاريخ"></div><div class="col-md-3"><select name="sort" class="form-select"><option value="newest">الأحدث</option><option value="oldest">الأقدم</option><option value="name_asc">الاسم أ-ي</option><option value="name_desc">الاسم ي-أ</option></select></div><div class="col-md-3"><button class="btn btn-outline-primary" type="submit">تطبيق</button></div></form></div><table class="table table-hover">
                 <thead>
                     <tr>
                         <th style="width: 50px;">#</th>
@@ -272,7 +273,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>
                             @if($customer->user && $customer->user->image)
-                            <img src="{{ asset('storage/images/customer/' . $customer->user->image) }}" alt="{{ $customer->user->name }}" class="customer-avatar">
+                            <img src="{{ $customer->user->profilePhotoUrl() }}" alt="{{ $customer->user->name }}" class="customer-avatar">
                             @else
                             <span class="avatar-placeholder">
                                 {{ $customer->user ? substr($customer->user->name, 0, 1) : '?' }}
@@ -294,14 +295,15 @@
                             @endif
                         </td>
                         <td>
+                            <x-cms.status-badge :status="$customer->user->status ?? 'unknown'" />
                             @if($customer->user && $customer->user->status == 'active')
-                            <span class="badge bg-success badge-status">✅ فعال</span>
+                            <x-cms.status-badge :status="$customer->user->status" /><span class="badge bg-success badge-status legacy-user-status">✅ فعال</span>
                             @elseif($customer->user && $customer->user->status == 'inactive')
-                            <span class="badge bg-danger badge-status">❌ غير فعال</span>
+                            <span class="badge bg-danger badge-status legacy-user-status">❌ غير فعال</span>
                             @elseif($customer->user && $customer->user->status == 'pending')
                             <span class="badge bg-warning text-dark badge-status">⏳ قيد التنفيذ</span>
                             @elseif($customer->user && $customer->user->status == 'blocked')
-                            <span class="badge bg-dark badge-status">🚫 محظور</span>
+                            <span class="badge bg-dark badge-status legacy-user-status">🚫 محظور</span>
                             @endif
                         </td>
                         <td>
@@ -310,7 +312,7 @@
 
                         <td>{{ $customer->created_at ? $customer->created_at->format('Y-m-d') : '-' }}</td>
                         <td>
-                            <div class="action-btns">
+                            <x-cms.table-actions :show-url="route('customers.show', $customer->id)" :edit-url="route('customers.edit', $customer->id)" :delete-url="route('customers.destroy', $customer->id)" show-permission="customers.view" edit-permission="customers.update" delete-permission="customers.delete" :delete-id="$customer->id" /><div class="action-btns legacy-user-actions">
                                 <a href="{{ route('customers.show', $customer->id) }}" class="action-btn btn-view" title="عرض">
                                     <i class="fas fa-eye"></i>
                                 </a>
@@ -440,6 +442,8 @@
     // ============================================
     // 5. إضافة مستمع للأحداث
     // ============================================
+    // Filtering is server-side; retain this legacy hook as a no-op for old markup.
+    function filterTable() { return false; }
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('searchCustomers')?.addEventListener('keyup', function(e) {
             if (e.key === 'Enter') {

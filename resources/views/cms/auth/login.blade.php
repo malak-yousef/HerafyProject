@@ -374,32 +374,14 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('herafy/css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ asset('herafy/css/google-auth.css') }}">
 </head>
 
 <body>
 
     <!-- ===== NAVBAR ===== -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold fs-3" href="index.html">
-                <i class="fas fa-hammer text-warning"></i> حرفي
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('index') }}">الرئيسية</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.html#about">من نحن</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.html#craftsmen">الحرفيون</a></li>
-                </ul>
-                <div class="d-flex gap-2">
-                    <a href="#" class="btn btn-warning btn-sm">دخول</a>
-                    <a href="{{ route('register') }}" class="btn btn-outline-warning btn-sm">انضم الآن</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <x-herafy.guest-navbar />
 
     <!-- ===== LOGIN SECTION ===== -->
     <section class="auth-section py-5">
@@ -416,7 +398,8 @@
                             <p class="text-muted">سجل دخولك للوصول إلى حسابك</p>
                         </div>
 
-                        <form id="loginForm" onsubmit="handleLogin(event)">
+                        <form id="loginForm" action="{{ url('/login') }}" method="POST" onsubmit="handleLogin(event)">
+                            @csrf
                             <div class="mb-3">
                                 <label for="email" class="form-label fw-bold">
                                     <i class="fas fa-envelope text-warning"></i> البريد الإلكتروني
@@ -450,13 +433,13 @@
 
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="remember">
+                                    <input class="form-check-input" type="checkbox" id="remember" name="remember" value="1">
                                     <label class="form-check-label small" for="remember">تذكرني</label>
                                 </div>
-                                <a href="#" class="text-warning text-decoration-none small">نسيت كلمة المرور؟</a>
+                                <a href="{{ route('password.request') }}" class="text-warning text-decoration-none small">نسيت كلمة المرور؟</a>
                             </div>
 
-                            <button type="button" onclick="login()" class="btn btn-warning btn-lg w-100 fw-bold">
+                            <button type="submit" id="loginButton" class="btn btn-warning btn-lg w-100 fw-bold">
                                 <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
                             </button>
 
@@ -465,12 +448,9 @@
                             </div>
 
                             <div class="d-grid gap-2">
-                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="socialLogin('google')">
+                                <a href="{{ route('auth.google.redirect') }}" class="btn google-auth-btn">
                                     <i class="fab fa-google"></i> تسجيل الدخول عبر Google
-                                </button>
-                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="socialLogin('facebook')">
-                                    <i class="fab fa-facebook"></i> تسجيل الدخول عبر Facebook
-                                </button>
+                                </a>
                             </div>
 
                             <div class="text-center mt-3">
@@ -515,33 +495,11 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="{{asset('cms/plugins/toastr/toastr.min.js')}}"></script>
     <script src="{{ asset('js/crud.js') }}"></script>
-    <script src="{{ asset('cms/js/main.js') }}"></script>
 
     <script>
         // ============================================
         // تسجيل الدخول
         // ============================================
-        function login() {
-            axios.post('login', {
-                    email: document.getElementById('email').value,
-                    password: document.getElementById('password').value,
-                    // remember: document.getElementById('remember').checked
-                })
-                .then(function(response) {
-                    window.location.href = response.data.redirect;
-                    // window.location.href = route('cms/admin');
-
-                })
-                .catch(function(error) {
-                    if (error.response.data.errors !== undefined) {
-                        showErrorMessages(error.response.data.errors);
-                    } else {
-                        showMessage(error.response.data);
-                    }
-                });
-        }
-
-
         // ============================================
         // تبديل إظهار/إخفاء كلمة المرور
         // ============================================
@@ -562,71 +520,64 @@
         // ============================================
         // معالجة تسجيل الدخول
         // ============================================
-        function handleLogin(event) {
+        async function handleLogin(event) {
             event.preventDefault();
 
+            const form = event.currentTarget;
+            const submitButton = document.getElementById('loginButton');
             const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
+            const password = document.getElementById('password').value;
 
             if (!email || !password) {
                 Swal.fire({
                     icon: 'error',
-                    title: '⚠️ حقول ناقصة',
-                    text: 'يرجى إدخال البريد الإلكتروني وكلمة المرور',
+                    title: 'يرجى إدخال البريد الإلكتروني وكلمة المرور.',
                     confirmButtonColor: '#FFC107'
                 });
                 return;
             }
 
-            // ✅ التحقق من كلمة المرور
-            if (user.password && user.password !== password) {
-                Swal.fire({
-                    icon: 'error',
-                    title: '⚠️ كلمة مرور خاطئة',
-                    text: 'يرجى التحقق من كلمة المرور',
-                    confirmButtonColor: '#FFC107'
+            submitButton.disabled = true;
+
+            try {
+                const response = await axios.post(form.action, {
+                    _token: form.querySelector('input[name="_token"]').value,
+                    email,
+                    password,
+                    remember: document.getElementById('remember').checked,
                 });
-                return;
-            }
 
-            localStorage.setItem('currentUser', JSON.stringify(user));
+                window.location.href = response.data.redirect;
+            } catch (error) {
+                const data = error.response?.data;
 
-            Swal.fire({
-                icon: 'success',
-                title: '✅ تم تسجيل الدخول بنجاح',
-                text: `مرحباً بك ${user.firstName || 'مستخدم'}`,
-                timer: 1500,
-                showConfirmButton: false
-            }).then(() => {
-                if (user.accountType === 'admin') {
-                    window.location.href = 'dashboard-admin.html';
-                } else if (user.accountType === 'craftsman') {
-                    window.location.href = 'dashboard-craftsman.html';
+                if (data?.errors) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: Object.values(data.errors).flat()[0],
+                        confirmButtonColor: '#FFC107'
+                    });
                 } else {
-                    window.location.href = 'dashboard-user.html';
+                    showMessage(data ?? {
+                        icon: 'error',
+                        title: 'تعذر تسجيل الدخول. يرجى المحاولة مرة أخرى.'
+                    });
                 }
-            });
-        }
-
-        // ============================================
-        // تسجيل الدخول عبر وسائل التواصل
-        // ============================================
-        function socialLogin(provider) {
-            Swal.fire({
-                icon: 'info',
-                title: 'جاري التوجيه',
-                text: `سيتم توجيهك لتسجيل الدخول عبر ${provider}`,
-                timer: 1500,
-                showConfirmButton: false
-            });
+            } finally {
+                submitButton.disabled = false;
+            }
         }
 
         // ============================================
         // تحميل الصفحة
         // ============================================
         document.addEventListener('DOMContentLoaded', function() {
-            ensureAdminExists();
-            console.log('🔐 صفحة تسجيل الدخول جاهزة');
+            @if($errors->has('google'))
+                showMessage({
+                    icon: 'error',
+                    title: @json($errors->first('google'))
+                });
+            @endif
         });
     </script>
 </body>

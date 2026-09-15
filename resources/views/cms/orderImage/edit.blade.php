@@ -125,7 +125,7 @@
                         <label class="form-label">الصورة الحالية</label>
                         <div class="image-preview">
                             @if($order_images->image_path)
-                            <img src="{{ asset('storage/images/order_images/' . $order_images->image_path) }}" alt="{{ $order_images->image_name }}">
+                            <img src="{{ $order_images->publicUrl() }}" alt="صورة الطلب">
                             @else
                             <div class="no-image">
                                 <i class="fas fa-image"></i>

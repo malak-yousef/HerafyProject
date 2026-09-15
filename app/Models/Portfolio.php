@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
+use Database\Factories\PortfolioFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Craftman;
-use App\Models\PortfolioImage;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Portfolio extends Model
 {
-    /** @use HasFactory<\Database\Factories\PortfolioFactory> */
+    /** @use HasFactory<PortfolioFactory> */
     use HasFactory, SoftDeletes;
-
 
     protected $fillable = [
         'title',
@@ -22,11 +20,15 @@ class Portfolio extends Model
         'portfolioCover_image',
         'craftman_id',
         'project_date',
-        'views_count'
+        'views_count',
+        'is_featured',
+        'is_featured',
     ];
 
     protected $casts = [
         'status' => 'boolean',
+        'is_featured' => 'boolean',
+        'is_featured' => 'boolean',
     ];
 
     public function craftman()

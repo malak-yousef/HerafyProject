@@ -38,7 +38,7 @@ return new class extends Migration
                 'accepted',
                 'in_progress',
                 'completed',
-                'cancelled'
+                'cancelled',
             ])->default('pending');
 
             // إضافات أنصح بها

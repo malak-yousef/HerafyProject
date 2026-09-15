@@ -12,7 +12,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::withCount('professions')->orderBy('id', 'desc')->withoutTrashed()->paginate(4);
+        $categories = Category::withCount('professions')->latest()->withoutTrashed()->paginate(15)->withQueryString();
+
         return response()->view('cms.category.index', compact('categories'));
     }
 
@@ -32,29 +33,27 @@ class CategoryController extends Controller
     {
         $validator = Validator($request->all(), [
             'name' => 'required|string|min:4|max:20',
-            'description' => 'required|max:100'
+            'description' => 'required|max:100',
         ], [
-            'name.required' => "هذا الحقل مطلوب",
-            'description.required' => "هذا الحقل مطلوب",
+            'name.required' => 'هذا الحقل مطلوب',
+            'description.required' => 'هذا الحقل مطلوب',
             'name.min' => 'لا يقبل اقل من 4 حروف',
             'name.max' => 'لا يقبل اكثر من 20حرف',
         ]);
         if ($validator->fails()) {
-            return response()->json([
-                'icon' => 'error',
-                'title' => $validator->getMessageBag()->first(),
-            ], 400);
+            if ($request->expectsJson()) {
+                return response()->json(['icon' => 'error', 'title' => $validator->getMessageBag()->first()], 400);
+            }
+
+            return back()->withErrors($validator)->withInput();
         } else {
-            $categories = new Category();
+            $categories = new Category;
             $categories->name = $request->input('name');
             $categories->description = $request->input('description');
 
             $isSavaved = $categories->save();
 
-            return response()->json([
-                'icon' => 'success',
-                'title' => 'Created is Successfully',
-            ], 200);
+            return $request->expectsJson() ? response()->json(['icon' => 'success', 'title' => 'Created is Successfully']) : redirect()->route('categories.index')->with('success', 'تمت إضافة التصنيف بنجاح.');
         }
     }
 
@@ -64,6 +63,7 @@ class CategoryController extends Controller
     public function show($id)
     {
         $categories = Category::findOrFail($id);
+
         return response()->view('cms.category.show', compact('categories'));
     }
 
@@ -73,6 +73,7 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $categories = Category::findOrFail($id);
+
         return response()->view('cms.category.edit', compact('categories'));
     }
 
@@ -83,15 +84,15 @@ class CategoryController extends Controller
     {
         $validator = validator($request->all(), [
             'name' => 'required|string|min:4|max:20',
-            'description' => 'required|max:100'
+            'description' => 'required|max:100',
         ], [
-            'name.required' => "هذا الحقل مطلوب",
-            'description.required' => "هذا الحقل مطلوب",
+            'name.required' => 'هذا الحقل مطلوب',
+            'description.required' => 'هذا الحقل مطلوب',
             'name.min' => 'لا يقبل اقل من4حروف',
             'name.max' => 'لا يقبل اكثر من 20حرف',
         ]);
 
-        $categories = new Category();
+        $categories = new Category;
         $categories->name = $request->input('name');
         $categories->description = $request->input('description');
 
@@ -101,22 +102,21 @@ class CategoryController extends Controller
             $categories->name = $request->input('name');
             $categories->description = $request->input('description');
             $isUpdated = $categories->save();
-            return ['redirect' => route('categories.index')];
+
+            return $request->expectsJson() ? ['redirect' => route('categories.index')] : redirect()->route('categories.index')->with('success', 'تم تحديث التصنيف بنجاح.');
 
             //  return response()->json([
             //   'icon' => 'success' ,
             //       'title' => 'Updated is Successfully',
             //   ] , 200);
         } else {
-            return response()->json([
-                'icon' => 'error',
-                'title' => $validator->getMessageBag()->first(),
-            ], 400);
+            if ($request->expectsJson()) {
+                return response()->json(['icon' => 'error', 'title' => $validator->getMessageBag()->first()], 400);
+            }
+
+            return back()->withErrors($validator)->withInput();
         }
     }
-
-
-
 
     /**
      * Remove the specified resource from storage.
@@ -128,25 +128,34 @@ class CategoryController extends Controller
 
     public function trashed()
     {
-        $categories = Category::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
+        $categories = Category::onlyTrashed()->orderByDesc('deleted_at')->paginate(15)->withQueryString();
+
         return response()->view('cms.category.trashed', compact('categories'));
     }
 
     public function restore($id)
     {
         $categories = Category::onlyTrashed()->findOrFail($id)->restore();
+
         return back()->with('success', 'Success');
     }
 
     public function force($id)
     {
         $categories = Category::onlyTrashed()->findOrFail($id)->forceDelete();
+
         return back()->with('success', 'Success');
     }
 
-    public function forceAll()
+    public function forceAll(Request $request)
     {
-        $categories = Category::onlyTrashed()->forceDelete();
+        Category::onlyTrashed()->whereKey($this->trashIds($request))->forceDelete();
+
         return back()->with('success', 'Success');
+    }
+
+    private function trashIds(Request $request): array
+    {
+        return $request->validate(['ids' => ['required', 'array', 'min:1'], 'ids.*' => ['integer', 'distinct']])['ids'];
     }
 }

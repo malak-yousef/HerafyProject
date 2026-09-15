@@ -4,8 +4,10 @@ namespace Database\Factories;
 
 use App\Models\Craftman;
 use App\Models\Profession;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/** @extends Factory<Craftman> */
 class CraftmanFactory extends Factory
 {
     protected $model = Craftman::class;
@@ -13,51 +15,45 @@ class CraftmanFactory extends Factory
     public function definition(): array
     {
         return [
-            'profession_id' => Profession::factory(),
-
+            'profession_id' => Profession::factory()->active(),
             'id_number' => fake()->unique()->numerify('##########'),
-
-            'experience_years' => fake()->numberBetween(1, 20),
-
-            'description' => fake()->paragraph(),
-
-            'rating' => fake()->randomFloat(2, 0, 5),
-
-            'total_reviews' => fake()->numberBetween(0, 500),
-
-            'hourly_rate' => fake()->numberBetween(50, 500),
-
-            'daily_rate' => fake()->numberBetween(200, 2000),
+            'experience_years' => fake()->numberBetween(1, 25),
+            'description' => fake()->randomElement([
+                'حرفي متخصص في أعمال الصيانة المنزلية مع الالتزام بالمواعيد.',
+                'خبرة عملية في تنفيذ المشاريع المنزلية والتجارية بجودة عالية.',
+                'أقدم خدمة مهنية موثوقة وأسعاراً واضحة قبل بدء العمل.',
+            ]),
+            'rating' => 0,
+            'total_reviews' => 0,
+            'hourly_rate' => fake()->numberBetween(30, 150),
+            'daily_rate' => fake()->numberBetween(150, 600),
         ];
     }
 
-    public function configure()
+    public function configure(): static
     {
-        return $this->afterCreating(function (Craftman $craftman) {
-
-            $craftman->user()->create([
-                'name' => fake()->name(),
-
-                'user_name' => fake()->unique()->userName(),
-
-                'email' => fake()->unique()->safeEmail(),
-
-                'password' => 'password',
-
-                'mobile' => fake()->numerify('059########'),
-
-                'gender' => fake()->randomElement([
-                    'male',
-                    'female',
-                ]),
-
-                'status' => 'active',
-
-                'address' => fake()->address(),
-
-                'date' => now(),
-            ]);
-
+        return $this->afterCreating(function (Craftman $craftman): void {
+            if (! $craftman->user()->exists()) {
+                User::factory()->create([
+                    'actor_type' => Craftman::class,
+                    'actor_id' => $craftman->id,
+                ]);
+            }
         });
+    }
+
+    public function active(): static
+    {
+        return $this->afterCreating(fn (Craftman $craftman) => $craftman->user()->update(['status' => 'active']));
+    }
+
+    public function inactive(): static
+    {
+        return $this->afterCreating(fn (Craftman $craftman) => $craftman->user()->update(['status' => 'inactive']));
+    }
+
+    public function blocked(): static
+    {
+        return $this->afterCreating(fn (Craftman $craftman) => $craftman->user()->update(['status' => 'blocked']));
     }
 }

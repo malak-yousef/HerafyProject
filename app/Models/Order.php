@@ -2,15 +2,10 @@
 
 namespace App\Models;
 
-use App\Models\Customer;
-use App\Models\City;
-use App\Models\Area;
-use App\Models\Offer;
-use App\Models\ServiceJob;
-
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
@@ -18,6 +13,7 @@ class Order extends Model
 
     protected $fillable = [
         'customer_id',
+        'profession_id',
         'city_id',
         'area_id',
         'title',
@@ -28,6 +24,7 @@ class Order extends Model
         'address',
         'phone',
     ];
+
     protected $casts = [
         'service_date' => 'date',
         'budget' => 'decimal:2',
@@ -36,6 +33,18 @@ class Order extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function profession()
+    {
+        return $this->belongsTo(Profession::class);
+    }
+
+    public function scopeEligibleForCraftman(Builder $query, Craftman $craftman): Builder
+    {
+        return $query
+            ->where('status', 'pending')
+            ->where('profession_id', $craftman->profession_id);
     }
 
     public function city()
@@ -52,7 +61,6 @@ class Order extends Model
     {
         return $this->hasMany(Review::class);
     }
-
 
     public function images()
     {

@@ -6,21 +6,24 @@ use App\Models\Area;
 use App\Models\City;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends Factory<Area>
- */
+/** @extends Factory<Area> */
 class AreaFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    public const GAZA_AREAS = [
+        'شمال غزة' => ['بيت لاهيا', 'بيت حانون', 'جباليا', 'مخيم جباليا', 'مشروع بيت لاهيا', 'العطاطرة', 'السلاطين', 'أم النصر'],
+        'غزة' => ['الرمال', 'النصر', 'الشجاعية', 'الزيتون', 'التفاح', 'الدرج', 'الصبرة', 'تل الهوى', 'الشيخ رضوان', 'الرمال الشمالي', 'الرمال الجنوبي', 'الميناء'],
+        'الوسطى' => ['دير البلح', 'النصيرات', 'مخيم النصيرات', 'البريج', 'مخيم البريج', 'المغازي', 'مخيم المغازي', 'الزوايدة'],
+        'خانيونس' => ['خانيونس البلد', 'بني سهيلا', 'عبسان الكبيرة', 'عبسان الجديدة', 'خزاعة', 'القرارة', 'الفخاري', 'معن', 'جورة اللوت', 'المواصي', 'مخيم خانيونس'],
+        'رفح' => ['رفح البلد', 'تل السلطان', 'الشابورة', 'الجنينة', 'يبنا', 'مصبح', 'حي السلام', 'خربة العدس', 'المواصي - رفح'],
+    ];
+
     public function definition(): array
     {
         return [
-             'name' => fake()->streetName(),
-             'city_id' => City::factory(),
+            'city_id' => City::factory(),
+            'name' => fn (array $attributes) => fake()->randomElement(
+                self::GAZA_AREAS[City::findOrFail($attributes['city_id'])->name]
+            ),
         ];
     }
 }

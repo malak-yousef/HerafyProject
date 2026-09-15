@@ -17,7 +17,7 @@ class PortfolioImageFactory extends Factory
      */
     public function definition(): array
     {
-       return [
+        return [
             'image_path' => fake()->imageUrl(),
             'image_name' => fake()->word(),
             'image_description' => fake()->sentence(),

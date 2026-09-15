@@ -64,7 +64,7 @@ class SettingController extends Controller
     public function update(Request $request, Setting $setting)
     {
         $validated = $request->validate([
-            'key' => 'required|string|max:255|unique:settings,key,' . $setting->id,
+            'key' => 'required|string|max:255|unique:settings,key,'.$setting->id,
             'value' => 'nullable|string',
         ]);
 
@@ -94,7 +94,7 @@ class SettingController extends Controller
     {
         $settings = Setting::onlyTrashed()
             ->latest('deleted_at')
-            ->get();
+            ->paginate(15)->withQueryString();
 
         return view('cms.setting.trashed', compact('settings'));
     }

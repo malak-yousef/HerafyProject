@@ -1,127 +1,25 @@
 @extends('cms.parent')
 
-@section('title','تعديل عرض')
-
-@section('styles')
-@endsection
+@section('title', 'تعديل العرض')
+@section('main_content', 'تعديل العرض')
 
 @section('content')
-
-<div class="form-card">
-
-    <h3 class="form-title">
-        <i class="fa-solid fa-pen-to-square"></i>
-        تعديل العرض
-    </h3>
-
-    <form action="{{ route('offers.update',$offer->id) }}" method="POST">
-        @csrf
-        @method('PUT')
-
-        <div class="row">
-
-            {{-- الطلب --}}
-            <div class="col-md-6 mb-3">
-                <label class="form-label">الطلب</label>
-
-                <select name="order_id" class="form-select">
-
-                    @foreach($orders as $order)
-                        <option value="{{ $order->id }}"
-                            {{ $offer->order_id == $order->id ? 'selected' : '' }}>
-                            {{ $order->title }}
-                        </option>
-                    @endforeach
-
-                </select>
-            </div>
-
-            {{-- الحرفي --}}
-            <div class="col-md-6 mb-3">
-                <label class="form-label">الحرفي</label>
-
-                <select name="craftman_id" class="form-select">
-
-                    @foreach($craftmen as $craftman)
-                        <option value="{{ $craftman->id }}"
-                            {{ $offer->craftman_id == $craftman->id ? 'selected' : '' }}>
-                            {{ $craftman->user->name }}
-                        </option>
-                    @endforeach
-
-                </select>
-            </div>
-
-            {{-- السعر --}}
-            <div class="col-md-6 mb-3">
-                <label class="form-label">السعر</label>
-
-                <input
-                    type="number"
-                    step="0.01"
-                    name="price"
-                    value="{{ $offer->price }}"
-                    class="form-control">
-            </div>
-
-            {{-- الحالة --}}
-            <div class="col-md-6 mb-3">
-                <label class="form-label">الحالة</label>
-
-                <select name="status" class="form-select">
-
-                    <option value="pending" {{ $offer->status=='pending'?'selected':'' }}>
-                        قيد الانتظار
-                    </option>
-
-                    <option value="accepted" {{ $offer->status=='accepted'?'selected':'' }}>
-                        مقبول
-                    </option>
-
-                    <option value="in_progress" {{ $offer->status=='in_progress'?'selected':'' }}>
-                        قيد التنفيذ
-                    </option>
-
-                    <option value="completed" {{ $offer->status=='completed'?'selected':'' }}>
-                        مكتمل
-                    </option>
-
-                    <option value="cancelled" {{ $offer->status=='cancelled'?'selected':'' }}>
-                        ملغي
-                    </option>
-
-                </select>
-            </div>
-
-            {{-- الرسالة --}}
-            <div class="col-12 mb-3">
-
-                <label class="form-label">رسالة العرض</label>
-
-                <textarea
-                    name="message"
-                    rows="5"
-                    class="form-control">{{ $offer->message }}</textarea>
-
-            </div>
-
-        </div>
-
-        <div class="mt-3">
-
-            <button class="btn btn-gold">
-                <i class="fa fa-save"></i>
-                تحديث
-            </button>
-
-            <a href="{{ route('offers.index') }}" class="btn btn-secondary">
-                رجوع
-            </a>
-
-        </div>
-
-    </form>
-
+<div class="container-fluid">
+    <div class="mb-4">
+        <h4 class="cms-form-title mb-1"><i class="fas fa-pen-to-square text-warning" aria-hidden="true"></i> تعديل العرض</h4>
+        <p class="text-muted mb-0">راجع بيانات العرض مع الحفاظ على توافق الطلب والحرفي والحالة.</p>
+    </div>
+    <div class="card cms-form-card"><div class="card-body">
+        <form action="{{ route('offers.update', $offer) }}" method="POST">
+            @csrf
+            @method('PUT')
+            @include('cms.offer._form')
+        </form>
+    </div></div>
 </div>
+@endsection
 
+@section('scripts')
+<script src="{{ asset('cms/js/marketplace-relations.js') }}"></script>
+<script>document.addEventListener('DOMContentLoaded', function () { CmsMarketplaceRelations.initOffer('#offer-order', '#offer-craftman'); });</script>
 @endsection

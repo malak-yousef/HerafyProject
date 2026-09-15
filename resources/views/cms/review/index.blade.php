@@ -5,6 +5,7 @@
 @section('styles')
 
 <style>
+    .legacy-review-action, .legacy-review-action + form { display: none !important; }
     .section-content {
         font-family: 'Cairo', sans-serif;
     }
@@ -141,7 +142,8 @@
 
         <div class="table-responsive">
 
-            <table class="table table-hover">
+            <form method="GET" class="row g-2 mb-3 align-items-end"><div class="col-md-3"><label class="form-label">بحث</label><input name="search" value="{{ request('search') }}" class="form-control" maxlength="100"></div><div class="col-md-2"><label class="form-label">الحالة</label><select name="status" class="form-select"><option value="">الكل</option>@foreach(['pending','approved','rejected'] as $status)<option value="{{ $status }}" @selected(request('status') === $status)>{{ $status }}</option>@endforeach</select></div><div class="col-md-2"><label class="form-label">التقييم</label><select name="rating" class="form-select"><option value="">الكل</option>@foreach(range(1,5) as $rating)<option value="{{ $rating }}" @selected((string)request('rating') === (string)$rating)>{{ $rating }}</option>@endforeach</select></div><div class="col-md-3"><label class="form-label">الحرفي</label><select name="craftman_id" class="form-select"><option value="">الكل</option>@foreach($craftmen as $craftman)<option value="{{ $craftman->id }}" @selected((string)request('craftman_id') === (string)$craftman->id)>{{ $craftman->user->name ?? $craftman->id }}</option>@endforeach</select></div><div class="col-md-2"><button class="btn btn-primary" type="submit">بحث</button> <a href="{{ route('reviews.index') }}">إعادة ضبط</a></div></form>
+            <div class="mb-3"><form method="GET" class="row g-2"><div class="col-md-3"><input type="date" name="date_from" value="{{ request('date_from') }}" class="form-control"></div><div class="col-md-3"><input type="date" name="date_to" value="{{ request('date_to') }}" class="form-control"></div><div class="col-md-3"><select name="sort" class="form-select"><option value="newest">الأحدث</option><option value="oldest">الأقدم</option><option value="rating_desc">الأعلى تقييمًا</option><option value="rating_asc">الأقل تقييمًا</option></select></div><div class="col-md-3"><button class="btn btn-outline-primary" type="submit">تطبيق</button></div></form></div><table class="table table-hover">
 
 
                 <thead>
@@ -225,7 +227,8 @@
 
                         <td>
 
-                            <span class="status {{$review->status}}">
+                            <x-cms.status-badge :status="$review->status" />
+                            <span class="status {{$review->status}} legacy-review-status">
 
                                 @if($review->status=='pending')
                                 قيد الانتظار
@@ -255,7 +258,7 @@
 
 
                             <a href="{{route('reviews.show',$review->id)}}"
-                                class="btn btn-sm btn-info">
+                                class="btn btn-sm btn-info legacy-review-action">
 
                                 <i class="fa fa-eye"></i>
 
@@ -264,7 +267,7 @@
 
 
                             <a href="{{route('reviews.edit',$review->id)}}"
-                                class="btn btn-sm btn-warning">
+                                class="btn btn-sm btn-warning legacy-review-action">
 
                                 <i class="fa fa-edit"></i>
 
@@ -272,6 +275,7 @@
 
 
 
+                            <x-cms.table-actions :show-url="route('reviews.show', $review->id)" :edit-url="route('reviews.edit', $review->id)" :delete-url="route('reviews.destroy', $review->id)" show-permission="reviews.view" edit-permission="reviews.update" delete-permission="reviews.delete" :delete-id="$review->id" />
                             <form
                                 action="{{route('reviews.destroy',$review->id)}}"
                                 method="POST"
@@ -302,7 +306,7 @@
 
                     <tr>
 
-                        <td colspan="9">
+                        <td colspan="9"><x-cms.empty-state :title="request()->hasAny(['search','status','rating','craftman_id','date_from','date_to','sort']) ? 'لا توجد نتائج مطابقة لخيارات البحث.' : 'لا توجد تقييمات حتى الآن'" :reset-url="route('reviews.index')" />
 
                             لا توجد تقييمات
 

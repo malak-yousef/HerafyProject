@@ -39,21 +39,21 @@ return [
 
     'guards' => [
         'web' => [
-            'driver'   => 'session',
+            'driver' => 'session',
             'provider' => 'users',
         ],
         'admin' => [
-            'driver'   => 'session',
+            'driver' => 'session',
             'provider' => 'users',
         ],
 
         'craftman' => [
-            'driver'   => 'session',
+            'driver' => 'session',
             'provider' => 'users',
         ],
 
         'customer' => [
-            'driver'   => 'session',
+            'driver' => 'session',
             'provider' => 'users',
         ],
     ],

@@ -27,9 +27,9 @@
                                     <div class="p-3 border rounded shadow-sm bg-light d-flex align-items-center">
                                         <div class="form-check form-switch m-0">
                                             <input class="form-check-input" type="checkbox" name="permissions[]" 
-                                                   value="{{ $permission->name }}" 
+                                                   value="{{ $permission->id }}" 
                                                    id="perm_{{ $permission->id }}"
-                                                   {{ in_array($permission->name, $rolePermissions) ? 'checked' : '' }}>
+                                                   {{ in_array($permission->id, $rolePermissions) ? 'checked' : '' }}>
                                             <label class="form-check-label fw-bold ms-2 text-dark" for="perm_{{ $permission->id }}">
                                                 {{ $permission->name }}
                                             </label>

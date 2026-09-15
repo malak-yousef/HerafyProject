@@ -2,50 +2,58 @@
 
 namespace Database\Factories;
 
-use App\Models\Order;
-use App\Models\City;
 use App\Models\Area;
+use App\Models\City;
 use App\Models\Customer;
-
-
+use App\Models\Order;
+use App\Models\Profession;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends Factory<Order>
- */
+/** @extends Factory<Order> */
 class OrderFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
-       return [
-        'customer_id' => Customer::factory(),
-        'city_id' => City::factory(),
-        'area_id' => Area::factory(),
+        return [
+            'customer_id' => Customer::factory()->active(),
+            'profession_id' => Profession::factory()->active(),
+            'city_id' => City::factory(),
+            'area_id' => fn (array $attributes) => Area::factory()->create(['city_id' => $attributes['city_id']])->id,
+            'title' => fake()->randomElement([
+                'صيانة تمديدات كهربائية', 'إصلاح تسريب مياه', 'تركيب أبواب خشبية',
+                'دهان شقة سكنية', 'صيانة جهاز تكييف', 'تنفيذ أعمال حديدية',
+            ]),
+            'description' => 'مطلوب حرفي متخصص لتنفيذ العمل بجودة عالية وفي الموعد المحدد.',
+            'budget' => fake()->numberBetween(100, 2500),
+            'service_date' => fake()->dateTimeBetween('+1 day', '+2 months')->format('Y-m-d'),
+            'status' => 'pending',
+            'address' => fake()->streetAddress(),
+            'phone' => fake()->numerify('059#######'),
+        ];
+    }
 
-        'title' => fake()->sentence(3),
+    public function pending(): static
+    {
+        return $this->state(fn () => ['status' => 'pending']);
+    }
 
-        'description' => fake()->paragraph(),
+    public function accepted(): static
+    {
+        return $this->state(fn () => ['status' => 'accepted']);
+    }
 
-        'budget' => fake()->numberBetween(50,1000),
+    public function inProgress(): static
+    {
+        return $this->state(fn () => ['status' => 'in_progress']);
+    }
 
-        'service_date' => fake()->dateTimeBetween('now','+2 months'),
+    public function completed(): static
+    {
+        return $this->state(fn () => ['status' => 'completed']);
+    }
 
-        'status' => fake()->randomElement([
-            'pending',
-            'accepted',
-            'in_progress',
-            'completed',
-            'cancelled'
-        ]),
-
-        'address' => fake()->address(),
-
-        'phone' => fake()->phoneNumber(),
-    ];
+    public function cancelled(): static
+    {
+        return $this->state(fn () => ['status' => 'cancelled']);
     }
 }

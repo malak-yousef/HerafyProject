@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Report;
+
 class ServiceJob extends Model
 {
     use HasFactory, SoftDeletes;
@@ -52,8 +52,19 @@ class ServiceJob extends Model
     {
         return $this->belongsTo(Craftman::class, 'craftman_id');
     }
+
+    public function review()
+    {
+        return $this->hasOne(Review::class, 'request_id', 'order_id');
+    }
+
+    public function customerReview()
+    {
+        return $this->hasOne(CustomerReview::class);
+    }
+
     public function reports()
-{
-    return $this->hasMany(Report::class, 'job_id');
-}
+    {
+        return $this->hasMany(Report::class, 'job_id');
+    }
 }

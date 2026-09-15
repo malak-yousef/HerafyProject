@@ -2,239 +2,288 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CmsOfferRequest;
 use App\Models\Craftman;
 use App\Models\Offer;
 use App\Models\Order;
-use Illuminate\Http\Request;
 use App\Models\Setting;
+use App\Notifications\NewOfferSubmitted;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class OfferController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-         $offers = offer::with(['order', 'craftman.user'])->paginate(10);
+        $validated = $request->validate([
+            'search' => ['nullable', 'string', 'max:100'], 'status' => ['nullable', Rule::in(['pending', 'accepted', 'in_progress', 'completed', 'cancelled'])],
+            'craftman_id' => ['nullable', Rule::exists('craftmen', 'id')->whereNull('deleted_at')], 'order_id' => ['nullable', Rule::exists('orders', 'id')->whereNull('deleted_at')],
+            'price_min' => ['nullable', 'numeric', 'min:0'], 'price_max' => ['nullable', 'numeric', 'min:0', 'gte:price_min'],
+            'date_from' => ['nullable', 'date'], 'date_to' => ['nullable', 'date', 'after_or_equal:date_from'], 'sort' => ['nullable', Rule::in(['newest', 'oldest', 'price_asc', 'price_desc'])],
+        ]);
+        $query = Offer::with(['order', 'craftman.user']);
+        if ($search = trim($validated['search'] ?? '')) {
+            $query->where(fn ($q) => $q->whereHas('order', fn ($o) => $o->where('title', 'like', "%{$search}%"))->orWhereHas('craftman.user', fn ($u) => $u->where('name', 'like', "%{$search}%")->orWhere('user_name', 'like', "%{$search}%")));
+        }
+        foreach (['status', 'craftman_id', 'order_id'] as $field) {
+            if (isset($validated[$field])) {
+                $query->where($field, $validated[$field]);
+            }
+        }
+        if (isset($validated['price_min'])) {
+            $query->where('price', '>=', $validated['price_min']);
+        } if (isset($validated['price_max'])) {
+            $query->where('price', '<=', $validated['price_max']);
+        }
+        if (isset($validated['date_from'])) {
+            $query->whereDate('created_at', '>=', $validated['date_from']);
+        } if (isset($validated['date_to'])) {
+            $query->whereDate('created_at', '<=', $validated['date_to']);
+        }
+        $sort = $validated['sort'] ?? 'newest';
+        if ($sort === 'newest') {
+            $query->latest();
+        } elseif ($sort === 'oldest') {
+            $query->oldest();
+        } else {
+            $query->orderBy('price', $sort === 'price_desc' ? 'desc' : 'asc');
+        }
+        $offers = $query->paginate(15)->withQueryString();
+        $craftmen = Craftman::with('user')->whereNull('deleted_at')->orderBy('id')->get();
+        $orders = Order::whereNull('deleted_at')->latest()->get(['id', 'title']);
 
-    return view('cms.offer.index', compact('offers'));
+        return view('cms.offer.index', compact('offers', 'craftmen', 'orders'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-      
+        $orders = Order::all();
+        $craftmen = Craftman::with('user')->get();
+        $selectedOrderId = $orders->firstWhere('id', $request->integer('order_id'))?->id;
 
-    $orders = Order::all();
-    $craftmen = Craftman::with('user')->get();
-
-    return view('cms.offer.create', compact('orders', 'craftmen'));
-}
-    
+        return view('cms.offer.create', compact('orders', 'craftmen', 'selectedOrderId'));
+    }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CmsOfferRequest $request)
     {
-         $request->validate([
-        'order_id' => 'required|exists:orders,id',
-        'craftman_id' => 'required|exists:craftmen,id',
-        'price' => 'required|numeric|min:1',
-        'message' => 'required|string',
-        'status' => 'required|in:pending,accepted,in_progress,completed,cancelled',
-    ]);
+        Offer::create($request->validated());
 
-    offer::create($request->all());
-
-    return redirect()->route('offers.index')
-        ->with('success', 'تم إضافة العرض بنجاح');
+        return redirect()->route('offers.index')
+            ->with('success', 'تم إضافة العرض بنجاح');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(offer $offer)
+    public function show(Offer $offer)
     {
-         $offer->load([
-        'order.customer.user',
-        'craftman.user'
-    ]);
+        $offer->load([
+            'order.customer.user',
+            'craftman.user',
+        ]);
 
-    return view('cms.offer.show', compact('offer'));
+        return view('cms.offer.show', compact('offer'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(offer $offer)
+    public function edit(Offer $offer)
     {
-         $orders = Order::all();
-    $craftmen = Craftman::with('user')->get();
+        $orders = Order::all();
+        $craftmen = Craftman::with('user')->get();
 
-    return view('cms.offer.edit', compact(
-        'offer',
-        'orders',
-        'craftmen'
+        return view('cms.offer.edit', compact(
+            'offer',
+            'orders',
+            'craftmen'
         ));
     }
 
     /**
      * Update the specified resource in storage.
      */
-   public function update(Request $request, Offer $offer)
-{
-    $request->validate([
-        'order_id' => 'required|exists:orders,id',
-        'craftman_id' => 'required|exists:craftmen,id',
-        'price' => 'required|numeric|min:1',
-        'message' => 'required|string',
-        'status' => 'required|in:pending,accepted,in_progress,completed,cancelled',
-    ]);
+    public function update(CmsOfferRequest $request, Offer $offer)
+    {
+        $offer->update($request->validated());
 
-    $offer->update($request->all());
+        return redirect()->route('offers.index')
+            ->with('success', 'تم تحديث العرض بنجاح');
+    }
 
-    return redirect()->route('offers.index')
-        ->with('success', 'تم تحديث العرض بنجاح');
-}
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(offer $offer)
+    public function destroy(Offer $offer)
     {
-         $offer->delete();
+        $offer->delete();
 
-    return response()->json([
-        'icon' => 'success',
-        'title' => 'تم نقل العرض إلى سلة المحذوفات'
-    ]);
+        return response()->json([
+            'icon' => 'success',
+            'title' => 'تم نقل العرض إلى سلة المحذوفات',
+        ]);
     }
 
+    public function trashed()
+    {
+        $offers = Offer::onlyTrashed()
+            ->with(['order', 'craftman.user'])
+            ->orderByDesc('deleted_at')->paginate(15)->withQueryString();
 
-
-   public function trashed()
-{
-    $offers = offer::onlyTrashed()
-        ->with(['order', 'craftman.user'])
-        ->get();
-
-    return view('cms.offer.trashed', compact('offers'));
-}
-
-public function restore($id)
-{
-    $offer = offer::onlyTrashed()->findOrFail($id);
-
-    $offer->restore();
-
-    return redirect()->route('offers_trashed');
-}
-
-public function force($id)
-{
-    $offer = offer::onlyTrashed()->findOrFail($id);
-
-    $offer->forceDelete();
-
-    return redirect()->route('offers_trashed');
-}
-
-public function forceAll()
-{
-    offer::onlyTrashed()->forceDelete();
-
-    return redirect()->route('offers_trashed');
-}
-public function craftmanStore(Request $request, Order $order)
-{
-    $request->validate([
-        'price' => 'required|numeric|min:1',
-        'message' => 'required|string',
-    ]);
-
-    // المستخدم الحالي
-    $user = auth('craftman')->user();
-
-    // الحرفي المرتبط بالمستخدم
-    $craftman = $user->actor;
-
-    if (!$craftman) {
-        return back()
-            ->withInput()
-            ->with('error', 'لم يتم العثور على بيانات الحرفي.');
+        return view('cms.offer.trashed', compact('offers'));
     }
 
-    // 🔴 منع الحرفي من تقديم أكثر من عرض على نفس الطلب
-    $alreadyOffered = Offer::where('order_id', $order->id)
-        ->where('craftman_id', $craftman->id)
-        ->exists();
+    public function restore($id)
+    {
+        $offer = Offer::onlyTrashed()->findOrFail($id);
 
-    if ($alreadyOffered) {
+        $offer->restore();
+
+        return redirect()->route('offers_trashed');
+    }
+
+    public function force($id)
+    {
+        $offer = Offer::onlyTrashed()->findOrFail($id);
+
+        $offer->forceDelete();
+
+        return redirect()->route('offers_trashed');
+    }
+
+    public function forceAll(Request $request)
+    {
+        Offer::onlyTrashed()->whereKey($this->trashIds($request))->forceDelete();
+
+        return redirect()->route('offers_trashed');
+    }
+
+    private function trashIds(Request $request): array
+    {
+        return $request->validate(['ids' => ['required', 'array', 'min:1'], 'ids.*' => ['integer', 'distinct']])['ids'];
+    }
+
+    public function craftmanStore(Request $request, Order $order)
+    {
+        $request->validate([
+            'price' => 'required|numeric|min:1',
+            'message' => 'required|string',
+        ]);
+
+        $craftman = $this->authenticatedCraftman();
+
+        $order = Order::query()
+            ->eligibleForCraftman($craftman)
+            ->findOrFail($order->id);
+
+        if (! $craftman) {
+            return back()
+                ->withInput()
+                ->with('error', 'لم يتم العثور على بيانات الحرفي.');
+        }
+
+        // 🔴 منع الحرفي من تقديم أكثر من عرض على نفس الطلب
+        $alreadyOffered = Offer::where('order_id', $order->id)
+            ->where('craftman_id', $craftman->id)
+            ->exists();
+
+        if ($alreadyOffered) {
+            return redirect()
+                ->route('herafy.order.show', $order->id)
+                ->with('error', 'لقد قدمت عرضًا على هذا الطلب مسبقًا.');
+        }
+
+        // الحد الأقصى للعروض اليومية
+        $maxDailyOffers = (int) Setting::where('key', 'max_daily_offers')
+            ->value('value');
+
+        if ($maxDailyOffers <= 0) {
+            $maxDailyOffers = 10;
+        }
+
+        // عدد عروض الحرفي اليوم
+        $todayOffers = Offer::where('craftman_id', $craftman->id)
+            ->whereDate('created_at', today())
+            ->count();
+
+        if ($todayOffers >= $maxDailyOffers) {
+            return back()
+                ->withInput()
+                ->with(
+                    'error',
+                    "لقد وصلت إلى الحد الأقصى للعروض اليومية وهو {$maxDailyOffers} عروض."
+                );
+        }
+
+        // ✅ إنشاء العرض بعد التأكد أنه لم يقدم سابقًا
+        $offer = DB::transaction(fn () => Offer::create([
+            'order_id' => $order->id,
+            'craftman_id' => $craftman->id,
+            'price' => $request->price,
+            'message' => $request->message,
+            'status' => 'pending',
+        ]));
+
+        $offer->load(['order.customer.user', 'craftman.user']);
+        $offer->order->customer->user->notify(new NewOfferSubmitted($offer));
+
         return redirect()
             ->route('herafy.order.show', $order->id)
-            ->with('error', 'لقد قدمت عرضًا على هذا الطلب مسبقًا.');
+            ->with('success', 'تم تقديم العرض بنجاح.');
     }
 
-    // الحد الأقصى للعروض اليومية
-    $maxDailyOffers = (int) Setting::where('key', 'max_daily_offers')
-        ->value('value');
+    public function craftmanOffers()
+    {
+        $craftman = $this->authenticatedCraftman();
 
-    if ($maxDailyOffers <= 0) {
-        $maxDailyOffers = 10;
+        $offers = Offer::where('craftman_id', $craftman->id)
+            ->with('order')
+            ->latest()
+            ->paginate(10);
+
+        return view('herafy.offer.index', compact('offers'));
     }
 
-    // عدد عروض الحرفي اليوم
-    $todayOffers = Offer::where('craftman_id', $craftman->id)
-        ->whereDate('created_at', today())
-        ->count();
+    public function craftmanCreate(Order $order)
+    {
+        $order = Order::query()
+            ->eligibleForCraftman($this->authenticatedCraftman())
+            ->findOrFail($order->id);
 
-    if ($todayOffers >= $maxDailyOffers) {
-        return back()
-            ->withInput()
-            ->with(
-                'error',
-                "لقد وصلت إلى الحد الأقصى للعروض اليومية وهو {$maxDailyOffers} عروض."
-            );
+        return view('herafy.offer.create', compact('order'));
     }
 
-    // ✅ إنشاء العرض بعد التأكد أنه لم يقدم سابقًا
-    Offer::create([
-        'order_id' => $order->id,
-        'craftman_id' => $craftman->id,
-        'price' => $request->price,
-        'message' => $request->message,
-        'status' => 'pending',
-    ]);
+    public function craftmanShow(Offer $offer)
+    {
+        abort_unless(
+            $offer->craftman_id === $this->authenticatedCraftman()->id,
+            403
+        );
 
-    return redirect()
-        ->route('herafy.order.show', $order->id)
-        ->with('success', 'تم تقديم العرض بنجاح.');
-}
+        $offer->load([
+            'order',
+            'craftman.user',
+        ]);
 
-public function craftmanOffers()
-{
-    $craftman = auth('craftman')->user()->actor;
+        return view('herafy.offer.show', compact('offer'));
+    }
 
-    $offers = offer::where('craftman_id', $craftman->id)
-        ->with('order')
-        ->latest()
-        ->paginate(10);
+    private function authenticatedCraftman(): Craftman
+    {
+        $craftman = auth('craftman')->user()?->actor;
 
-    return view('herafy.offer.index', compact('offers'));
-}
-public function craftmanCreate(Order $order)
-{
-    return view('herafy.offer.create', compact('order'));
-}
-public function craftmanShow(Offer $offer)
-{
-    $offer->load([
-        'order',
-        'craftman.user'
-    ]);
+        abort_unless($craftman instanceof Craftman, 403);
 
-    return view('herafy.offer.show', compact('offer'));
-}
+        return $craftman;
+    }
 }

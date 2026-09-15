@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,8 +15,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-
-    use HasFactory, Notifiable, HasRoles, SoftDeletes;
+    use HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -26,6 +26,7 @@ class User extends Authenticatable
         'name',
         'user_name',
         'email',
+        'email_verified_at',
         'password',
         'mobile',
         'gender',
@@ -36,6 +37,7 @@ class User extends Authenticatable
         'actor_type',
         'actor_id',
         'role_name',
+        'google_id',
 
     ];
 
@@ -59,33 +61,82 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-
     public function actor(): MorphTo
     {
         return $this->morphTo();
     }
 
-    public function isAdmin()
+    public function isAdmin(): bool
     {
-        return is_null($this->actor_type);
+        return is_null($this->actor_type)
+            && is_null($this->actor_id)
+            && $this->roles()->where('guard_name', 'admin')->exists();
     }
 
-    public function isCustomer()
+    /** Limit a query to identities managed as CMS administrators. */
+    public function scopeCmsAdmin(Builder $query): Builder
     {
-        return $this->actor_type === \App\Models\Customer::class;
+        return $query
+            ->whereNull('actor_type')
+            ->whereNull('actor_id')
+            ->whereHas('roles', fn (Builder $roles) => $roles->where('guard_name', 'admin'));
     }
-    public function isCraftman()
+
+    public function isCustomer(): bool
     {
-        return $this->actor_type === \App\Models\Craftman::class;
+        return $this->actor_type === Customer::class
+            && $this->actor instanceof Customer;
     }
+
+    public function isCraftman(): bool
+    {
+        return $this->actor_type === Craftman::class
+            && $this->actor instanceof Craftman;
+    }
+
+    public function profilePhotoPath(): ?string
+    {
+        if (! $this->image) {
+            return null;
+        }
+
+        $path = str_replace('\\', '/', trim($this->image));
+
+        if (preg_match('#^https?://#i', $path)) {
+            $path = (string) parse_url($path, PHP_URL_PATH);
+        }
+
+        foreach (['/storage/app/public/', '/public/storage/', '/storage/'] as $prefix) {
+            if (($position = stripos($path, $prefix)) !== false) {
+                $path = substr($path, $position + strlen($prefix));
+                break;
+            }
+        }
+
+        $path = ltrim($path, '/');
+
+        if (! str_contains($path, '/')) {
+            $directory = $this->actor_type === Customer::class ? 'images/customer' : 'images/craftman';
+            $path = $directory.'/'.$path;
+        }
+
+        return $path;
+    }
+
+    public function profilePhotoUrl(): ?string
+    {
+        $path = $this->profilePhotoPath();
+
+        return $path ? asset('storage/'.$path) : null;
+    }
+
     public function reportsMade()
-{
-    return $this->hasMany(Report::class, 'reporter_id');
-}
+    {
+        return $this->hasMany(Report::class, 'reporter_id');
+    }
 
-public function reportsReceived()
-{
-    return $this->hasMany(Report::class, 'reported_id');
-}
-
+    public function reportsReceived()
+    {
+        return $this->hasMany(Report::class, 'reported_id');
+    }
 }

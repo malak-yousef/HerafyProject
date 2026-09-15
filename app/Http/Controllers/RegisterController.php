@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Craftman;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
@@ -79,8 +78,9 @@ class RegisterController extends Controller
                 ->with('success', 'تم إنشاء الحساب بنجاح. يرجى تسجيل الدخول.');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return redirect()->back()
-                ->with('error', 'حدث خطأ أثناء إنشاء الحساب: ' . $e->getMessage())
+                ->with('error', 'حدث خطأ أثناء إنشاء الحساب: '.$e->getMessage())
                 ->withInput();
         }
     }

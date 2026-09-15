@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('status', [
                 'pending',
                 'approved',
-                'rejected'
+                'rejected',
             ])->default('pending');
 
             $table->timestamps();

@@ -12,7 +12,8 @@ class CityController extends Controller
      */
     public function index()
     {
-        $cities = City::withCount('areas', 'orders')->orderBy('id', 'desc')->withoutTrashed()->paginate(4);
+        $cities = City::withCount('areas', 'orders')->latest()->withoutTrashed()->paginate(15)->withQueryString();
+
         return response()->view('cms.city.index', compact('cities'));
     }
 
@@ -34,29 +35,27 @@ class CityController extends Controller
             'name' => 'required|string|min:4|max:20',
 
         ], [
-            'name.required' => "هذا الحقل مطلوب",
+            'name.required' => 'هذا الحقل مطلوب',
 
             'name.min' => 'لا يقبل اقل من 4 حروف',
             'name.max' => 'لا يقبل اكثر من 20حرف',
         ]);
         if ($validator->fails()) {
-            return response()->json([
-                'icon' => 'error',
-                'title' => $validator->getMessageBag()->first(),
-            ], 400);
-        } else {
-            $cities = new City();
-            $cities->name = $request->input('name');
+            if ($request->expectsJson()) {
+                return response()->json(['icon' => 'error', 'title' => $validator->getMessageBag()->first()], 400);
+            }
 
+            return back()->withErrors($validator)->withInput();
+        } else {
+            $cities = new City;
+            $cities->name = $request->input('name');
 
             $isSavaved = $cities->save();
 
-            return response()->json([
-                'icon' => 'success',
-                'title' => 'Created is Successfully',
-            ], 200);
+            return $request->expectsJson() ? response()->json(['icon' => 'success', 'title' => 'Created is Successfully']) : redirect()->route('cities.index')->with('success', 'تمت إضافة المدينة بنجاح.');
         }
     }
+
     /**
      * Display the specified resource.
      */
@@ -64,10 +63,9 @@ class CityController extends Controller
     {
         //
         $cities = City::with(['areas', 'orders.customer.user'])->findOrFail($id);
+
         return response()->view('cms.city.show', compact('cities'));
     }
-
-
 
     /**
      * Show the form for editing the specified resource.
@@ -75,6 +73,7 @@ class CityController extends Controller
     public function edit($id)
     {
         $cities = City::findOrFail($id);
+
         return response()->view('cms.city.edit', compact('cities'));
     }
 
@@ -87,15 +86,14 @@ class CityController extends Controller
             'name' => 'required|string|min:4|max:20',
 
         ], [
-            'name.required' => "هذا الحقل مطلوب",
+            'name.required' => 'هذا الحقل مطلوب',
 
             'name.min' => 'لا يقبل اقل من4حروف',
             'name.max' => 'لا يقبل اكثر من 20حرف',
         ]);
 
-        $cities = new City();
+        $cities = new City;
         $cities->name = $request->input('name');
-
 
         if (! $validator->fails()) {
 
@@ -103,17 +101,19 @@ class CityController extends Controller
             $cities->name = $request->input('name');
 
             $isUpdated = $cities->save();
-            return ['redirect' => route('cities.index')];
+
+            return $request->expectsJson() ? ['redirect' => route('cities.index')] : redirect()->route('cities.index')->with('success', 'تم تحديث المدينة بنجاح.');
 
             //  return response()->json([
             //   'icon' => 'success' ,
             //       'title' => 'Updated is Successfully',
             //   ] , 200);
         } else {
-            return response()->json([
-                'icon' => 'error',
-                'title' => $validator->getMessageBag()->first(),
-            ], 400);
+            if ($request->expectsJson()) {
+                return response()->json(['icon' => 'error', 'title' => $validator->getMessageBag()->first()], 400);
+            }
+
+            return back()->withErrors($validator)->withInput();
         }
     }
 
@@ -127,25 +127,34 @@ class CityController extends Controller
 
     public function trashed()
     {
-        $cities = City::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
+        $cities = City::onlyTrashed()->orderByDesc('deleted_at')->paginate(15)->withQueryString();
+
         return response()->view('cms.city.trashed', compact('cities'));
     }
 
     public function restore($id)
     {
         $cities = City::onlyTrashed()->findOrFail($id)->restore();
+
         return back()->with('success', 'Success');
     }
 
     public function force($id)
     {
         $cities = City::onlyTrashed()->findOrFail($id)->forceDelete();
+
         return back()->with('success', 'Success');
     }
 
-    public function forceAll()
+    public function forceAll(Request $request)
     {
-        $cities = City::onlyTrashed()->forceDelete();
+        City::onlyTrashed()->whereKey($this->trashIds($request))->forceDelete();
+
         return back()->with('success', 'Success');
+    }
+
+    private function trashIds(Request $request): array
+    {
+        return $request->validate(['ids' => ['required', 'array', 'min:1'], 'ids.*' => ['integer', 'distinct']])['ids'];
     }
 }

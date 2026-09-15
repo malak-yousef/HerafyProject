@@ -20,10 +20,10 @@ class PortfolioFactory extends Factory
         return [
             'title' => fake()->name(),
             'portfolioCover_image' => fake()->imageUrl(),
-            'location'=> fake()->address(),
-            'description'=> fake()->text(),
-            'craftman_id'=> fake()->numberBetween(1, 5),
-            'status'=> fake()->boolean(),
+            'location' => fake()->address(),
+            'description' => fake()->text(),
+            'craftman_id' => fake()->numberBetween(1, 5),
+            'status' => fake()->boolean(),
         ];
     }
 }

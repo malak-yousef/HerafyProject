@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Craftman;
-use App\Models\Customer;
-use App\Models\Order;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

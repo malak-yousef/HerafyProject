@@ -3,19 +3,40 @@
 namespace App\Http\Controllers;
 
 use App\Models\Report;
-use App\Models\User;
 use App\Models\ServiceJob;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ReportController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $reports = Report::with([
+        $validated = $request->validate([
+            'search' => ['nullable', 'string', 'max:100'], 'status' => ['nullable', Rule::in(['pending', 'reviewing', 'resolved', 'rejected'])],
+            'reporter_id' => ['nullable', Rule::exists('users', 'id')], 'reported_id' => ['nullable', Rule::exists('users', 'id')], 'job_id' => ['nullable', Rule::exists('service_jobs', 'id')->whereNull('deleted_at')],
+            'date_from' => ['nullable', 'date'], 'date_to' => ['nullable', 'date', 'after_or_equal:date_from'], 'sort' => ['nullable', Rule::in(['newest', 'oldest'])],
+        ]);
+        $query = Report::with([
             'reporter',
             'reported',
-            'job'
-        ])->latest()->paginate(10);
+            'job.order',
+        ]);
+        if ($search = trim($validated['search'] ?? '')) {
+            $query->where(fn ($q) => $q->where('reason', 'like', "%{$search}%")->orWhere('description', 'like', "%{$search}%")->orWhereHas('reporter', fn ($u) => $u->where('name', 'like', "%{$search}%"))->orWhereHas('reported', fn ($u) => $u->where('name', 'like', "%{$search}%"))->orWhereHas('job.order', fn ($o) => $o->where('title', 'like', "%{$search}%")));
+        }
+        foreach (['status', 'reporter_id', 'reported_id', 'job_id'] as $f) {
+            if (isset($validated[$f])) {
+                $query->where($f, $validated[$f]);
+            }
+        }
+        if (isset($validated['date_from'])) {
+            $query->whereDate('created_at', '>=', $validated['date_from']);
+        } if (isset($validated['date_to'])) {
+            $query->whereDate('created_at', '<=', $validated['date_to']);
+        }
+        ($validated['sort'] ?? 'newest') === 'oldest' ? $query->oldest() : $query->latest();
+        $reports = $query->paginate(15)->withQueryString();
 
         return view('cms.report.index', compact('reports'));
     }
@@ -51,7 +72,7 @@ class ReportController extends Controller
         $report->load([
             'reporter',
             'reported',
-            'job'
+            'job',
         ]);
 
         return view('cms.report.show', compact('report'));
@@ -102,10 +123,10 @@ class ReportController extends Controller
             ->with([
                 'reporter',
                 'reported',
-                'job'
+                'job',
             ])
             ->latest('deleted_at')
-            ->paginate(10);
+            ->paginate(15)->withQueryString();
 
         return view('cms.report.trashed', compact('reports'));
     }

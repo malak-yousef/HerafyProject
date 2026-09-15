@@ -174,7 +174,7 @@
                         <div class="d-flex justify-content-center">
                             <div class="image-preview" onclick="document.getElementById('profile_image').click()">
                                 @if($craftmen->user && $craftmen->user->image)
-                                <img id="imagePreview" src="{{ asset('storage/images/craftman/' . $craftmen->user->image) }}"
+                                <img id="imagePreview" src="{{ $craftmen->user->profilePhotoUrl() }}"
                                     alt="صورة الحرفي" style="width:100%; height:100%; object-fit:cover;">
                                 @else
                                 <div class="placeholder" id="imagePlaceholder">

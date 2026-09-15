@@ -298,7 +298,7 @@
                         حالة الحساب</label>
                     <select disabled id="status" name="status" class="form-select">
                         <option value="active" {{ old('status', $admins->status) == 'active' ? 'selected' : '' }}>فعال</option>
-                        <option value="in_active" {{ old('status', $admins->status) == 'in_active' ? 'selected' : '' }}>غير فعال</option>
+                        <option value="inactive" {{ old('status', $admins->status) == 'inactive' ? 'selected' : '' }}>غير فعال</option>
                         <option value="pending" {{ old('status', $admins->status) == 'pending' ? 'selected' : '' }}>قيد التنفيذ</option>
                         <option value="blocked" {{ old('status', $admins->status) == 'blocked' ? 'selected' : '' }}>محظور</option>
                     </select>

@@ -1,215 +1,150 @@
-function store(url, data) {
-    axios.post(url, data)
-        .then(function (response) {
-            showMessage(response.data);
-            const activeForm = document.querySelector('form');
-            if (activeForm) {
-                activeForm.reset();
-            }
+(function (window, document) {
+    'use strict';
 
-            clearAndHideErrors();
-        })
-        .catch(function (error) {
-            if (error.response.data.errors !== undefined) {
-                showErrorMessages(error.response.data.errors);
-            } else {
-                showMessage(error.response.data);
-            }
-        });
+    const messages = {
+        success: 'تمت العملية بنجاح.',
+        error: 'تعذر إتمام العملية. يرجى المحاولة مرة أخرى.',
+        deleteTitle: 'هل أنت متأكد؟',
+        deleteText: 'لا يمكن التراجع عن عملية الحذف.',
+        deleteSuccess: 'تمت عملية الحذف بنجاح.',
+    };
 
-}
-
-function storepart(url, data) {
-
-    axios.post(url, data)
-
-        .then(function (response) {
-            showMessage(response.data);
-            clearForm();
-            clearAndHideErrors();
-
-        })
-
-        .catch(function (error) {
-
-            if (error.response.data.errors !== undefined) {
-                showErrorMessages(error.response.data.errors);
-            } else {
-
-                showMessage(error.response.data);
-            }
-        });
-
-}
-function storeRoute(url, data) {
-    axios.post(url, data, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+    if (window.axios) {
+        window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+        if (csrfToken) window.axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
     }
-})
-        .then(function (response) {
-                window.location = response.data.redirect;
-             // showMessage(response.data);
-            // clearForm();
-            // clearAndHideErrors();
 
-        })
-        .catch(function (error) {
+    function normalizedMessage(data, icon = 'success', title = messages.success) {
+        if (typeof data === 'string' && data.trim()) return { icon, title: data };
+        return {
+            icon: data?.icon || (data?.success === false ? 'error' : icon),
+            title: data?.title || data?.message || title,
+            text: data?.text,
+        };
+    }
 
-            if (error.response.data.errors !== undefined) {
-                showErrorMessages(error.response.data.errors);
-            } else {
-
-                showMessage(error.response.data);
-            }
-        });
-}
-function storeRedirect (url, data, redirectUrl) {
-    axios.post( url, data)
-        .then(function (response) {
-            console.log(response);
-            if (redirectUrl != null)
-                window.location.href = redirectUrl;
-        })
-        .catch(function (error) {
-            console.log(error.response);
-        });
-}
-
-function update (url, data, redirectUrl) {
-    axios.put( url, data)
-
-        .then(function (response) {
-            console.log(response);
-
-            if (redirectUrl != null)
-                window.location.href = redirectUrl;
-        })
-        .catch(function (error) {
-            console.log(error.response);
-        });
-}
-function updateRoute (url, data) {
-    axios.put( url, data)
-
-        .then(function (response) {
-            console.log(response);
-
-        window.location = response.data.redirect;
-
-        })
-        .catch(function (error) {
-            console.log(error.response);
-        });
-}
-function updateReload (url, data, redirectUrl) {
-    axios.put( url, data)
-        .then(function (response) {
-            console.log(response);
-            location.reload()
-        })
-        .catch(function (error) {
-            console.log(error.response);
-        });
-}
-function updatePage(url, data) {
-    axios.post(url, data)
-        .then(function (response) {
-            console.log(response);
-            location.reload()
-            // showMessage(response.data);
-         })
-        .catch(function (error) {
-            console.log(error.response);
-        });
-}
-
-function confirmDestroy(url, td) {
-    Swal.fire({
-        title: 'ARE YOU SURE ?',
-        text: "لا يمكن التراجع عن عملية الحذف",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'نعم',
-        cancelButtonText: 'لا',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            destroy(url, td);
-            Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'تمت عملية الحذف بنجاح',
-                showConfirmButton: false,
-                timer: 1500
-              })
-
-        }else{
-
-            Swal.fire({
-                    icon: 'error',
-                    title: 'فشلت عملية الحذف .',
-                    showConfirmButton: false,
-                    timer: 1500
-
-                  })
+    function showMessage(data, icon = 'success', title = messages.success) {
+        const message = normalizedMessage(data, icon, title);
+        if (!window.Swal) {
+            window.alert(message.title);
+            return Promise.resolve();
         }
-    });
-}
-
-function destroy(url, td) {
-    axios.delete(url)
-        .then(function (response) {
-            // handle success
-            console.log(response.data);
-            td.closest('tr').remove();
-            // showToaster(response.data.message, true);
-        })
-        .catch(function (error) {
-            // handle error
-            console.log(error.response);
-            // showToaster(error.response.data.message, false);
-        })
-        .then(function () {
-            // always executed
+        return window.Swal.fire({
+            position: 'center', icon: message.icon, title: message.title, text: message.text,
+            showConfirmButton: message.icon === 'error', confirmButtonText: 'حسنًا',
+            timer: message.icon === 'error' ? undefined : 1500,
         });
-}
-
-
-
-
-function showErrorMessages(errors) {
-
-    document.getElementById('error_alert').hidden = true;
-    var errorMessagesUl = document.getElementById("error_messages_ul");
-    errorMessagesUl.innerHTML = '';
-
-    for (var key of Object.keys(errors)) {
-        var newLI = document.createElement('li');
-        newLI.appendChild(document.createTextNode(errors[key]));
-        errorMessagesUl.appendChild(newLI);
     }
-}
 
-function clearAndHideErrors() {
-    document.getElementById('error_alert').hidden = true
-    var errorMessagesUl = document.getElementById("error_messages_ul");
-    errorMessagesUl.innerHTML = '';
-}
+    function showErrorMessages(errors) {
+        const alertElement = document.getElementById('error_alert');
+        const list = document.getElementById('error_messages_ul');
+        const items = Object.values(errors || {}).flat();
+        if (!alertElement || !list) {
+            return showMessage({ icon: 'error', title: items[0] || messages.error }, 'error', messages.error);
+        }
+        alertElement.hidden = false;
+        list.replaceChildren();
+        items.forEach(message => {
+            const item = document.createElement('li');
+            item.textContent = message;
+            list.appendChild(item);
+        });
+    }
 
-function clearForm() {
-    document.getElementById("create_form").reset();
-}
+    function clearAndHideErrors() {
+        const alertElement = document.getElementById('error_alert');
+        const list = document.getElementById('error_messages_ul');
+        if (alertElement) alertElement.hidden = true;
+        if (list) list.replaceChildren();
+    }
 
-function showMessage(data) {
-    console.log(data);
-    Swal.fire({
-        position: 'center',
-        icon: data.icon,
-        title: data.title,
-        showConfirmButton: false,
-        timer: 1500
-    })
-}
+    function clearForm() { document.getElementById('create_form')?.reset(); }
 
+    function handleError(error) {
+        const errors = error?.response?.data?.errors;
+        if (errors) return showErrorMessages(errors);
+        return showMessage(error?.response?.data, 'error', messages.error);
+    }
+
+    function redirectFrom(response, fallback = null) {
+        const target = response?.data?.redirect || fallback;
+        if (target) window.location.href = target;
+    }
+
+    function request(method, url, data, options = {}) {
+        return window.axios({ method, url, data, headers: options.headers })
+            .then(response => {
+                return showMessage(response.data, 'success', options.successMessage || messages.success)
+                    .then(() => {
+                        if (options.resetFirstForm) document.querySelector('form')?.reset();
+                        if (options.clearForm) clearForm();
+                        clearAndHideErrors();
+                        if (options.removeRow) options.removeRow.closest('tr')?.remove();
+                        redirectFrom(response, options.redirectUrl);
+                        if (options.reload && !response?.data?.redirect) window.location.reload();
+                        return response;
+                    });
+            })
+            .catch(error => {
+                handleError(error);
+                return null;
+            });
+    }
+
+    function store(url, data) {
+        return request('post', url, data, { resetFirstForm: true });
+    }
+    function storepart(url, data) {
+        return request('post', url, data, { clearForm: true });
+    }
+    function storeRoute(url, data) {
+        return request('post', url, data, { headers: { 'Content-Type': 'multipart/form-data' } });
+    }
+    function storeRedirect(url, data, redirectUrl) {
+        return request('post', url, data, { redirectUrl });
+    }
+    function update(url, data, redirectUrl = null) {
+        return request('put', url, data, { redirectUrl });
+    }
+    function updateRoute(url, data) { return update(url, data); }
+    function updateReload(url, data) { return request('put', url, data, { reload: true }); }
+    function updatePage(url, data) { return request('post', url, data, { reload: true }); }
+    function destroy(url, reference) {
+        return request('delete', url, null, {
+            removeRow: reference,
+            successMessage: messages.deleteSuccess,
+        });
+    }
+
+    function confirmDestroy(url, reference, confirmationMessage = messages.deleteText) {
+        if (!window.Swal) {
+            return window.confirm(confirmationMessage) ? destroy(url, reference) : Promise.resolve(false);
+        }
+        return window.Swal.fire({
+            title: messages.deleteTitle, text: confirmationMessage, icon: 'warning',
+            showCancelButton: true, confirmButtonColor: '#3085d6', cancelButtonColor: '#d33',
+            confirmButtonText: 'نعم', cancelButtonText: 'لا',
+        }).then(result => result.isConfirmed ? destroy(url, reference) : false);
+    }
+
+    document.addEventListener('submit', event => {
+        const form = event.target.closest('form[data-crud-delete]');
+        if (!form || !window.axios) return;
+
+        event.preventDefault();
+        const submitButton = event.submitter || form.querySelector('[type="submit"]');
+        if (submitButton) submitButton.disabled = true;
+
+        confirmDestroy(form.action, submitButton, form.dataset.confirmMessage).finally(() => {
+            if (submitButton?.isConnected) submitButton.disabled = false;
+        });
+    });
+
+    Object.assign(window, {
+        store, storepart, storeRoute, storeRedirect, update, updateRoute, updateReload,
+        updatePage, confirmDestroy, destroy, showErrorMessages, clearAndHideErrors,
+        clearForm, showMessage,
+    });
+})(window, document);

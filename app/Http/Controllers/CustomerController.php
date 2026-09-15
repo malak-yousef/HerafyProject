@@ -3,26 +3,49 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
-use App\Models\User;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class CustomerController extends Controller
 {
-
-
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // $customers = Customer::orderBy('id', 'desc')->withoutTrashed()->paginate(4);
-        // return response()->view('cms.customer.index', compact('customers'));
-        $customers = Customer::with('user', 'orders')
-            ->orderBy('id', 'desc')
-            ->withoutTrashed()
-            ->paginate(4);
+        $validated = $request->validate([
+            'search' => ['nullable', 'string', 'max:100'],
+            'account_status' => ['nullable', Rule::in(['active', 'inactive', 'blocked'])],
+            'date_from' => ['nullable', 'date'], 'date_to' => ['nullable', 'date', 'after_or_equal:date_from'],
+            'sort' => ['nullable', Rule::in(['newest', 'oldest', 'name_asc', 'name_desc'])],
+        ]);
+        $query = Customer::query()->with('user');
+        if ($search = trim($validated['search'] ?? '')) {
+            $query->whereHas('user', fn ($q) => $q->where('name', 'like', "%{$search}%")->orWhere('user_name', 'like', "%{$search}%")->orWhere('email', 'like', "%{$search}%"));
+        }
+        if (isset($validated['account_status'])) {
+            $query->whereHas('user', fn ($q) => $q->where('status', $validated['account_status']));
+        }
+        if (isset($validated['date_from'])) {
+            $query->whereHas('user', fn ($q) => $q->whereDate('created_at', '>=', $validated['date_from']));
+        }
+        if (isset($validated['date_to'])) {
+            $query->whereHas('user', fn ($q) => $q->whereDate('created_at', '<=', $validated['date_to']));
+        }
+        $sort = $validated['sort'] ?? 'newest';
+        if ($sort === 'newest') {
+            $query->latest('customers.created_at');
+        } elseif ($sort === 'oldest') {
+            $query->oldest('customers.created_at');
+        } else {
+            $query->orderBy(User::select('name')->whereColumn('users.actor_id', 'customers.id')->where('users.actor_type', Customer::class), $sort === 'name_asc' ? 'asc' : 'desc');
+        }
+        $customers = $query->paginate(15)->withQueryString();
+
         return response()->view('cms.customer.index', compact('customers'));
     }
 
@@ -39,17 +62,17 @@ class CustomerController extends Controller
         $validator = validator(
             $request->all(),
             [
-                'name'             => 'required |string|min:3|max:50',
-                'user_name'        => 'required |string|min:3|max:50|unique:users,user_name',
-                'id_number'        => 'required |numeric|unique:customers,id_number',
-                'mobile'           => 'nullable |numeric',
-                'email'            => 'required |email|unique:users,email',
-                'password'         => 'required |string|min:3|max:50',
-                'status'           => 'required |in:pending,active,inactive,blocked,',
-                'address'          => 'nullable |string|min:3|max:255',
-                'gender'           => 'required |in:male,female',
+                'name' => 'required |string|min:3|max:50',
+                'user_name' => 'required |string|min:3|max:50|unique:users,user_name',
+                'id_number' => 'required |numeric|unique:customers,id_number',
+                'mobile' => 'nullable |numeric',
+                'email' => 'required |email|unique:users,email',
+                'password' => 'required|string|min:8|max:50',
+                'status' => 'required |in:pending,active,inactive,blocked,',
+                'address' => 'nullable |string|min:3|max:255',
+                'gender' => 'required |in:male,female',
                 'date' => 'nullable|date',
-                'image'            => 'nullable |image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             ],
             messages: [
                 'required' => 'هذا الحقل مطلوب',
@@ -57,44 +80,56 @@ class CustomerController extends Controller
         );
 
         if ($validator->fails()) {
+            if (! $request->expectsJson()) {
+                return back()->withErrors($validator)->withInput($request->except('password'));
+            }
+
             return response()->json([
                 'icon' => 'error',
                 'title' => $validator->getMessageBag()->first(),
             ], 400);
         } else {
-            $customers = new Customer();
+            $customers = new Customer;
             $customers->id_number = $request->input('id_number');
             $isSaved = $customers->save();
 
             if ($isSaved) {
-                $users = new User();
+                $users = new User;
 
                 if (request()->hasFile('image')) {
                     $image = $request->file('image');
-                    $imageName = time() . '.' . $image->getClientOriginalExtension();
+                    $imageName = time().'.'.$image->getClientOriginalExtension();
                     $image->move('storage/images/customer', $imageName);
                     $users->image = $imageName;
                 }
 
-                $users->name      = $request->input('name');
+                $users->name = $request->input('name');
                 $users->user_name = $request->input('user_name');
-                $users->email     = $request->input('email');
-                $users->password  = Hash::make($request->input('password'));
-                $users->address   = $request->input('address');
-                $users->mobile    = $request->input('mobile');
-                $users->gender    = $request->input('gender');
+                $users->email = $request->input('email');
+                $users->password = Hash::make($request->input('password'));
+                $users->address = $request->input('address');
+                $users->mobile = $request->input('mobile');
+                $users->gender = $request->input('gender');
                 $users->date = $request->input('date');
-                $users->status    = $request->input('status');
+                $users->status = $request->input('status');
                 $users->actor()->associate($customers);
                 $isSaved = $users->save();
             }
 
-            if (!$isSaved) {
+            if (! $isSaved) {
+                if (! $request->expectsJson()) {
+                    return back()->withErrors(['form' => 'لم يتم حفظ بيانات الزبون'])->withInput($request->except('password'));
+                }
+
                 return response()->json([
-                    'icon'  => 'error',
+                    'icon' => 'error',
                     'title' => 'لم يتم حفظ بيانات الزبون',
                 ], 400);
             } else {
+                if (! $request->expectsJson()) {
+                    return redirect()->route('customers.index')->with('success', 'تم الحفظ بنجاح');
+                }
+
                 return response()->json([
                     'icon' => 'success',
                     'title' => 'تم الحفظ بنجاح',
@@ -124,16 +159,14 @@ class CustomerController extends Controller
 
         return response()->view('cms.customer.show', compact('customers'));
     }
-/*public function show($id)
-    {
-        $orders = Order::all();
-        $cities = City::all();
-        $areas = Area::all();
-        $customers = Customer::findOrFail($id);
-        return response()->view('cms.customer.show', compact('customers', 'orders' , 'cities' , 'areas'));
-    }*/
-
-
+    /*public function show($id)
+        {
+            $orders = Order::all();
+            $cities = City::all();
+            $areas = Area::all();
+            $customers = Customer::findOrFail($id);
+            return response()->view('cms.customer.show', compact('customers', 'orders' , 'cities' , 'areas'));
+        }*/
 
     /**
      * Show the form for editing the specified resource.
@@ -141,6 +174,7 @@ class CustomerController extends Controller
     public function edit($id)
     {
         $customers = Customer::findOrFail($id);
+
         return response()->view('cms.customer.edit', compact('customers'));
     }
 
@@ -151,7 +185,7 @@ class CustomerController extends Controller
     {
         $customers = Customer::findOrFail($id);
         $user = $customers->user;
-        if (!$user) {
+        if (! $user) {
             return response()->json([
                 'icon' => 'error',
                 'title' => 'خطأ',
@@ -162,87 +196,126 @@ class CustomerController extends Controller
         $validator = validator(
             $request->all(),
             [
-                'name'             => 'required |string|min:3|max:50',
-                'user_name'        => 'required |string|min:3|max:50|unique:users,user_name,' . $user_id,
-                'id_number'        => 'required |numeric|unique:customers,id_number,' . $id,
-                'mobile'           => 'nullable |numeric',
-                'email'            => 'required |email|unique:users,email,' . $user_id,
-                'password'         => 'nullable |string|min:3|max:50',
-                'status'           => 'required |in:pending,active,inactive,blocked',
-                'address'          => 'nullable |string|min:3|max:255',
-                'gender'           => 'required |in:male,female',
+                'name' => 'required |string|min:3|max:50',
+                'user_name' => 'required |string|min:3|max:50|unique:users,user_name,'.$user_id,
+                'id_number' => 'required |numeric|unique:customers,id_number,'.$id,
+                'mobile' => 'nullable |numeric',
+                'email' => 'required |email|unique:users,email,'.$user_id,
+                'password' => 'nullable|string|min:8|max:50',
+                'status' => 'required |in:pending,active,inactive,blocked',
+                'address' => 'nullable |string|min:3|max:255',
+                'gender' => 'required |in:male,female',
                 'date' => 'nullable|date',
-                'image'            => 'nullable |image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             ],
             messages: [
                 'required' => 'هذا الحقل مطلوب',
             ]
         );
         if ($validator->fails()) {
+            if (! $request->expectsJson()) {
+                return back()->withErrors($validator)->withInput($request->except('password'));
+            }
 
             return response()->json([
-                'icon'  => 'error',
+                'icon' => 'error',
                 'title' => 'خطأ في البيانات',
-                'text'  => $validator->getMessageBag()->first(),
+                'text' => $validator->getMessageBag()->first(),
             ], 400);
         }
         $customers->id_number = $request->input('id_number');
         $isSaved = $customers->save();
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $imageName = time().'.'.$image->getClientOriginalExtension();
             $image->move(
                 public_path('storage/images/customer'),
                 $imageName
             );
             $user->image = $imageName;
         }
-        $user->name      = $request->input('name');
+        $user->name = $request->input('name');
         $user->user_name = $request->input('user_name');
-        $user->email     = $request->input('email');
-        $user->address   = $request->input('address');
-        $user->mobile    = $request->input('mobile');
-        $user->gender    = $request->input('gender');
+        $user->email = $request->input('email');
+        $user->address = $request->input('address');
+        $user->mobile = $request->input('mobile');
+        $user->gender = $request->input('gender');
         $user->date = $request->input('date');
-        $user->status    = $request->input('status');
+        $user->status = $request->input('status');
         if ($request->filled('password')) {
             $user->password = Hash::make($request->input('password'));
         }
         $isSaved = $user->save();
+
+        if (! $request->expectsJson()) {
+            return redirect()->route('customers.index')->with('success', 'تم تحديث بيانات الزبون بنجاح');
+        }
+
         return [
-            'redirect' => route('customers.index')
+            'redirect' => route('customers.index'),
         ];
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        $customers = Customer::destroy($id);
+        Customer::destroy($id);
+
+        if ($request->expectsJson()) {
+            return ['redirect' => route('customers.index')];
+        }
+
+        return redirect()->route('customers.index')->with('success', 'تم حذف العميل بنجاح.');
     }
+
     public function trashed()
     {
-        $customers = Customer::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
-        return response()->view('cms.customers.trashed', compact('customers'));
+        $customers = Customer::onlyTrashed()->with('user')->orderByDesc('deleted_at')->paginate(15)->withQueryString();
+
+        return response()->view('cms.customer.trashed', compact('customers'));
     }
 
     public function restore($id)
     {
         $customers = Customer::onlyTrashed()->findOrFail($id);
         $customers->restore();
+
         return redirect()->route('customers_trashed')->with('success', 'تم استعادة الزبون بنجاح.');
     }
-    public function forceDestroy($id)
+
+    public function force($id)
     {
         $customers = Customer::onlyTrashed()->findOrFail($id);
-        $customers->forceDelete();
-        return redirect()->route('customer_trashed')->with('success', 'تم حذف الزبون بشكل دائم.');
+        $user = $customers->user()->withTrashed()->first();
+
+        DB::transaction(function () use ($customers, $user): void {
+            $customers->forceDelete();
+            $user?->forceDelete();
+        });
+
+        return redirect()->route('customers_trashed')->with('success', 'تم حذف العميل بشكل دائم.');
     }
-    public function DestroyAll()
+
+    public function forceAll(Request $request)
     {
-        $customers = Customer::onlyTrashed()->forceDelete();
-        return redirect()->route('customers_trashed')->with('success', 'تم حذف جميع الزبون بشكل دائم.');
+        $customers = Customer::onlyTrashed()->whereKey($this->trashIds($request))->get();
+
+        DB::transaction(function () use ($customers): void {
+            $customers->each(function (Customer $customer): void {
+                $user = $customer->user()->withTrashed()->first();
+                $customer->forceDelete();
+                $user?->forceDelete();
+            });
+        });
+
+        return redirect()->route('customers_trashed')->with('success', 'تم حذف العملاء المحددين بشكل دائم.');
+    }
+
+    private function trashIds(Request $request): array
+    {
+        return $request->validate(['ids' => ['required', 'array', 'min:1'], 'ids.*' => ['integer', 'distinct']])['ids'];
     }
 
     public function orders(Customer $customer)

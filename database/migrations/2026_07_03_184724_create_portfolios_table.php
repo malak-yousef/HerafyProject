@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('portfolios', function (Blueprint $table) {
             $table->id();
-            $table->string('title' ,200);
+            $table->string('title', 200);
             $table->text('description');
             $table->string('portfolioCover_image');
             $table->string('location')->nullable();
             $table->boolean('status')->default(true);
             $table->foreignId('craftman_id')->constrained()->onDelete('cascade');
-             $table->date('project_date')->nullable();
-$table->integer('views_count')->default(0);
+            $table->date('project_date')->nullable();
+            $table->integer('views_count')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

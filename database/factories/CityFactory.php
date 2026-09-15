@@ -5,20 +5,13 @@ namespace Database\Factories;
 use App\Models\City;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends Factory<City>
- */
+/** @extends Factory<City> */
 class CityFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    public const GAZA_LOCATIONS = ['شمال غزة', 'غزة', 'الوسطى', 'خانيونس', 'رفح'];
+
     public function definition(): array
     {
-        return [
-            'name' => fake()->city(),
-        ];
+        return ['name' => fake()->randomElement(self::GAZA_LOCATIONS)];
     }
 }

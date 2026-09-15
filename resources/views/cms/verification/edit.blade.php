@@ -1,183 +1,65 @@
 @extends('cms.parent')
 
 @section('title', 'مراجعة طلب التوثيق')
-
 @section('main_content', 'مراجعة طلب التوثيق')
 
 @section('content')
-
 <div class="container-fluid">
-
     <div class="mb-4">
-
-        <h4 class="fw-bold">
-            <i class="fas fa-user-check text-warning"></i>
-            مراجعة طلب التوثيق
-        </h4>
-
-        <p class="text-muted">
-            مراجعة وثيقة الحرفي وتحديد حالة التوثيق
-        </p>
-
+        <h4 class="cms-form-title mb-1"><i class="fas fa-user-check text-warning" aria-hidden="true"></i> مراجعة طلب التوثيق</h4>
+        <p class="text-muted mb-0">راجع وثيقة الحرفي وحدد حالة طلب التوثيق.</p>
     </div>
 
-
-    @if($errors->any())
-
-        <div class="alert alert-danger">
-
-            <ul class="mb-0">
-
-                @foreach($errors->all() as $error)
-
-                    <li>{{ $error }}</li>
-
-                @endforeach
-
-            </ul>
-
-        </div>
-
-    @endif
-
-
-    <div class="card shadow-sm border-0">
-
+    <div class="card cms-form-card">
         <div class="card-body">
+            <x-cms.form-errors-summary class="mb-4" />
 
-            <div class="row g-4">
-
-
-                {{-- بيانات الحرفي --}}
+            <div class="row g-3 mb-4">
                 <div class="col-md-6">
-
-                    <h5 class="fw-bold mb-3">
-                        بيانات الحرفي
-                    </h5>
-
-                    <div class="mb-3">
-
-                        <label class="form-label fw-bold">
-                            الحرفي
-                        </label>
-
-                        <input type="text"
-                               class="form-control"
-                               value="{{ $verification->craftman->user->name ?? 'غير معروف' }}"
-                               disabled>
-
-                    </div>
-
-
-                    <div class="mb-3">
-
-                        <label class="form-label fw-bold">
-                            رقم الحرفي
-                        </label>
-
-                        <input type="text"
-                               class="form-control"
-                               value="{{ $verification->craftman_id }}"
-                               disabled>
-
-                    </div>
-
+                    <span class="form-label fw-semibold d-block">الحرفي</span>
+                    <div class="cms-readonly-field">{{ $verification->craftman?->user?->name ?? 'غير متاح' }}</div>
                 </div>
-
-
-                {{-- الوثيقة --}}
                 <div class="col-md-6">
-
-                    <h5 class="fw-bold mb-3">
-                        وثيقة التوثيق
-                    </h5>
-
-                    <div class="mb-3">
-
-                        <a href="{{ asset('storage/' . $verification->document_path) }}"
-                           target="_blank"
-                           class="btn btn-primary">
-
-                            <i class="fas fa-file-alt"></i>
-                            فتح الوثيقة
-
-                        </a>
-
-                    </div>
-
+                    <span class="form-label fw-semibold d-block">المهنة</span>
+                    <div class="cms-readonly-field">{{ $verification->craftman?->profession?->name ?? 'غير متاحة' }}</div>
                 </div>
-
-
-                {{-- الحالة --}}
-                <div class="col-md-12">
-
-                    <form action="{{ route('verifications.update', $verification->id) }}"
-                          method="POST">
-
-                        @csrf
-                        @method('PUT')
-
-
-                        <div class="mb-4">
-
-                            <label class="form-label fw-bold">
-                                حالة التوثيق
-                            </label>
-
-                            <select name="status"
-                                    class="form-select"
-                                    required>
-
-                                <option value="pending"
-                                    {{ $verification->status === 'pending' ? 'selected' : '' }}>
-                                    قيد المراجعة
-                                </option>
-
-                                <option value="approved"
-                                    {{ $verification->status === 'approved' ? 'selected' : '' }}>
-                                    مقبول
-                                </option>
-
-                                <option value="rejected"
-                                    {{ $verification->status === 'rejected' ? 'selected' : '' }}>
-                                    مرفوض
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        <div class="d-flex gap-2">
-
-                            <button type="submit"
-                                    class="btn btn-success">
-
-                                <i class="fas fa-save"></i>
-                                حفظ الحالة
-
-                            </button>
-
-
-                            <a href="{{ route('verifications.show', $verification->id) }}"
-                               class="btn btn-secondary">
-
-                                إلغاء
-
-                            </a>
-
-                        </div>
-
-                    </form>
-
+                <div class="col-md-6">
+                    <span class="form-label fw-semibold d-block">تاريخ التقديم</span>
+                    <div class="cms-readonly-field">{{ $verification->created_at?->format('Y-m-d H:i') ?? 'غير متاح' }}</div>
                 </div>
-
+                <div class="col-md-6">
+                    <span class="form-label fw-semibold d-block">الحالة الحالية</span>
+                    <div class="cms-readonly-field"><x-cms.status-badge :status="$verification->status" /></div>
+                </div>
+                <div class="col-12">
+                    <span class="form-label fw-semibold d-block">وثيقة التوثيق</span>
+                    <a href="{{ asset('storage/'.$verification->document_path) }}" target="_blank" rel="noopener" class="btn btn-outline-primary cms-document-action">
+                        <i class="fas fa-file-alt" aria-hidden="true"></i>
+                        فتح الوثيقة
+                    </a>
+                </div>
             </div>
 
+            <form action="{{ route('verifications.update', $verification) }}" method="POST">
+                @csrf
+                @method('PUT')
+
+                <div class="mb-4">
+                    <label for="verification-status" class="form-label fw-semibold">حالة التوثيق <span class="cms-required" aria-hidden="true">*</span></label>
+                    <select id="verification-status" name="status" @class(['form-select', 'is-invalid' => $errors->has('status')]) required>
+                        @foreach(['pending' => 'قيد المراجعة', 'approved' => 'معتمد', 'rejected' => 'مرفوض'] as $value => $label)
+                            <option value="{{ $value }}" @selected(old('status', $verification->status) === $value)>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                    <x-cms.form-error field="status" />
+                </div>
+
+                <div class="cms-form-actions">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save" aria-hidden="true"></i> تحديث الحالة</button>
+                    <a href="{{ route('verifications.show', $verification) }}" class="btn btn-outline-secondary"><i class="fas fa-arrow-right" aria-hidden="true"></i> إلغاء</a>
+                </div>
+            </form>
         </div>
-
     </div>
-
 </div>
-
 @endsection

@@ -11,11 +11,11 @@ class OrderImageController extends Controller
     /**
      * Display a listing of the resource.
      */
-   public function index()
+    public function index()
     {
         // تم إضافة علاقة order للتأكد من إمكانية عرض تفاصيل الطلب في جدول الصور
         $order_images = OrderImage::with('order')->orderBy('id', 'desc')->paginate(10);
-        
+
         // استبدلي order_images باسم المجلد الحقيقي لديك في views إذا كان مختلفاً
         return response()->view('cms.orderImage.index', compact('order_images'));
     }
@@ -25,7 +25,8 @@ class OrderImageController extends Controller
      */
     public function create()
     {
-         $orders = Order::all();
+        $orders = Order::all();
+
         return response()->view('cms.orderImage.create', compact('orders'));
     }
 
@@ -37,9 +38,8 @@ class OrderImageController extends Controller
         $validator = validator(
             $request->all(),
             [
-                
-               
-                'image_path' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
+                'image_path' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
                 'order_id' => 'required|exists:orders,id',
             ],
             messages: [
@@ -56,16 +56,15 @@ class OrderImageController extends Controller
                 'titel' => $validator->getMessageBag()->first(),
             ], 400);
         } else {
-            $order_images = new OrderImage();
+            $order_images = new OrderImage;
 
             if (request()->hasFile('image_path')) {
                 $image = $request->file('image_path');
-                $imageName = time() . '_' . $image->getClientOriginalName();
+                $imageName = time().'_'.$image->getClientOriginalName();
                 $image->move('storage/images/order_images', $imageName);
-                $order_images->image_path =  $imageName;
+                $order_images->image_path = $imageName;
             }
 
-        
             $order_images->order_id = $request->input('order_id');
 
             $isSaved = $order_images->save();
@@ -84,6 +83,7 @@ class OrderImageController extends Controller
     {
         $order_images = OrderImage::findOrFail($id);
         $orders = Order::all();
+
         return response()->view('cms.orderImage.show', compact('order_images', 'orders'));
     }
 
@@ -94,6 +94,7 @@ class OrderImageController extends Controller
     {
         $order_images = OrderImage::findOrFail($id);
         $orders = Order::all();
+
         return response()->view('cms.orderImage.edit', compact('order_images', 'orders'));
     }
 
@@ -105,9 +106,9 @@ class OrderImageController extends Controller
         $validator = validator(
             $request->all(),
             [
-                
-                'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'order_id' => 'required|exists:portfolios,id',
+
+                'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+                'order_id' => 'required|exists:orders,id',
             ],
             [
                 'required' => 'هذا الحقل مطلوب.',
@@ -128,7 +129,7 @@ class OrderImageController extends Controller
 
         if ($request->hasFile('image_path')) {
             $image = $request->file('image_path');
-            $imageName = time() . '_' . $image->getClientOriginalName();
+            $imageName = time().'_'.$image->getClientOriginalName();
             $image->move('storage/images/order_images', $imageName);
             $order_images->image_path = $imageName;
         }
@@ -143,36 +144,46 @@ class OrderImageController extends Controller
         ], 200);
     }
 
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
     {
-        $order_images = orderImage::destroy($id);
+        $order_images = OrderImage::destroy($id);
     }
 
     public function trashed()
     {
-        $order_images = orderImage::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
+        $order_images = OrderImage::onlyTrashed()->with('order')->orderByDesc('deleted_at')->paginate(15)->withQueryString();
+
         return response()->view('cms.orderImage.trashed', compact('order_images'));
     }
 
     public function restore($id)
     {
-        $order_images = orderImage::onlyTrashed()->findOrFail($id);
+        $order_images = OrderImage::onlyTrashed()->findOrFail($id);
         $order_images->restore();
+
         return redirect()->route('order_images_trashed')->with('success', 'تم استعادة المعرض بنجاح.');
     }
+
     public function forceDestroy($id)
     {
-        $order_images = orderImage::onlyTrashed()->findOrFail($id);
+        $order_images = OrderImage::onlyTrashed()->findOrFail($id);
         $order_images->forceDelete();
+
         return redirect()->route('order_images_trashed')->with('success', 'تم حذف المعرض بشكل دائم.');
     }
-    public function DestroyAll()
+
+    public function DestroyAll(Request $request)
     {
-        orderImage::onlyTrashed()->forceDelete();
+        OrderImage::onlyTrashed()->whereKey($this->trashIds($request))->forceDelete();
+
         return redirect()->route('order_images_trashed')->with('success', 'تم حذف جميع المعارض بشكل دائم.');
+    }
+
+    private function trashIds(Request $request): array
+    {
+        return $request->validate(['ids' => ['required', 'array', 'min:1'], 'ids.*' => ['integer', 'distinct']])['ids'];
     }
 }

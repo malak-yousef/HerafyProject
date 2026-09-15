@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Verification;
 use App\Models\Craftman;
+use App\Models\Verification;
 use Illuminate\Database\Seeder;
 
 class VerificationSeeder extends Seeder
@@ -14,6 +14,7 @@ class VerificationSeeder extends Seeder
 
         if ($craftmen->isEmpty()) {
             $this->command->warn('لا يوجد حرفيون لإضافة طلبات التوثيق.');
+
             return;
         }
 

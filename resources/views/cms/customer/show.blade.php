@@ -157,7 +157,7 @@
                     <label class="form-label fw-bold">الصورة الشخصية</label>
                     <div class="image-display">
                         @if($customers->user && $customers->user->image)
-                        <img src="{{ asset('storage/images/customer/' . $customers->user->image) }}" alt="{{ $customers->user->name }}">
+                        <img src="{{ $customers->user->profilePhotoUrl() }}" alt="{{ $customers->user->name }}">
                         @else
                         <div class="no-image">
                             <i class="fas fa-user"></i>

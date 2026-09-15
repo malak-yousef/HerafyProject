@@ -2,17 +2,16 @@
 
 namespace App\Models;
 
+use Database\Factories\AreaFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\City;
-use App\Models\Order;
-
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Area extends Model
 {
-    /** @use HasFactory<\Database\Factories\AreaFactory> */
+    /** @use HasFactory<AreaFactory> */
     use HasFactory, SoftDeletes;
+
     protected $fillable = [
         'city_id',
         'name',

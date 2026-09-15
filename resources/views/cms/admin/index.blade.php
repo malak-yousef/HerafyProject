@@ -297,14 +297,15 @@
                         <td dir="ltr">{{ $admin->mobile }}</td>
                         <td>{{ $admin->date ?? "---" }}</td>
                         <td>
+                            <x-cms.status-badge :status="$admin->status ?? 'unknown'" />
                             @if($admin->status == 'active')
-                            <span class="badge bg-success badge-status">✅ فعال</span>
+                            <x-cms.status-badge :status="$admin->status" /><span class="badge bg-success badge-status legacy-user-status">✅ فعال</span>
                             @elseif($admin->status == 'inactive')
-                            <span class="badge bg-danger badge-status">❌ غير فعال</span>
+                            <span class="badge bg-danger badge-status legacy-user-status">❌ غير فعال</span>
                             @elseif($admin->status == 'pending')
                             <span class="badge bg-warning badge-status">⏳ قيد التنفيذ</span>
                             @elseif($admin->status == 'blocked')
-                            <span class="badge bg-dark badge-status">🚫 محظور</span>
+                            <span class="badge bg-dark badge-status legacy-user-status">🚫 محظور</span>
                             @endif
                         </td>
                         <td>
@@ -315,7 +316,7 @@
                             @endif
                         </td>
                         <td class="text-center actions-column">
-                            <div class="action-btns">
+                            <x-cms.table-actions :show-url="route('admins.show', $admin->id)" :edit-url="route('admins.edit', $admin->id)" :delete-url="route('admins.destroy', $admin->id)" show-permission="admins.view" edit-permission="admins.update" delete-permission="admins.delete" :delete-id="$admin->id" /><div class="action-btns legacy-user-actions">
                                 <a href="{{ route('admins.show', $admin->id) }}" class="action-btn btn-view" title="عرض">
                                     <i class="fas fa-eye"></i>
                                 </a>

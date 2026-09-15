@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\PortfolioImageFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Portfolio;
 
 class PortfolioImage extends Model
 {
-    /** @use HasFactory<\Database\Factories\PortfolioImageFactory> */
+    /** @use HasFactory<PortfolioImageFactory> */
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
@@ -18,7 +18,6 @@ class PortfolioImage extends Model
         'image_description',
         'portfolio_id',
     ];
-
 
     public function portfolio()
     {

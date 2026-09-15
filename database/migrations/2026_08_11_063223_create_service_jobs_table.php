@@ -29,14 +29,14 @@ return new class extends Migration
             $table->foreignId('craftman_id')
                 ->constrained()
                 ->cascadeOnDelete();
-$table->enum('status', [
-    'pending',
-    'in_progress',
-    'completed',
-    'cancelled',
-])->default('pending');
-$table->timestamp('started_at')->nullable();
-    $table->timestamp('completed_at')->nullable();
+            $table->enum('status', [
+                'pending',
+                'in_progress',
+                'completed',
+                'cancelled',
+            ])->default('pending');
+            $table->timestamp('started_at')->nullable();
+            $table->timestamp('completed_at')->nullable();
             $table->timestamps();
 
             $table->softDeletes();

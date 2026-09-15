@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
+use Database\Factories\OfferFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\ServiceJob;
 
 class offer extends Model
 {
-    /** @use HasFactory<\Database\Factories\OfferFactory> */
+    /** @use HasFactory<OfferFactory> */
     use HasFactory , SoftDeletes;
-
 
     protected $fillable = [
         'order_id',
@@ -36,8 +35,9 @@ class offer extends Model
     {
         return $this->belongsTo(Craftman::class);
     }
+
     public function serviceJob()
-{
-    return $this->hasOne(ServiceJob::class);
-}
+    {
+        return $this->hasOne(ServiceJob::class);
+    }
 }

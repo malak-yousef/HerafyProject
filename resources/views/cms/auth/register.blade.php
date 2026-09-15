@@ -541,6 +541,8 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('herafy/css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ asset('herafy/css/google-auth.css') }}">
 
 
 </head>
@@ -550,27 +552,7 @@
     <!-- ============================================ -->
     <!-- NAVBAR -->
     <!-- ============================================ -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold fs-3" href="{{ url('/') }}">
-                <i class="fas fa-hammer text-warning"></i> حرفي
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('index') }}">الرئيسية</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('index') }}#about">من نحن</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('showCraftsmen') }}#craftsmen">الحرفيون</a></li>
-                </ul>
-                <div class="d-flex gap-2">
-                    <a href="{{ route('login') }}" class="btn btn-warning btn-sm">دخول</a>
-                    <a href="{{ route('register') }}" class="btn btn-outline-warning btn-sm">انضم الآن</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <x-herafy.guest-navbar />
 
     <!-- ============================================ -->
     <!-- REGISTER SECTION -->
@@ -587,6 +569,13 @@
                             <h3 class="fw-bold">انضم إلى <span class="text-warning">حرفي</span></h3>
                             <p class="text-muted">أنشئ حسابك وابدأ رحلتك معنا</p>
                         </div>
+
+                        @if($googleRegistration)
+                            <div class="alert alert-success border-0 rounded-3 text-center">
+                                <i class="fab fa-google ms-1"></i>
+                                تم التحقق من حساب Google. أكمل بياناتك لاختيار نوع الحساب.
+                            </div>
+                        @endif
 
                         <!-- اختيار نوع الحساب -->
                         <div class="row g-3 mb-3">
@@ -615,7 +604,8 @@
                         </div>
 
                         <!-- نموذج الاشتراك -->
-                        <form id="registerForm" onsubmit="handleRegister(event)">
+                        <form id="registerForm" action="{{ url('/register') }}" method="POST" onsubmit="handleRegister(event)">
+                            @csrf
                             <!-- حقل مخفي لنوع الحساب -->
                             <input type="hidden" id="accountType" value="user">
 
@@ -626,7 +616,7 @@
                                         <i class="fas fa-user text-warning"></i> الاسم الأول
                                     </label>
                                     <input type="text" class="form-control" id="firstName"
-                                        placeholder="أحمد" required>
+                                        value="{{ $googleFirstName }}" placeholder="أحمد" required>
                                 </div>
 
                                 <!-- الاسم الأخير -->
@@ -635,7 +625,7 @@
                                         <i class="fas fa-user text-warning"></i> الاسم الأخير
                                     </label>
                                     <input type="text" class="form-control" id="lastName"
-                                        placeholder="محمد" required>
+                                        value="{{ $googleLastName }}" placeholder="محمد" required>
                                 </div>
 
                                 <!-- اسم المستخدم -->
@@ -652,7 +642,7 @@
                                     <label for="gender" class="form-label">
                                         <i class="fas fa-venus-mars text-warning"></i> الجنس
                                     </label>
-                                    <select class="form-select" id="gender">
+                                    <select class="form-select" id="gender" required>
                                         <option value="">اختر الجنس</option>
                                         <option value="male">ذكر</option>
                                         <option value="female">أنثى</option>
@@ -666,7 +656,8 @@
                                     <i class="fas fa-envelope text-warning"></i> البريد الإلكتروني
                                 </label>
                                 <input type="email" class="form-control" id="email"
-                                    placeholder="example@email.com" required>
+                                    value="{{ $googleRegistration['email'] ?? '' }}" placeholder="example@email.com" required
+                                    @if($googleRegistration) readonly @endif>
                             </div>
 
                             <div class="row">
@@ -676,7 +667,7 @@
                                         <i class="fas fa-phone text-warning"></i> رقم الهاتف
                                     </label>
                                     <input type="tel" class="form-control" id="phone"
-                                        placeholder="0599 123 456">
+                                        placeholder="0599 123 456" required>
                                 </div>
 
                                 <!-- العنوان -->
@@ -685,10 +676,11 @@
                                         <i class="fas fa-map-marker-alt text-warning"></i> العنوان
                                     </label>
                                     <input type="text" class="form-control" id="address"
-                                        placeholder="غزة، شارع عمر المختار">
+                                        placeholder="غزة، شارع عمر المختار" required>
                                 </div>
                             </div>
 
+                            @unless($googleRegistration)
                             <!-- كلمة المرور -->
                             <div class="mb-3">
                                 <label for="password" class="form-label">
@@ -718,6 +710,7 @@
                                     </button>
                                 </div>
                             </div>
+                            @endunless
 
                             <!-- حقل إضافي للحرفي (يظهر فقط عند اختيار حرفي) -->
                             <div id="craftsmanFields" style="display: none;">
@@ -738,7 +731,7 @@
                                         <i class="fas fa-id-card text-warning"></i> رقم الهوية
                                     </label>
                                     <input type="text" class="form-control" id="id_number"
-                                        placeholder="مثال: 123456789" required>
+                                        placeholder="مثال: 123456789">
                                 </div>
 
                                 <div class="mb-3">
@@ -781,15 +774,23 @@
                                             <i class="fas fa-clock text-warning"></i> السعر بالساعة (₪)
                                         </label>
                                         <input type="number" class="form-control" id="hourly_rate"
-                                            placeholder="50" min="0" step="0.5">
+                                            placeholder="50" min="0" step="1">
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="daily_rate" class="form-label">
                                             <i class="fas fa-calendar-day text-warning"></i> السعر باليوم (₪)
                                         </label>
                                         <input type="number" class="form-control" id="daily_rate"
-                                            placeholder="350" min="0" step="0.5">
+                                            placeholder="350" min="0" step="1">
                                     </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">
+                                        <i class="fas fa-align-right text-warning"></i> نبذة عن خبرتك
+                                    </label>
+                                    <textarea class="form-control" id="description" rows="3"
+                                        maxlength="2000" placeholder="اكتب نبذة مختصرة عن خبرتك"></textarea>
                                 </div>
                             </div>
 
@@ -811,6 +812,7 @@
                                 <i class="fas fa-user-plus"></i> إنشاء الحساب
                             </button>
 
+                            @unless($googleRegistration)
                             <!-- فصل -->
                             <div class="my-3 text-center">
                                 <span class="text-muted small">أو</span>
@@ -818,15 +820,11 @@
 
                             <!-- أزرار التسجيل عبر وسائل التواصل -->
                             <div class="d-grid gap-2">
-                                <button type="button" class="btn btn-outline-danger btn-sm"
-                                    onclick="socialRegister('google')">
+                                <a href="{{ route('auth.google.redirect') }}" class="btn google-auth-btn">
                                     <i class="fab fa-google"></i> التسجيل عبر Google
-                                </button>
-                                <button type="button" class="btn btn-outline-primary btn-sm"
-                                    onclick="socialRegister('facebook')">
-                                    <i class="fab fa-facebook"></i> التسجيل عبر Facebook
-                                </button>
+                                </a>
                             </div>
+                            @endunless
 
                             <!-- رابط تسجيل الدخول -->
                             <div class="text-center mt-3">
@@ -921,7 +919,6 @@
     <!-- ============================================ -->
     <script src="{{ asset('js/crud.js') }}"></script>
     <script src="{{asset('cms/plugins/toastr/toastr.min.js')}}"></script>
-    <script src="{{ asset('cms/js/main.js') }}"></script>
 
     <script>
         // ============================================
@@ -1032,12 +1029,14 @@
         function handleRegister(event) {
             event.preventDefault();
 
+            const isGoogleRegistration = @json((bool) $googleRegistration);
+
             // جلب البيانات من النموذج
             const firstName = document.getElementById('firstName').value.trim();
             const lastName = document.getElementById('lastName').value.trim();
             const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
+            const password = document.getElementById('password')?.value || '';
+            const confirmPassword = document.getElementById('confirmPassword')?.value || '';
             const accountType = document.getElementById('accountType').value;
             const phone = document.getElementById('phone').value.trim();
             const terms = document.getElementById('terms').checked;
@@ -1047,7 +1046,7 @@
             // ============================================
 
             // التحقق من الحقول المطلوبة
-            if (!firstName || !lastName || !email || !password || !confirmPassword) {
+            if (!firstName || !lastName || !email || (!isGoogleRegistration && (!password || !confirmPassword))) {
                 Swal.fire({
                     icon: 'error',
                     title: '⚠️ حقول ناقصة',
@@ -1070,7 +1069,7 @@
             }
 
             // التحقق من تطابق كلمة المرور
-            if (password !== confirmPassword) {
+            if (!isGoogleRegistration && password !== confirmPassword) {
                 Swal.fire({
                     icon: 'error',
                     title: '⚠️ كلمات المرور غير متطابقة',
@@ -1080,12 +1079,12 @@
                 return;
             }
 
-            // التحقق من قوة كلمة المرور (على الأقل 6 أحرف)
-            if (password.length < 6) {
+            // التحقق من قوة كلمة المرور (على الأقل 8 أحرف)
+            if (!isGoogleRegistration && password.length < 8) {
                 Swal.fire({
                     icon: 'error',
                     title: '⚠️ كلمة مرور ضعيفة',
-                    text: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل',
+                    text: 'كلمة المرور يجب أن تكون 8 أحرف على الأقل',
                     confirmButtonColor: '#FFC107'
                 });
                 return;
@@ -1197,11 +1196,14 @@
             // إعداد بيانات المستخدم (أسماء الحقول تطابق قاعدة البيانات)
             // ============================================
             const formData = new FormData();
+            formData.append('_token', event.target.querySelector('input[name="_token"]').value);
             formData.append('name', firstName + ' ' + lastName);
             formData.append('user_name', document.getElementById('user_name').value.trim());
             formData.append('email', email);
-            formData.append('password', password);
-            formData.append('password_confirmation', confirmPassword);
+            if (!isGoogleRegistration) {
+                formData.append('password', password);
+                formData.append('password_confirmation', confirmPassword);
+            }
             formData.append('mobile', phone);
             formData.append('address', document.getElementById('address').value.trim());
             formData.append('gender', document.getElementById('gender').value);
@@ -1213,12 +1215,11 @@
                 formData.append('experience_years', experience);
                 formData.append('hourly_rate', document.getElementById('hourly_rate').value || 0);
                 formData.append('daily_rate', document.getElementById('daily_rate').value || 0);
+                formData.append('description', document.getElementById('description').value.trim());
                 if (document.getElementById('craft').value === 'other') {
                     formData.append('custom_craft', document.getElementById('customCraft').value.trim());
                 }
             }
-
-            console.log('📝 بيانات التسجيل:', Object.fromEntries(formData));
 
             // ============================================
             // إرسال البيانات إلى السيرفر عبر axios
@@ -1229,7 +1230,7 @@
             button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إنشاء الحساب...';
             button.disabled = true;
 
-            axios.post('register', formData)
+            axios.post(event.target.action, formData)
                 .then(function(response) {
                     const accountTypeText = accountType === 'craftsman' ? 'حرفي' : 'مستخدم';
                     let message = 'مرحباً بك ' + firstName + ' في منصة حرفي! 🎉';
@@ -1278,55 +1279,6 @@
                     }
                 });
 
-        }
-
-        // ============================================
-        // 6. تسجيل الدخول عبر وسائل التواصل
-        // ============================================
-        function socialRegister(provider) {
-            // محاكاة تسجيل الدخول عبر وسائل التواصل
-            const providerNames = {
-                'google': 'Google',
-                'facebook': 'Facebook',
-                'apple': 'Apple'
-            };
-
-            Swal.fire({
-                icon: 'info',
-                title: '🔄 جاري التوجيه',
-                text: `سيتم توجيهك للتسجيل عبر ${providerNames[provider] || provider}`,
-                timer: 2000,
-                showConfirmButton: false
-            }).then(() => {
-                // محاكاة نجاح التسجيل عبر وسائل التواصل
-                const randomName = ['أحمد', 'محمد', 'سارة', 'فاطمة', 'خالد', 'نور'][Math.floor(Math.random() * 6)];
-                const randomLastName = ['النجار', 'السباك', 'المبلط', 'الكهربائي', 'الدهان'][Math.floor(Math.random() * 5)];
-
-                Swal.fire({
-                    icon: 'success',
-                    title: '✅ تم التسجيل بنجاح',
-                    text: `مرحباً بك ${randomName} ${randomLastName} في منصة حرفي`,
-                    timer: 2500,
-                    showConfirmButton: false
-                }).then(() => {
-                    // تخزين بيانات المستخدم في localStorage
-                    const userData = {
-                        id: Date.now(),
-                        firstName: randomName,
-                        lastName: randomLastName,
-                        fullName: `${randomName} ${randomLastName}`,
-                        email: `${randomName.toLowerCase()}@${provider}.com`,
-                        accountType: 'user',
-                        provider: provider,
-                        createdAt: new Date().toISOString(),
-                        isActive: true
-                    };
-                    localStorage.setItem('currentUser', JSON.stringify(userData));
-
-                    // تحويل إلى لوحة التحكم
-                    window.location.href = 'dashboard-user.html';
-                });
-            });
         }
 
         // ============================================

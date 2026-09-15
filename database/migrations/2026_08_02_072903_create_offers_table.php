@@ -12,26 +12,26 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('offers', function (Blueprint $table) {
-          $table->id();
+            $table->id();
             $table->foreignId('order_id')
                 ->constrained('orders')
                 ->cascadeOnDelete();
 
             $table->foreignId('craftman_id')->constrained()->onDelete('cascade');
 
-           $table->decimal('price', 10, 2);
+            $table->decimal('price', 10, 2);
 
-$table->text('message');
+            $table->text('message');
 
-$table->enum('status', [
-    'pending',
-    'accepted',
-    'in_progress',
-    'completed',
-    'cancelled',
-])->default('pending');
-$table->timestamps();
-$table->softDeletes();
+            $table->enum('status', [
+                'pending',
+                'accepted',
+                'in_progress',
+                'completed',
+                'cancelled',
+            ])->default('pending');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

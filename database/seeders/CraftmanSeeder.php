@@ -14,8 +14,9 @@ class CraftmanSeeder extends Seeder
     {
         $profession = Profession::first();
 
-        if (!$profession) {
+        if (! $profession) {
             $this->command->error('لا يوجد Profession في قاعدة البيانات.');
+
             return;
         }
 
@@ -44,7 +45,7 @@ class CraftmanSeeder extends Seeder
             'actor_type' => Craftman::class,
             'actor_id' => $craftman->id,
         ]);
-         User::create([
+        User::create([
             'name' => 'Craftman Test2',
             'user_name' => 'craftman2',
             'email' => 'craftman2@gmail.com',
@@ -67,6 +68,6 @@ class CraftmanSeeder extends Seeder
             'address' => 'Gaza',
             'actor_type' => Craftman::class,
             'actor_id' => $craftman->id,
-        ]); 
+        ]);
     }
 }

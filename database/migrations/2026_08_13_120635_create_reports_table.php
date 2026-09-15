@@ -13,29 +13,29 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-             $table->foreignId('reporter_id')
-        ->constrained('users')
-        ->cascadeOnDelete();
+            $table->foreignId('reporter_id')
+                ->constrained('users')
+                ->cascadeOnDelete();
 
-    $table->foreignId('reported_id')
-        ->constrained('users')
-        ->cascadeOnDelete();
+            $table->foreignId('reported_id')
+                ->constrained('users')
+                ->cascadeOnDelete();
 
-    $table->foreignId('job_id')
-        ->constrained('service_jobs')
-        ->cascadeOnDelete();
+            $table->foreignId('job_id')
+                ->constrained('service_jobs')
+                ->cascadeOnDelete();
 
-    $table->string('reason');
+            $table->string('reason');
 
-    $table->text('description')->nullable();
+            $table->text('description')->nullable();
 
-    $table->enum('status', [
-        'pending',
-        'reviewing',
-        'resolved',
-        'rejected'
-    ])->default('pending');
-                  $table->softDeletes();
+            $table->enum('status', [
+                'pending',
+                'reviewing',
+                'resolved',
+                'rejected',
+            ])->default('pending');
+            $table->softDeletes();
 
             $table->timestamps();
         });

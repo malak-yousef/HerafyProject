@@ -55,22 +55,6 @@
 
 <div class="container py-5">
 
-    {{-- رسائل النجاح والخطأ --}}
-
-    @if(session('success'))
-        <div class="alert alert-success">
-            <i class="fas fa-check-circle"></i>
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-danger">
-            <i class="fas fa-circle-exclamation"></i>
-            {{ session('error') }}
-        </div>
-    @endif
-
 
     <div class="card shadow-lg order-card">
 
@@ -223,6 +207,23 @@
 
             </div>
 
+
+            @if($order->images->isNotEmpty())
+                <section class="mt-5" aria-labelledby="order-images-title">
+                    <h4 id="order-images-title" class="section-title mb-4">
+                        <i class="fas fa-images text-warning"></i> صور الطلب
+                    </h4>
+                    <div class="row g-3">
+                        @foreach($order->images as $image)
+                            <div class="col-6 col-md-4 col-lg-3">
+                                <a href="{{ $image->publicUrl() }}" target="_blank" rel="noopener" class="d-block">
+                                    <img src="{{ $image->publicUrl() }}" alt="صورة مرفقة بطلب {{ $order->title }}" class="img-fluid rounded-3 border shadow-sm" style="height: 180px; width: 100%; object-fit: cover;">
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                </section>
+            @endif
 
             {{-- ============================= --}}
             {{-- العروض المقدمة --}}

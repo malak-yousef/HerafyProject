@@ -2,17 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Database\Factories\CityFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Order;
-use App\Models\Area;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class City extends Model
 {
-    /** @use HasFactory<\Database\Factories\CityFactory> */
+    /** @use HasFactory<CityFactory> */
     use HasFactory, SoftDeletes;
+
     protected $fillable = [
         'name',
     ];
@@ -21,6 +20,7 @@ class City extends Model
     {
         return $this->hasMany(Area::class);
     }
+
     public function orders()
     {
         return $this->hasMany(Order::class);

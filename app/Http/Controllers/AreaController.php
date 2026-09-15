@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Area;
 use App\Models\City;
-
 use Illuminate\Http\Request;
 
 class AreaController extends Controller
@@ -14,10 +13,10 @@ class AreaController extends Controller
      */
     public function index()
     {
-        $areas = Area::with('city')
-            ->orderBy('id', 'desc')
+        $areas = Area::with('city')->withCount('orders')
+            ->latest()
             ->withoutTrashed()
-            ->paginate(4);
+            ->paginate(15)->withQueryString();
 
         return response()->view('cms.area.index', compact('areas'));
     }
@@ -28,6 +27,7 @@ class AreaController extends Controller
     public function create()
     {
         $cities = City::all();
+
         return response()->view('cms.area.create', compact('cities'));
     }
 
@@ -42,7 +42,7 @@ class AreaController extends Controller
             'city_id' => 'required|exists:cities,id',
 
         ], [
-            'name.required' => "هذا الحقل مطلوب",
+            'name.required' => 'هذا الحقل مطلوب',
 
             'name.min' => 'لا يقبل اقل من 4 حروف',
             'name.max' => 'لا يقبل اكثر من 20حرف',
@@ -50,23 +50,20 @@ class AreaController extends Controller
             'city_id.exists' => 'التصنيف المختار غير موجود.',
         ]);
         if ($validator->fails()) {
-            return response()->json([
-                'icon' => 'error',
-                'title' => $validator->getMessageBag()->first(),
-            ], 400);
+            if ($request->expectsJson()) {
+                return response()->json(['icon' => 'error', 'title' => $validator->getMessageBag()->first()], 400);
+            }
+
+            return back()->withErrors($validator)->withInput();
         } else {
 
-            $areas = new Area();
+            $areas = new Area;
             $areas->name = $request->input('name');
             $areas->city_id = $request->input('city_id');
 
-
             $isUpdated = $areas->save();
 
-            return response()->json([
-                'icon' => 'success',
-                'title' => 'Created is Successfully',
-            ], 200);
+            return $request->expectsJson() ? response()->json(['icon' => 'success', 'title' => 'Created is Successfully']) : redirect()->route('areas.index')->with('success', 'تمت إضافة المنطقة بنجاح.');
         }
     }
 
@@ -78,6 +75,7 @@ class AreaController extends Controller
         //
         $cities = City::all();
         $areas = Area::findOrFail($id);
+
         return response()->view('cms.area.show', compact('areas', 'cities'));
     }
 
@@ -88,6 +86,7 @@ class AreaController extends Controller
     {
         $cities = City::all();
         $areas = Area::findOrFail($id);
+
         return response()->view('cms.area.edit', compact('areas', 'cities'));
     }
 
@@ -100,7 +99,7 @@ class AreaController extends Controller
             'name' => 'required|string|min:4|max:20',
             'city_id' => 'required|exists:cities,id',
         ], [
-            'name.required' => "هذا الحقل مطلوب",
+            'name.required' => 'هذا الحقل مطلوب',
 
             'name.min' => 'لا يقبل اقل من 4 حروف',
             'name.max' => 'لا يقبل اكثر من 20حرف',
@@ -108,24 +107,24 @@ class AreaController extends Controller
 
         ]);
         if ($validator->fails()) {
-            return response()->json([
-                'icon' => 'error',
-                'title' => $validator->getMessageBag()->first(),
-            ], 400);
+            if ($request->expectsJson()) {
+                return response()->json(['icon' => 'error', 'title' => $validator->getMessageBag()->first()], 400);
+            }
+
+            return back()->withErrors($validator)->withInput();
         } else {
 
             $areas = Area::findOrFail($id);
             $areas->name = $request->input('name');
 
-
             $areas->city_id = $request->input('city_id');
-
 
             $isSavaved = $areas->save();
 
-            return ['redirect' => route('areas.index')];
+            return $request->expectsJson() ? ['redirect' => route('areas.index')] : redirect()->route('areas.index')->with('success', 'تم تحديث المنطقة بنجاح.');
         }
     }
+
     /**
      * Remove the specified resource from storage.
      */
@@ -136,25 +135,34 @@ class AreaController extends Controller
 
     public function trashed()
     {
-        $areas = Area::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
+        $areas = Area::onlyTrashed()->with('city')->orderByDesc('deleted_at')->paginate(15)->withQueryString();
+
         return response()->view('cms.area.trashed', compact('areas'));
     }
 
     public function restore($id)
     {
         $areas = Area::onlyTrashed()->findOrFail($id)->restore();
+
         return back()->with('success', 'Success');
     }
 
     public function force($id)
     {
         $areas = Area::onlyTrashed()->findOrFail($id)->forceDelete();
+
         return back()->with('success', 'Success');
     }
 
-    public function forceAll()
+    public function forceAll(Request $request)
     {
-        $areas = Area::onlyTrashed()->forceDelete();
+        Area::onlyTrashed()->whereKey($this->trashIds($request))->forceDelete();
+
         return back()->with('success', 'Success');
+    }
+
+    private function trashIds(Request $request): array
+    {
+        return $request->validate(['ids' => ['required', 'array', 'min:1'], 'ids.*' => ['integer', 'distinct']])['ids'];
     }
 }

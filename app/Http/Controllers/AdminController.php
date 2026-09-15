@@ -2,211 +2,254 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $admins = User::whereNull('actor_type')->whereNull('actor_id')->latest()->paginate(10);
+        $admins = User::cmsAdmin()->latest()->paginate(10);
+
         return response()->view('cms.admin.index', compact('admins'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request)
     {
-        $roles = Role::where('guard_name', 'admin')->get();
+        $roles = Role::query()->where('guard_name', 'admin')
+            ->when(! $this->isSuperAdmin($request), fn (Builder $query) => $query->where('name', '!=', 'super-admin'))
+            ->get();
+
         return response()->view('cms.admin.create', compact('roles'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse|RedirectResponse
     {
-        $validator = validator($request->all(), [
-            'name'      => 'required|string|max:255',
-            'user_name' => 'required|string|max:255|unique:users,user_name',
-            'email'     => 'required|string|email|max:255|unique:users,email',
-            'password'  => 'nullable|string|min:8',
-            'gender'    => 'nullable|string|in:male,female',
-            'mobile'    => 'nullable|string|max:45',
-            'status'    => 'required|string|in:active,inactive,pending,blocked',
-            'actor_type' => 'nullable|string|in:craftman,customer,admin',
-            'image'     => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'role_name' => 'required|exists:roles,name',
+        $validated = $this->validateRequest($request, $this->rules());
 
-        ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'icon' => 'error',
-                'title' => $validator->getMessageBag()->first(),
-            ], 400);
-        } else {
-            $admins = new User();
-
-            if (request()->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '_image.' . $image->getClientOriginalExtension();
-                $image->move('storage/images/admin', $imageName);
-                //$image->storeAs('storage/images/admin' , $imageName);
-                $admins->image = $imageName;
-            }
-
-            $admins->name      = $request->input('name');
-            $admins->user_name = $request->input('user_name');
-            $admins->email     = $request->input('email');
-            $admins->password  = Hash::make($request->password);
-            $admins->mobile    = $request->input('mobile');
-            $admins->status    = $request->input('status');
-            $admins->gender    = $request->input('gender');
-            $admins->address   = $request->input('address');
-            $admins->date      = $request->input('date');
-            $admins->setAttribute('actor_id', null);
-            $admins->setAttribute('actor_type', null);
-            // $admins->assignRole('$request->role_name');
-            $admins->assignRole($request->role_name);
-
-            $isSaved = $admins->save();
-
-            if ($isSaved) {
-                return response()->json([
-                    'icon' => 'success',
-                    'title' => 'تم اضافة مشرف بنجاح',
-                ], 200);
-            } else {
-                return response()->json(['icon' => 'error', 'title' => 'فشلت عملية الحفظ'], 400);
-            }
+        if ($validated['role_name'] === 'super-admin' && ! $this->isSuperAdmin($request)) {
+            abort(403);
         }
+
+        $role = Role::query()->where('name', $validated['role_name'])
+            ->where('guard_name', 'admin')->firstOrFail();
+
+        $admin = new User;
+        $this->fillEditableFields($admin, $validated);
+        $admin->password = Hash::make($validated['password']);
+        $admin->actor_id = null;
+        $admin->actor_type = null;
+        $this->storeImage($request, $admin);
+
+        DB::transaction(function () use ($admin, $role): void {
+            $admin->save();
+            $admin->assignRole($role);
+        });
+
+        return $this->successResponse($request, 'تم إنشاء المسؤول بنجاح.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
-        $admins = User::findOrFail($id);
+        $admins = $this->adminQuery()->findOrFail($id);
+
         return response()->view('cms.admin.show', compact('admins'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        $admins = User::findOrFail($id);
+        $admins = $this->adminQuery()->findOrFail($id);
+        $this->authorizeProtectedTarget($request, $admins);
+
         return response()->view('cms.admin.edit', compact('admins'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse|RedirectResponse
     {
-        $validator = validator($request->all(), [
-            'name'  => 'required|string|max:255',
-            'user_name'  => 'required|string|max:255|unique:users,user_name,' . $id,
-            'email'  => 'required|string|email|max:255|unique:users,email,' . $id,
-            'password'  => 'nullable|string|min:8',
-            'gender'  => 'nullable|string|in:male,female',
-            'mobile'  => 'nullable|string|max:45',
-            'status'  => 'required|string|in:active,inactive,pending,blocked',
-            'actor_type'  => 'nullable|string|in:craftman,customer,admin',
-            'image'  => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        $admin = $this->adminQuery()->findOrFail($id);
+        $this->authorizeProtectedTarget($request, $admin);
+        $validated = $this->validateRequest($request, $this->rules($admin));
 
-        ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'icon' => 'error',
-                'title' => $validator->getMessageBag()->first(),
-            ], 400);
-        } else {
-            $admins = User::findOrFail($id);
-
-            if (request()->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '_image.' . $image->getClientOriginalExtension();
-                $image->move('storage/images/admin', $imageName);
-                //$image->storeAs('storage/images/admin' , $imageName);
-                $admins->image = $imageName;
-            }
-
-            $admins->name = $request->input('name');
-            $admins->user_name = $request->input('user_name');
-            $admins->email = $request->input('email');
-            if ($request->filled('password')) {
-                $admins->password = Hash::make($request->password);
-            }
-
-            $admins->mobile = $request->input('mobile');
-            $admins->status = $request->input('status');
-            $admins->gender = $request->input('gender');
-            $admins->address = $request->input('address');
-            $admins->date = $request->input('date');
-            $admins->setAttribute('actor_id', null);
-            $admins->setAttribute('actor_type', null);
-            $isSaved = $admins->save();
-
-            if ($isSaved) {
-                return response()->json([
-                    'icon' => 'success',
-                    'title' => 'تم تعديل مشرف بنجاح',
-                    'redirect' => route('admins.index'),
-                ], 200);
-            }
-
-            return response()->json([
-                'icon' => 'error',
-                'title' => 'فشلت عملية الحفظ',
-            ], 400);
+        if ($request->user('admin')?->is($admin) && $validated['status'] !== 'active') {
+            abort(403, 'لا يمكنك تعطيل حسابك الحالي.');
         }
-    }
-    /**
-     * Remove the specified resource from storage.
-     */
 
+        $this->fillEditableFields($admin, $validated);
+        if (! empty($validated['password'])) {
+            $admin->password = Hash::make($validated['password']);
+        }
+        $admin->actor_id = null;
+        $admin->actor_type = null;
+        $this->storeImage($request, $admin);
+        $admin->save();
 
-    public function destroy($id)
-    {
-        $isDeleted = User::destroy($id);
-
-        return response()->json([
-            'icon' => $isDeleted ? 'success' : 'error',
-            'title' => $isDeleted ? 'تم الحذف بنجاح' : 'فشل الحذف',
-        ], $isDeleted ? 200 : 400);
+        return $this->successResponse($request, 'تم تحديث المسؤول بنجاح.');
     }
 
-
-    public function trashed()
+    public function destroy(Request $request, $id): JsonResponse|RedirectResponse
     {
-        $admins = User::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
+        $admin = $this->adminQuery()->findOrFail($id);
+        $this->authorizeProtectedTarget($request, $admin);
+        $this->denySelfTarget($request, $admin);
+        $admin->delete();
+
+        return $this->successResponse($request, 'تم حذف المسؤول بنجاح.');
+    }
+
+    public function trashed(Request $request)
+    {
+        $admins = $this->protectSuperAdmins($this->adminQuery(true), $request)
+            ->orderByDesc('deleted_at')->paginate(15)->withQueryString();
+
         return response()->view('cms.admin.trashed', compact('admins'));
     }
 
-    public function restore($id)
+    public function restore(Request $request, $id): RedirectResponse
     {
-        $admins = User::onlyTrashed()->findOrFail($id)->restore();
+        $admin = $this->adminQuery(true)->findOrFail($id);
+        $this->authorizeProtectedTarget($request, $admin);
+        $admin->restore();
+
         return back()->with('success', 'Success');
     }
 
-    public function force($id)
+    public function force(Request $request, $id): RedirectResponse
     {
-        $admins = User::onlyTrashed()->findOrFail($id)->forceDelete();
+        $admin = $this->adminQuery(true)->findOrFail($id);
+        $this->authorizeProtectedTarget($request, $admin);
+        $this->denySelfTarget($request, $admin);
+        $admin->forceDelete();
+
         return back()->with('success', 'Success');
     }
 
-    public function forceAll()
+    public function forceAll(Request $request): RedirectResponse
     {
-        $admins = User::onlyTrashed()->forceDelete();
+        $ids = $this->validatedTrashIds($request);
+        $this->protectSuperAdmins($this->adminQuery(true), $request)->whereKey($ids)->forceDelete();
+
         return back()->with('success', 'Success');
+    }
+
+    private function validatedTrashIds(Request $request): array
+    {
+        return $request->validate([
+            'ids' => ['required', 'array', 'min:1'],
+            'ids.*' => ['required', 'integer', 'distinct'],
+        ])['ids'];
+    }
+
+    private function rules(?User $admin = null): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'user_name' => ['required', 'string', 'max:45', Rule::unique('users', 'user_name')->ignore($admin?->id)],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($admin?->id)],
+            'password' => [$admin ? 'nullable' : 'required', 'string', 'min:8', 'confirmed'],
+            'gender' => ['nullable', 'string', Rule::in(['male', 'female'])],
+            'mobile' => ['nullable', 'string', 'max:45'],
+            'status' => ['required', 'string', Rule::in(['active', 'inactive', 'pending', 'blocked'])],
+            'address' => ['nullable', 'string', 'max:255'],
+            'date' => ['nullable', 'date'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            ...($admin ? [] : [
+                'role_name' => ['required', Rule::exists('roles', 'name')->where('guard_name', 'admin')],
+            ]),
+        ];
+    }
+
+    private function adminQuery(bool $onlyTrashed = false): Builder
+    {
+        $query = User::query();
+        if ($onlyTrashed) {
+            $query->onlyTrashed();
+        }
+
+        return $query->cmsAdmin();
+    }
+
+    private function protectSuperAdmins(Builder $query, Request $request): Builder
+    {
+        if ($this->isSuperAdmin($request)) {
+            return $query;
+        }
+
+        return $query->whereDoesntHave('roles', fn (Builder $roles) => $roles
+            ->where('guard_name', 'admin')->where('name', 'super-admin'));
+    }
+
+    private function authorizeProtectedTarget(Request $request, User $admin): void
+    {
+        if ($admin->hasRole('super-admin', 'admin') && ! $this->isSuperAdmin($request)) {
+            abort(403);
+        }
+    }
+
+    private function denySelfTarget(Request $request, User $admin): void
+    {
+        if ($request->user('admin')?->is($admin)) {
+            abort(403, 'لا يمكنك حذف حسابك الحالي.');
+        }
+    }
+
+    private function isSuperAdmin(Request $request): bool
+    {
+        return (bool) $request->user('admin')?->hasRole('super-admin', 'admin');
+    }
+
+    private function validateRequest(Request $request, array $rules): array
+    {
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            if ($request->expectsJson()) {
+                throw new ValidationException($validator);
+            }
+
+            $safeInput = $request->except(['password', 'password_confirmation']);
+            throw new ValidationException($validator, redirect()->back()->withErrors($validator)->withInput($safeInput));
+        }
+
+        return $validator->validated();
+    }
+
+    private function fillEditableFields(User $admin, array $validated): void
+    {
+        foreach (['name', 'user_name', 'email', 'mobile', 'status', 'gender', 'address', 'date'] as $field) {
+            $admin->{$field} = $validated[$field] ?? null;
+        }
+    }
+
+    private function storeImage(Request $request, User $admin): void
+    {
+        if (! $request->hasFile('image')) {
+            return;
+        }
+
+        $image = $request->file('image');
+        $imageName = time().'_image.'.$image->getClientOriginalExtension();
+        $image->move('storage/images/admin', $imageName);
+        $admin->image = $imageName;
+    }
+
+    private function successResponse(Request $request, string $message): JsonResponse|RedirectResponse
+    {
+        if ($request->expectsJson()) {
+            return response()->json([
+                'icon' => 'success',
+                'title' => $message,
+                'redirect' => route('admins.index'),
+            ]);
+        }
+
+        return redirect()->route('admins.index')->with('success', $message);
     }
 }

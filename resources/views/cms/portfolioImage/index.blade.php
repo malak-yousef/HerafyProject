@@ -271,17 +271,7 @@
                         </td>
                         <td>{{ $portfolio_image->created_at ? $portfolio_image->created_at->format('Y-m-d') : '-' }}</td>
                         <td>
-                            <div class="action-btns">
-                                <a href="{{ route('portfolio_images.show', $portfolio_image->id) }}" class="action-btn btn-view" title="عرض">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="{{ route('portfolio_images.edit', $portfolio_image->id) }}" class="action-btn btn-edit" title="تعديل">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <button class="action-btn btn-delete" onclick="performDestroy('{{ $portfolio_image->id }}', this)" title="حذف">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </div>
+                            <x-cms.table-actions :show-url="route('portfolio_images.show', $portfolio_image)" :edit-url="route('portfolio_images.edit', $portfolio_image)" :delete-url="route('portfolio_images.destroy', $portfolio_image)" show-permission="portfolio-images.view" edit-permission="portfolio-images.update" delete-permission="portfolio-images.delete" />
                         </td>
                     </tr>
                     @empty

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
@@ -12,7 +13,8 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        $permissions = Permission::all();
+        $permissions = Permission::where('guard_name', 'admin')->get();
+
         return response()->view('cms.spatie.permissions.index', compact('permissions'));
     }
 
@@ -32,13 +34,14 @@ class PermissionController extends Controller
         $validator = validator(
             $request->all(),
             [
-                'name'       => 'required|unique:permissions,name',
-                'guard_name' => 'required|string|in:admin,user,craftman',
+                'name' => [
+                    'required',
+                    Rule::unique('permissions', 'name')->where('guard_name', 'admin'),
+                ],
             ],
             [
-                'name.required' => 'اسم الدور مطلوب',
-                'name.unique' => 'اسم الدور موجود مسبقا',
-                'guard_name.required' => 'الصلاحيات مطلوبة',
+                'name.required' => 'اسم الصلاحية مطلوب',
+                'name.unique' => 'اسم الصلاحية موجود مسبقًا',
             ]
         );
         if ($validator->fails()) {
@@ -47,54 +50,30 @@ class PermissionController extends Controller
                 'title' => $validator->getMessageBag()->first(),
             ], 400);
         } else {
-            $permissions = new Permission();
+            $permissions = new Permission;
             $permissions->name = $request->input('name');
-            $permissions->guard_name = $request->input('guard_name');
+            $permissions->guard_name = 'admin';
             $isSaved = $permissions->save();
 
-            if (!$isSaved) {
+            if (! $isSaved) {
                 return response()->json([
                     'icon' => 'error',
-                    'title' => 'حدث خطأ اثناء الحفظ',
+                    'title' => 'حدث خطأ أثناء حفظ الصلاحية',
                 ], 400);
             } else {
                 return response()->json([
                     'icon' => 'success',
-                    'title' => 'تم الحفظ بنجاح',
+                    'title' => 'تم حفظ الصلاحية بنجاح',
                 ], 200);
             }
         }
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
-    public function destroy( $id)
+    public function destroy($id)
     {
-        $permissions = Permission::destroy($id);
+        Permission::where('guard_name', 'admin')->findOrFail($id)->delete();
     }
 }

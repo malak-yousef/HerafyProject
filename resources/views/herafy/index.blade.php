@@ -6,43 +6,42 @@
 
 @endsection
 
-@section('nav-links')
-<li class="nav-item"><a class="nav-link" href="#about">من نحن</a></li>
-<li class="nav-item"><a class="nav-link" href="#testimonials">الآراء</a></li>
-<li class="nav-item"><a class="nav-link" href="#gallery">معرض الأعمال</a></li>
-
-@endsection
-
 @section('content')
 
 <!-- ============================================ -->
 <!-- 2. HERO SECTION -->
 <!-- ============================================ -->
-<section class="hero-section py-5">
+<section class="hero-section">
     <div class="container">
-        <div class="row align-items-center min-vh-75">
+        <div class="row align-items-center g-5 hero-row">
             <div class="col-lg-6 text-center text-lg-start">
-                <h1 class="display-3 fw-bold">
+                <div class="hero-content">
+                <span class="hero-kicker"><i class="fas fa-shield-halved"></i> خدمات موثوقة وحرفيون محترفون</span>
+                <h1 class="fw-bold">
                     احترف مع <span class="text-warning">حرفي</span>
                 </h1>
-                <p class="lead text-muted mt-3">
+                <p class="hero-description">
                     منصة تربطك بأفضل الحرفيين في مجال النجارة، السباكة، البلاط، الكهرباء، وأكثر...
                 </p>
-                <p class="text-muted">
+                <p class="hero-subtitle">
                     قدم طلبك واستقبل عروضاً من حرفيين محترفين، واختر الأنسب لك!
                 </p>
-                <div class="mt-4 d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
-                    <a href="{{ route('request') }}" class="btn btn-warning btn-lg px-5">
+                <div class="hero-actions d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+                    <a href="{{ route('request') }}" class="btn btn-warning btn-lg">
                         <i class="fas fa-pen"></i> قدم طلبك
                     </a>
-                    <a href="#craftsmen" class="btn btn-outline-secondary btn-lg px-5">
+                    <a href="#craftsmen" class="btn btn-outline-dark btn-lg">
                         <i class="fas fa-search"></i> استعرض الحرفيين
                     </a>
                 </div>
+                </div>
             </div>
-            <div class="col-lg-6 mt-4 mt-lg-0 text-center">
-                <img src="https://via.placeholder.com/600x400/FFC107/FFFFFF?text=حرفي" alt="حرفي"
-                    class="img-fluid rounded-4 shadow-lg">
+            <div class="col-lg-6 text-center">
+                <div class="hero-image-wrap">
+                <img src="{{ asset('herafy/img/Codex Image 26 Aug 2026, 12_48_14.png') }}" alt="حرفي"
+                    class="hero-image">
+                    <span class="hero-image-badge"><i class="fas fa-star"></i> جودة تستحق الثقة</span>
+                </div>
             </div>
         </div>
     </div>
@@ -51,15 +50,16 @@
 <!-- ============================================ -->
 <!-- 3. ABOUT US (من نحن) -->
 <!-- ============================================ -->
-<section id="about" class="py-5 bg-light">
+<section id="about" class="home-section about-section">
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 order-lg-2">
-                <h2 class="fw-bold">من نحن</h2>
-                <p class="text-muted">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6 order-lg-2 about-content">
+                <span class="section-kicker">عن المنصة</span>
+                <h2 class="section-title">من نحن</h2>
+                <p class="section-description">
                     منصة <strong>حرفي</strong> هي جسر التواصل بين المستخدمين والحرفيين المحترفين.
                 </p>
-                <ul class="list-unstyled">
+                <ul class="list-unstyled about-list">
                     <li class="mb-2"><i class="fas fa-check-circle text-warning"></i> نوفر لك حرفيين موثوقين
                         ومقيّمين</li>
                     <li class="mb-2"><i class="fas fa-check-circle text-warning"></i> تقدم طلبك بسهولة وتستقبل
@@ -70,8 +70,9 @@
                 </ul>
             </div>
             <div class="col-lg-6 order-lg-1 text-center">
-                <img src="https://via.placeholder.com/500x350/FFFFFF/FFC107?text=من+نحن" alt="من نحن"
-                    class="img-fluid rounded-4 shadow">
+                <div class="about-image-wrap">
+                    <img src="{{ asset('herafy/img/hero1.png') }}" alt="مجموعة من حرفيي منصة حرفي" class="about-image">
+                </div>
             </div>
         </div>
     </div>
@@ -80,77 +81,42 @@
 <!-- ============================================ -->
 <!-- 4. CRAFTSMEN (الحرفيون) -->
 <!-- ============================================ -->
-<section id="craftsmen" class="py-5">
+<section id="craftsmen" class="home-section featured-section">
     <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">أبرز الحرفيين</h2>
-            <p class="text-muted">تعرف على نخبة من الحرفيين المحترفين في مجالات متنوعة</p>
+        <div class="section-heading text-center">
+            <span class="section-kicker">مختارون بعناية</span>
+            <h2 class="section-title">أبرز الحرفيين</h2>
+            <p class="section-description">تعرف على نخبة من الحرفيين المحترفين في مجالات متنوعة</p>
         </div>
 
-        <div class="row g-4">
-            <!-- بطاقة حرفي 1 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="card h-100 shadow-sm hover-card">
-                    <img src="https://via.placeholder.com/300x200/FFC107/FFFFFF?text=نجار" class="card-img-top"
-                        alt="نجار">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">أحمد النجار</h5>
-                        <span class="badge bg-warning text-dark">نجارة</span>
-                        <p class="card-text small text-muted mt-2">
-                            <i class="fas fa-star text-warning"></i> 4.8 (120 تقييم)
-                        </p>
-                        <a href="craftsman-profile.html" class="btn btn-outline-warning btn-sm">عرض الملف</a>
+        <div class="row g-4 justify-content-center">
+            @forelse($featuredCraftmen as $craftman)
+                <div class="col-md-6 col-lg-3">
+                    <div class="card h-100 craftsman-card hover-card">
+                        @if($craftman->user?->profilePhotoUrl())
+                            <img src="{{ $craftman->user->profilePhotoUrl() }}" class="card-img-top" alt="صورة {{ $craftman->user->name }}" style="height: 230px; object-fit: cover;">
+                        @else
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center text-secondary" style="height: 230px;" role="img" aria-label="لا توجد صورة">
+                                <i class="fas fa-user fa-5x" aria-hidden="true"></i>
+                            </div>
+                        @endif
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ $craftman->user->name }}</h5>
+                            <span class="badge bg-warning text-dark">{{ $craftman->profession?->name ?? 'حرفي' }}</span>
+                            <p class="card-text small text-muted mt-2">
+                                <i class="fas fa-star text-warning" aria-hidden="true"></i>
+                                {{ number_format((float) ($craftman->approved_reviews_avg_rating ?? 0), 1) }}
+                                ({{ $craftman->approved_reviews_count }} تقييم)
+                            </p>
+                            <a href="{{ route('herafy.craftmen.show', $craftman) }}" class="btn btn-outline-warning craftsman-profile-btn">عرض الملف</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- بطاقة حرفي 2 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="card h-100 shadow-sm hover-card">
-                    <img src="https://via.placeholder.com/300x200/FFC107/FFFFFF?text=سباك" class="card-img-top"
-                        alt="سباك">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">محمد السباك</h5>
-                        <span class="badge bg-warning text-dark">سباكة</span>
-                        <p class="card-text small text-muted mt-2">
-                            <i class="fas fa-star text-warning"></i> 4.9 (85 تقييم)
-                        </p>
-                        <a href="craftsman-profile.html" class="btn btn-outline-warning btn-sm">عرض الملف</a>
-                    </div>
+            @empty
+                <div class="col-12 text-center text-muted py-4">
+                    لم يتم اختيار حرفيين مميزين بعد.
                 </div>
-            </div>
-
-            <!-- بطاقة حرفي 3 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="card h-100 shadow-sm hover-card">
-                    <img src="https://via.placeholder.com/300x200/FFC107/FFFFFF?text=بلاط" class="card-img-top"
-                        alt="بلاط">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">خالد المبلط</h5>
-                        <span class="badge bg-warning text-dark">تبليط</span>
-                        <p class="card-text small text-muted mt-2">
-                            <i class="fas fa-star text-warning"></i> 4.7 (64 تقييم)
-                        </p>
-                        <a href="craftsman-profile.html" class="btn btn-outline-warning btn-sm">عرض الملف</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- بطاقة حرفي 4 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="card h-100 shadow-sm hover-card">
-                    <img src="https://via.placeholder.com/300x200/FFC107/FFFFFF?text=كهربائي" class="card-img-top"
-                        alt="كهربائي">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">سامي الكهربائي</h5>
-                        <span class="badge bg-warning text-dark">كهرباء</span>
-                        <p class="card-text small text-muted mt-2">
-                            <i class="fas fa-star text-warning"></i> 4.6 (52 تقييم)
-                        </p>
-                        <a href="craftsman-profile.html" class="btn btn-outline-warning btn-sm">عرض الملف</a>
-                    </div>
-                </div>
-            </div>
+            @endforelse
         </div>
 
         <div class="text-center mt-4">
@@ -162,88 +128,42 @@
 <!-- ============================================ -->
 <!-- 5. TESTIMONIALS (الآراء) -->
 <!-- ============================================ -->
-<section id="testimonials" class="py-5 bg-light">
+<section id="testimonials" class="home-section testimonials-section">
     <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">آراء عملائنا</h2>
-            <p class="text-muted">ماذا يقول عنا المستخدمون والحرفيون</p>
+        <div class="section-heading text-center">
+            <span class="section-kicker">تجارب حقيقية</span>
+            <h2 class="section-title">آراء عملائنا</h2>
+            <p class="section-description">ماذا يقول عنا المستخدمون والحرفيون</p>
         </div>
 
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body">
-                        <div class="text-warning mb-2">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <p class="card-text">
-                            "منصة رائعة! وجدت نجار ممتاز خلال ساعة من تقديم الطلب. أنجز العمل بإتقان."
-                        </p>
-                        <div class="d-flex align-items-center mt-3">
-                            <img src="https://via.placeholder.com/50/FFC107/FFFFFF?text=U"
-                                class="rounded-circle me-2" width="50" alt="مستخدم">
-                            <div>
-                                <h6 class="mb-0">سارة أحمد</h6>
-                                <small class="text-muted">مستخدم</small>
+        <div class="row g-4 justify-content-center">
+            @forelse($testimonials as $review)
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 testimonial-card">
+                        <div class="card-body d-flex flex-column">
+                            <div class="mb-2" aria-label="التقييم {{ $review->rating }} من 5">
+                                @for($star = 1; $star <= 5; $star++)
+                                    <i class="fas fa-star {{ $star <= $review->rating ? 'text-warning' : 'text-secondary opacity-25' }}" aria-hidden="true"></i>
+                                @endfor
+                            </div>
+                            <p class="card-text flex-grow-1">“{{ $review->comment }}”</p>
+                            <div class="d-flex align-items-center gap-2 mt-3">
+                                @if($review->customer?->user?->profilePhotoUrl())
+                                    <img src="{{ $review->customer->user->profilePhotoUrl() }}" class="rounded-circle" width="50" height="50" style="object-fit: cover;" alt="صورة {{ $review->customer->user->name }}">
+                                @else
+                                    <span class="rounded-circle bg-warning-subtle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;" aria-hidden="true"><i class="fas fa-user text-warning"></i></span>
+                                @endif
+                                <div>
+                                    <h3 class="h6 mb-0">{{ $review->customer->user->name }}</h3>
+                                    <small class="text-muted">عميل قيّم {{ $review->craftsman?->user?->name ?? 'الخدمة' }}</small>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body">
-                        <div class="text-warning mb-2">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <p class="card-text">
-                            "كحرفي، المنصة ساعدتني أوصل لزبائن جدد بشكل مستمر. أنصح أي حرفي بالتسجيل."
-                        </p>
-                        <div class="d-flex align-items-center mt-3">
-                            <img src="https://via.placeholder.com/50/FFC107/FFFFFF?text=C"
-                                class="rounded-circle me-2" width="50" alt="حرفي">
-                            <div>
-                                <h6 class="mb-0">أحمد النجار</h6>
-                                <small class="text-muted">حرفي</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body">
-                        <div class="text-warning mb-2">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <p class="card-text">
-                            "سهولة الاستخدام وسرعة الاستجابة. أفضل منصة للخدمات المنزلية في منطقتنا."
-                        </p>
-                        <div class="d-flex align-items-center mt-3">
-                            <img src="https://via.placeholder.com/50/FFC107/FFFFFF?text=U"
-                                class="rounded-circle me-2" width="50" alt="مستخدم">
-                            <div>
-                                <h6 class="mb-0">فاطمة خالد</h6>
-                                <small class="text-muted">مستخدم</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @empty
+                <div class="col-12 text-center text-muted py-4">لا توجد آراء معتمدة للعرض بعد.</div>
+            @endforelse
         </div>
     </div>
 </section>
@@ -251,38 +171,40 @@
 <!-- ============================================ -->
 <!-- 6. GALLERY (معرض الأعمال) -->
 <!-- ============================================ -->
-<section id="gallery" class="py-5">
+<section id="gallery" class="home-section gallery-section">
     <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">معرض الأعمال</h2>
-            <p class="text-muted">أحدث المشاريع التي نفذها حرفيونا</p>
+        <div class="section-heading text-center">
+            <span class="section-kicker">أعمال مميزة</span>
+            <h2 class="section-title">معرض الأعمال</h2>
+            <p class="section-description">أحدث المشاريع التي نفذها حرفيونا</p>
         </div>
 
         <div class="row g-3">
-            <div class="col-md-4">
-                <img src="https://via.placeholder.com/400x300/FFC107/FFFFFF?text=مطبخ"
-                    class="img-fluid rounded-3 w-100" alt="مطبخ">
-            </div>
-            <div class="col-md-4">
-                <img src="https://via.placeholder.com/400x300/FFC107/FFFFFF?text=حمام"
-                    class="img-fluid rounded-3 w-100" alt="حمام">
-            </div>
-            <div class="col-md-4">
-                <img src="https://via.placeholder.com/400x300/FFC107/FFFFFF?text=غرفة"
-                    class="img-fluid rounded-3 w-100" alt="غرفة">
-            </div>
-            <div class="col-md-4">
-                <img src="https://via.placeholder.com/400x300/FFC107/FFFFFF?text=سباكة"
-                    class="img-fluid rounded-3 w-100" alt="سباكة">
-            </div>
-            <div class="col-md-4">
-                <img src="https://via.placeholder.com/400x300/FFC107/FFFFFF?text=كهرباء"
-                    class="img-fluid rounded-3 w-100" alt="كهرباء">
-            </div>
-            <div class="col-md-4">
-                <img src="https://via.placeholder.com/400x300/FFC107/FFFFFF?text=حديقة"
-                    class="img-fluid rounded-3 w-100" alt="حديقة">
-            </div>
+            @forelse($featuredPortfolios as $portfolio)
+                <div class="col-md-6 col-lg-4">
+                    <a href="{{ route('herafy.craftmen.portfolios.show', [$portfolio->craftman, $portfolio]) }}" class="card h-100 text-decoration-none text-dark overflow-hidden portfolio-card">
+                        @if($portfolio->portfolioCover_image)
+                            <img src="{{ asset('storage/images/portfolio/'.$portfolio->portfolioCover_image) }}" class="card-img-top" style="height: 260px; object-fit: cover;" alt="{{ $portfolio->title }}">
+                        @else
+                            <div class="bg-light d-flex align-items-center justify-content-center text-secondary" style="height: 260px;" role="img" aria-label="لا توجد صورة للعمل">
+                                <i class="fas fa-images fa-4x" aria-hidden="true"></i>
+                            </div>
+                        @endif
+                        <div class="card-body">
+                            <h3 class="h5 fw-bold mb-2">{{ $portfolio->title }}</h3>
+                            <p class="small text-muted mb-0">
+                                <i class="fas fa-user text-warning" aria-hidden="true"></i>
+                                {{ $portfolio->craftman?->user?->name }}
+                                @if($portfolio->craftman?->profession)
+                                    · {{ $portfolio->craftman->profession->name }}
+                                @endif
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            @empty
+                <div class="col-12 text-center text-muted py-4">لم يتم اختيار أعمال مميزة بعد.</div>
+            @endforelse
         </div>
     </div>
 </section>
@@ -292,23 +214,23 @@
 <!-- ============================================ -->
 <!-- 7. STATISTICS (إحصائيات) -->
 <!-- ============================================ -->
-<section class="py-5 bg-warning text-dark">
+<section class="home-section stats-section text-dark">
     <div class="container">
         <div class="row text-center g-4">
-            <div class="col-md-3 col-6">
-                <h2 class="display-4 fw-bold counter" data-target="150">0</h2>
-                <p class="fw-bold">حرفي مسجل</p>
+            <div class="col-md-3 col-6 stat-item">
+                <h2 class="display-4 fw-bold counter" data-target="{{ $homepageStats['active_craftmen'] }}">0</h2>
+                <p class="fw-bold">حرفي نشط</p>
             </div>
-            <div class="col-md-3 col-6">
-                <h2 class="display-4 fw-bold counter" data-target="500">0</h2>
+            <div class="col-md-3 col-6 stat-item">
+                <h2 class="display-4 fw-bold counter" data-target="{{ $homepageStats['completed_jobs'] }}">0</h2>
                 <p class="fw-bold">طلب منفذ</p>
             </div>
-            <div class="col-md-3 col-6">
-                <h2 class="display-4 fw-bold counter" data-target="98">0</h2>
+            <div class="col-md-3 col-6 stat-item">
+                <h2 class="display-4 fw-bold counter" data-target="{{ $homepageStats['satisfaction_rate'] }}">0</h2>
                 <p class="fw-bold">% نسبة رضا</p>
             </div>
-            <div class="col-md-3 col-6">
-                <h2 class="display-4 fw-bold counter" data-target="4.8">0</h2>
+            <div class="col-md-3 col-6 stat-item">
+                <h2 class="display-4 fw-bold counter" data-target="{{ $homepageStats['average_rating'] }}">0</h2>
                 <p class="fw-bold">متوسط التقييم</p>
             </div>
         </div>
@@ -318,15 +240,16 @@
 <!-- ============================================ -->
 <!-- 8. HOW IT WORKS (كيف تعمل المنصة) -->
 <!-- ============================================ -->
-<section class="py-5 bg-light">
+<section class="home-section process-section">
     <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">كيف تعمل المنصة؟</h2>
-            <p class="text-muted">4 خطوات بسيطة للحصول على خدمتك</p>
+        <div class="section-heading text-center">
+            <span class="section-kicker">بكل سهولة</span>
+            <h2 class="section-title">كيف تعمل المنصة؟</h2>
+            <p class="section-description">4 خطوات بسيطة للحصول على خدمتك</p>
         </div>
 
         <div class="row g-4">
-            <div class="col-md-3 text-center">
+            <div class="col-md-3 text-center process-step">
                 <div class="step-icon bg-warning rounded-circle d-inline-flex align-items-center justify-content-center"
                     style="width: 80px; height: 80px; font-size: 2rem;">
                     <i class="fas fa-pen"></i>
@@ -334,7 +257,7 @@
                 <h5 class="mt-3">1. قدم طلبك</h5>
                 <p class="text-muted small">حدد نوع الحرفة ووصف العمل المطلوب</p>
             </div>
-            <div class="col-md-3 text-center">
+            <div class="col-md-3 text-center process-step">
                 <div class="step-icon bg-warning rounded-circle d-inline-flex align-items-center justify-content-center"
                     style="width: 80px; height: 80px; font-size: 2rem;">
                     <i class="fas fa-handshake"></i>
@@ -342,7 +265,7 @@
                 <h5 class="mt-3">2. استقبل العروض</h5>
                 <p class="text-muted small">حرفيون مقيّمون يقدمون عروضهم</p>
             </div>
-            <div class="col-md-3 text-center">
+            <div class="col-md-3 text-center process-step">
                 <div class="step-icon bg-warning rounded-circle d-inline-flex align-items-center justify-content-center"
                     style="width: 80px; height: 80px; font-size: 2rem;">
                     <i class="fas fa-check-circle"></i>
@@ -350,7 +273,7 @@
                 <h5 class="mt-3">3. اختر الأنسب</h5>
                 <p class="text-muted small">قارن العروض واختر الحرفي المناسب</p>
             </div>
-            <div class="col-md-3 text-center">
+            <div class="col-md-3 text-center process-step">
                 <div class="step-icon bg-warning rounded-circle d-inline-flex align-items-center justify-content-center"
                     style="width: 80px; height: 80px; font-size: 2rem;">
                     <i class="fas fa-star"></i>
@@ -365,11 +288,12 @@
 <!-- ============================================ -->
 <!-- 9. FAQ (الأسئلة الشائعة) -->
 <!-- ============================================ -->
-<section id="faq" class="py-5">
+<section id="faq" class="home-section faq-section">
     <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">الأسئلة الشائعة</h2>
-            <p class="text-muted">أجوبة لأكثر الأسئلة تكراراً</p>
+        <div class="section-heading text-center">
+            <span class="section-kicker">نجيبك بوضوح</span>
+            <h2 class="section-title">الأسئلة الشائعة</h2>
+            <p class="section-description">أجوبة لأكثر الأسئلة تكراراً</p>
         </div>
 
         <div class="row justify-content-center">

@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Report;
-use App\Models\User;
 use App\Models\ServiceJob;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class ReportSeeder extends Seeder

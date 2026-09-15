@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
-use App\Models\Order;
-use Illuminate\Support\Facades\View;
+use App\Models\User;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Facades\Schema; // 1. أضف هذه المكتبة
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,22 +24,22 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    
     public function boot(): void
     {
-        Paginator::useBootstrap();
+        RateLimiter::for('login', function (Request $request): Limit {
+            return Limit::perMinute(5)->by(strtolower((string) $request->input('email')).'|'.$request->ip());
+        });
 
-        // 2. التحقق من وجود الاتصال وقاعدة البيانات وجدول orders لتجنب الخطأ أثناء الـ Migration
-        try {
-            if (Schema::hasTable('orders')) {
-                View::share('ordersCount', Order::count());
-            } else {
-                View::share('ordersCount', 0);
-            }
-        } catch (\Exception $e) {
-            // في حال لم يتم إعداد قاعدة البيانات بعد
-            View::share('ordersCount', 0);
-        }
+        RateLimiter::for('registration', function (Request $request): Limit {
+            return Limit::perMinute(5)->by(strtolower((string) $request->input('email')).'|'.$request->ip());
+        });
+
+        Gate::before(function (User $user): ?bool {
+            $admin = Auth::guard('admin')->user();
+
+            return $admin?->is($user) && $user->hasRole('super-admin', 'admin') ? true : null;
+        });
+
+        Paginator::useBootstrap();
     }
-        
 }

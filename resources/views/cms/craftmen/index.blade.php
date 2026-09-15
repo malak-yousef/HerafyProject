@@ -296,7 +296,8 @@
     </div>
 
     <div class="table-responsive">
-        <table class="table table-hover">
+        <form method="GET" class="row g-2 mb-3 align-items-end"><div class="col-md-3"><label class="form-label">بحث</label><input name="search" value="{{ request('search') }}" class="form-control" maxlength="100"></div><div class="col-md-3"><label class="form-label">المهنة</label><select name="profession_id" class="form-select"><option value="">الكل</option>@foreach($professions as $profession)<option value="{{ $profession->id }}" @selected((string)request('profession_id') === (string)$profession->id)>{{ $profession->name }}</option>@endforeach</select></div><div class="col-md-2"><label class="form-label">الحالة</label><select name="account_status" class="form-select"><option value="">الكل</option>@foreach(['active','inactive','blocked'] as $status)<option value="{{ $status }}" @selected(request('account_status') === $status)>{{ $status }}</option>@endforeach</select></div><div class="col-md-2"><label class="form-label">التوثيق</label><select name="verification_status" class="form-select"><option value="">الكل</option>@foreach(['unverified','pending','approved','rejected'] as $status)<option value="{{ $status }}" @selected(request('verification_status') === $status)>{{ $status }}</option>@endforeach</select></div><div class="col-md-2"><button class="btn btn-primary" type="submit">بحث</button> <a href="{{ route('craftmen.index') }}">إعادة ضبط</a></div></form>
+        <div class="mb-3"><label class="form-label">الترتيب</label><form method="GET" class="d-inline"><input type="hidden" name="search" value="{{ request('search') }}"><input type="hidden" name="profession_id" value="{{ request('profession_id') }}"><select name="sort" class="form-select d-inline-block w-auto" onchange="this.form.submit()"><option value="newest">الأحدث</option><option value="oldest">الأقدم</option><option value="name_asc">الاسم أ-ي</option><option value="name_desc">الاسم ي-أ</option><option value="experience_desc">الأكثر خبرة</option><option value="experience_asc">الأقل خبرة</option></select></form></div><table class="table table-hover">
             <thead>
                 <tr>
                     <th style="width: 50px;">#</th>
@@ -311,6 +312,7 @@
                     <th style="width: 120px;">العنوان</th>
                     <th style="width: 120px;">تاريخ الانضمام</th>
                     <th style="width: 110px;">الحالة</th>
+                    <th style="width: 100px;">أبرز الحرفيين</th>
                     <th style="width: 140px;">الإجراءات</th>
                 </tr>
             </thead>
@@ -320,7 +322,7 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>
                         @if($craftman->user && $craftman->user->image)
-                        <img src="{{ asset('storage/images/craftman/' . $craftman->user->image) }}" alt="{{ $craftman->user->name }}" class="craftsman-avatar">
+                        <img src="{{ $craftman->user->profilePhotoUrl() }}" alt="{{ $craftman->user->name }}" class="craftsman-avatar">
                         @else
                         <span class="avatar-placeholder">
                             {{ $craftman->user ? substr($craftman->user->name, 0, 1) : '?' }}
@@ -349,20 +351,28 @@
                     <td>{{ $craftman->user->address ?? '-' }}</td>
                     <td>{{ $craftman->created_at ? $craftman->created_at->format('Y-m-d') : '-' }}</td>
                     <td>
+                        <x-cms.status-badge :status="$craftman->user->status ?? 'unknown'" />
                         @if($craftman->user && $craftman->user->status == 'active')
-                        <span class="badge bg-success badge-status">✅ فعال</span>
+                        <x-cms.status-badge :status="$craftman->user->status" /><span class="badge bg-success badge-status legacy-user-status">✅ فعال</span>
                         @elseif($craftman->user && $craftman->user->status == 'inactive')
-                        <span class="badge bg-danger badge-status">❌ غير فعال</span>
+                        <span class="badge bg-danger badge-status legacy-user-status">❌ غير فعال</span>
                         @elseif($craftman->user && $craftman->user->status == 'pending')
                         <span class="badge bg-warning text-dark badge-status">⏳ قيد التنفيذ</span>
                         @elseif($craftman->user && $craftman->user->status == 'blocked')
-                        <span class="badge bg-dark badge-status">🚫 محظور</span>
+                        <span class="badge bg-dark badge-status legacy-user-status">🚫 محظور</span>
                         @else
                         <span class="badge bg-secondary badge-status">غير محدد</span>
                         @endif
                     </td>
                     <td>
-                        <div class="action-btns">
+                        @if($craftman->is_featured)
+                            <span class="badge bg-warning text-dark"><i class="fas fa-star" aria-hidden="true"></i> مميز</span>
+                        @else
+                            <span class="text-muted">—</span>
+                        @endif
+                    </td>
+                    <td>
+                        <x-cms.table-actions :show-url="route('craftmen.show', $craftman->id)" :edit-url="route('craftmen.edit', $craftman->id)" :delete-url="route('craftmen.destroy', $craftman->id)" show-permission="craftmen.view" edit-permission="craftmen.update" delete-permission="craftmen.delete" :delete-id="$craftman->id" /><div class="action-btns legacy-user-actions">
                             {{-- عرض --}}
                             <a href="{{ route('craftmen.show', $craftman->id) }}" class="action-btn btn-view" title="عرض التفاصيل">
                                 <i class="fas fa-eye"></i>
@@ -382,7 +392,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="11" class="text-center py-5 text-muted">
+                    <td colspan="12" class="text-center py-5 text-muted">
                         <i class="fas fa-users-slash fa-2x mb-2 d-block" style="color: #ccc;"></i>
                         لا يوجد حرفيين مسجلين حالياً
                         <br>
@@ -489,6 +499,8 @@
     // ============================================
     // 5. إضافة مستمع للأحداث
     // ============================================
+    // Filtering is server-side; retain this legacy hook as a no-op for old markup.
+    function filterTable() { return false; }
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('searchCraftsmen')?.addEventListener('keyup', function(e) {
             if (e.key === 'Enter') {

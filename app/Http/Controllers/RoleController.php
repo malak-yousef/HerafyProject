@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -13,7 +14,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::withCount('permissions')->get();
+        $roles = Role::where('guard_name', 'admin')->withCount('permissions')->get();
+
         return response()->view('cms.spatie.roles.index', compact('roles'));
     }
 
@@ -33,8 +35,10 @@ class RoleController extends Controller
         $validator = validator(
             $request->all(),
             [
-                'name'       => 'required|unique:roles,name',
-                'guard_name' => 'required|string|in:admin,user,craftman',
+                'name' => [
+                    'required',
+                    Rule::unique('roles', 'name')->where('guard_name', 'admin'),
+                ],
             ],
             [
                 'name.required' => 'اسم الدور مطلوب',
@@ -48,12 +52,12 @@ class RoleController extends Controller
                 'title' => $validator->getMessageBag()->first(),
             ], 400);
         } else {
-            $roles = new Role();
+            $roles = new Role;
             $roles->name = $request->input('name');
-            $roles->guard_name = $request->input('guard_name');
+            $roles->guard_name = 'admin';
             $isSaved = $roles->save();
 
-            if (!$isSaved) {
+            if (! $isSaved) {
                 return response()->json([
                     'icon' => 'error',
                     'title' => 'حدث خطأ اثناء الحفظ',
@@ -68,45 +72,21 @@ class RoleController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
     {
-        $roles = Role::destroy($id);
+        Role::where('guard_name', 'admin')->findOrFail($id)->delete();
     }
 
     public function editRolePermissions(string $id)
     {
-        $role = Role::findOrFail($id);
+        $role = Role::where('guard_name', 'admin')->findOrFail($id);
 
         $permissions = Permission::where('guard_name', $role->guard_name)->get();
 
         // جلب أسماء الصلاحيات التي يمتلكها الدور حالياً لتعليمها بـ Checked
-        $rolePermissions = $role->permissions()->pluck('name')->toArray();
+        $rolePermissions = $role->permissions()->pluck('id')->toArray();
 
         return view('cms.spatie.roles.role-permissions', compact('role', 'permissions', 'rolePermissions'));
     }
@@ -114,12 +94,21 @@ class RoleController extends Controller
     // 2. حفظ وتحديث الصلاحيات للدور في قاعدة البيانات
     public function updateRolePermissions(Request $request, string $id)
     {
-        $role = Role::findOrFail($id);
+        $role = Role::where('guard_name', 'admin')->findOrFail($id);
 
         // إذا لم يتم تحديد أي Checkbox، نمرر مصفوفة فارغة لإلغاء كل الصلاحيات
-        $permissions = $request->input('permissions', []);
+        $validated = $request->validate([
+            'permissions' => ['sometimes', 'array'],
+            'permissions.*' => [
+                'integer',
+                Rule::exists('permissions', 'id')->where('guard_name', 'admin'),
+            ],
+        ]);
 
-        // الدالة السحرية من السباتي تقوم بحذف القديم ومزامنة الجديد فوراً
+        $permissions = Permission::where('guard_name', 'admin')
+            ->whereIn('id', $validated['permissions'] ?? [])
+            ->get();
+
         $role->syncPermissions($permissions);
 
         return redirect()->route('roles.index')->with('success', 'تم تحديث صلاحيات الدور بنجاح');

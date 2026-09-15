@@ -14,12 +14,10 @@ class ProfessionController extends Controller
     public function index()
     {
 
-
-
-        $professions = Profession::with('category')
-            ->orderBy('id', 'desc')
+        $professions = Profession::with('category')->withCount('craftsmen')
+            ->latest()
             ->withoutTrashed()
-            ->paginate(4);
+            ->paginate(15)->withQueryString();
 
         return response()->view('cms.profession.index', compact('professions'));
     }
@@ -30,6 +28,7 @@ class ProfessionController extends Controller
     public function create()
     {
         $categories = Category::all();
+
         return response()->view('cms.profession.create', compact('categories'));
     }
 
@@ -44,51 +43,43 @@ class ProfessionController extends Controller
             'category_id' => 'required',
             'status' => 'required|in:active,in_active',
         ], [
-            'name.required' => "هذا الحقل مطلوب",
-            'description.required' => "هذا الحقل مطلوب",
+            'name.required' => 'هذا الحقل مطلوب',
+            'description.required' => 'هذا الحقل مطلوب',
             'name.min' => 'لا يقبل اقل من 4 حروف',
             'name.max' => 'لا يقبل اكثر من 20حرف',
             'category_id.required' => 'يرجى اختيار التصنيف.',
             'category_id.exists' => 'التصنيف المختار غير موجود.',
         ]);
         if ($validator->fails()) {
-            return response()->json([
-                'icon' => 'error',
-                'title' => $validator->getMessageBag()->first(),
-            ], 400);
+            if ($request->expectsJson()) {
+                return response()->json(['icon' => 'error', 'title' => $validator->getMessageBag()->first()], 400);
+            }
+
+            return back()->withErrors($validator)->withInput();
         } else {
 
-            $professions = new Profession();
+            $professions = new Profession;
             $professions->name = $request->input('name');
             $professions->description = $request->input('description');
             $professions->status = $request->input('status');
             $professions->category_id = $request->input('category_id');
 
-
             $isUpdated = $professions->save();
 
-            return response()->json([
-                'icon' => 'success',
-                'title' => 'Created is Successfully',
-            ], 200);
+            return $request->expectsJson() ? response()->json(['icon' => 'success', 'title' => 'Created is Successfully']) : redirect()->route('professions.index')->with('success', 'تمت إضافة المهنة بنجاح.');
         }
     }
-
-
-
 
     /**
      * Display the specified resource.
      */
-
     public function show($id)
     {
         $categories = Category::all();
         $professions = Profession::findOrFail($id);
+
         return response()->view('cms.profession.show', compact('professions', 'categories'));
     }
-
-
 
     /**
      * Show the form for editing the specified resource.
@@ -97,6 +88,7 @@ class ProfessionController extends Controller
     {
         $categories = Category::all();
         $professions = Profession::findOrFail($id);
+
         return response()->view('cms.profession.edit', compact('professions', 'categories'));
     }
 
@@ -111,18 +103,19 @@ class ProfessionController extends Controller
             'category_id' => 'sometimes|required',
             'status' => 'sometimes|required|in:active,in_active',
         ], [
-            'name.required' => "هذا الحقل مطلوب",
-            'description.required' => "هذا الحقل مطلوب",
+            'name.required' => 'هذا الحقل مطلوب',
+            'description.required' => 'هذا الحقل مطلوب',
             'name.min' => 'لا يقبل اقل من 4 حروف',
             'name.max' => 'لا يقبل اكثر من 20حرف',
             'category_id.required' => 'يرجى اختيار التصنيف.',
 
         ]);
         if ($validator->fails()) {
-            return response()->json([
-                'icon' => 'error',
-                'title' => $validator->getMessageBag()->first(),
-            ], 400);
+            if ($request->expectsJson()) {
+                return response()->json(['icon' => 'error', 'title' => $validator->getMessageBag()->first()], 400);
+            }
+
+            return back()->withErrors($validator)->withInput();
         } else {
 
             $professions = Profession::findOrFail($id);
@@ -131,13 +124,11 @@ class ProfessionController extends Controller
             $professions->status = $request->input('status');
             $professions->category_id = $request->input('category_id');
 
-
             $isSavaved = $professions->save();
 
-            return ['redirect' => route('professions.index')];
+            return $request->expectsJson() ? ['redirect' => route('professions.index')] : redirect()->route('professions.index')->with('success', 'تم تحديث المهنة بنجاح.');
         }
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -149,25 +140,34 @@ class ProfessionController extends Controller
 
     public function trashed()
     {
-        $professions = Profession::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
+        $professions = Profession::onlyTrashed()->with('category')->orderByDesc('deleted_at')->paginate(15)->withQueryString();
+
         return response()->view('cms.profession.trashed', compact('professions'));
     }
 
     public function restore($id)
     {
         $professions = Profession::onlyTrashed()->findOrFail($id)->restore();
+
         return back()->with('success', 'Success');
     }
 
     public function force($id)
     {
         $professions = Profession::onlyTrashed()->findOrFail($id)->forceDelete();
+
         return back()->with('success', 'Success');
     }
 
-    public function forceAll()
+    public function forceAll(Request $request)
     {
-        $professions = Profession::onlyTrashed()->forceDelete();
+        Profession::onlyTrashed()->whereKey($this->trashIds($request))->forceDelete();
+
         return back()->with('success', 'Success');
+    }
+
+    private function trashIds(Request $request): array
+    {
+        return $request->validate(['ids' => ['required', 'array', 'min:1'], 'ids.*' => ['integer', 'distinct']])['ids'];
     }
 }

@@ -77,4 +77,6 @@ return [
         public_path('storage') => storage_path('app/public'),
     ],
 
+    'portfolio_cover_path' => storage_path('app/public/images/portfolio'),
+
 ];

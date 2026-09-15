@@ -252,7 +252,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>
                             @if($order_image->image_path)
-                                <img src="{{ asset('storage/images/order_images/' . $order_image->image_path) }}" alt="{{ $order_image->order->title }}" class="order-image">
+                                <img src="{{ $order_image->publicUrl() }}" alt="{{ $order_image->order->title }}" class="order-image">
                             @else
                                 <span class="image-placeholder">
                                     <i class="fas fa-image"></i>
@@ -268,17 +268,7 @@
                         </td>
                         <td>{{ $order_image->created_at ? $order_image->created_at->format('Y-m-d') : '-' }}</td>
                         <td>
-                            <div class="action-btns">
-                                <a href="{{ route('order_images.show', $order_image->id) }}" class="action-btn btn-view" title="عرض">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="{{ route('order_images.edit', $order_image->id) }}" class="action-btn btn-edit" title="تعديل">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <button class="action-btn btn-delete" onclick="performDestroy('{{ $order_image->id }}', this)" title="حذف">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </div>
+                            <x-cms.table-actions :show-url="route('order_images.show', $order_image)" :edit-url="route('order_images.edit', $order_image)" :delete-url="route('order_images.destroy', $order_image)" show-permission="order-images.view" edit-permission="order-images.update" delete-permission="order-images.delete" />
                         </td>
                     </tr>
                     @empty

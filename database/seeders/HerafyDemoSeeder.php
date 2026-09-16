@@ -141,7 +141,7 @@ class HerafyDemoSeeder extends Seeder
         $admin = User::updateOrCreate(['email' => 'admin2@example.com'], [
             'name' => 'مسؤول المحتوى',
             'user_name' => 'cms_admin',
-            'password' => Hash::make('12312378'),
+            'password' => Hash::make(env('HERAFY_CMS_ADMIN_PASSWORD', '12312378')),
             'mobile' => '0599999998',
             'gender' => 'male',
             'status' => 'active',

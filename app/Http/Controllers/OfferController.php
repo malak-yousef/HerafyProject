@@ -182,57 +182,57 @@ class OfferController extends Controller
 
         $craftman = $this->authenticatedCraftman();
 
-        $order = Order::query()
-            ->eligibleForCraftman($craftman)
-            ->findOrFail($order->id);
+        // الحد الأقصى للعروض اليومية
+        $maxDailyOffers = max((int) Setting::where('key', 'max_daily_offers')->value('value'), 1);
 
-        if (! $craftman) {
+        // إنشاء العرض داخل معاملة مع قفل لمنع العروض المكررة
+        [$offer, $blockedReason] = DB::transaction(function () use ($request, $order, $craftman, $maxDailyOffers): array {
+            $order = Order::query()
+                ->lockForUpdate()
+                ->eligibleForCraftman($craftman)
+                ->findOrFail($order->id);
+
+            // منع الحرفي من تقديم أكثر من عرض على نفس الطلب
+            $alreadyOffered = Offer::where('order_id', $order->id)
+                ->where('craftman_id', $craftman->id)
+                ->exists();
+
+            if ($alreadyOffered) {
+                return [null, 'duplicate'];
+            }
+
+            // الحد الأقصى للعروض اليومية
+            $todayOffers = Offer::where('craftman_id', $craftman->id)
+                ->whereDate('created_at', today())
+                ->count();
+
+            if ($todayOffers >= $maxDailyOffers) {
+                return [null, 'daily_limit'];
+            }
+
+            return [
+                Offer::create([
+                    'order_id' => $order->id,
+                    'craftman_id' => $craftman->id,
+                    'price' => $request->price,
+                    'message' => $request->message,
+                    'status' => 'pending',
+                ]),
+                null,
+            ];
+        });
+
+        if ($blockedReason === 'daily_limit') {
             return back()
                 ->withInput()
-                ->with('error', 'لم يتم العثور على بيانات الحرفي.');
+                ->with('error', "لقد وصلت إلى الحد الأقصى للعروض اليومية وهو {$maxDailyOffers} عروض.");
         }
 
-        // 🔴 منع الحرفي من تقديم أكثر من عرض على نفس الطلب
-        $alreadyOffered = Offer::where('order_id', $order->id)
-            ->where('craftman_id', $craftman->id)
-            ->exists();
-
-        if ($alreadyOffered) {
+        if (! $offer) {
             return redirect()
                 ->route('herafy.order.show', $order->id)
                 ->with('error', 'لقد قدمت عرضًا على هذا الطلب مسبقًا.');
         }
-
-        // الحد الأقصى للعروض اليومية
-        $maxDailyOffers = (int) Setting::where('key', 'max_daily_offers')
-            ->value('value');
-
-        if ($maxDailyOffers <= 0) {
-            $maxDailyOffers = 10;
-        }
-
-        // عدد عروض الحرفي اليوم
-        $todayOffers = Offer::where('craftman_id', $craftman->id)
-            ->whereDate('created_at', today())
-            ->count();
-
-        if ($todayOffers >= $maxDailyOffers) {
-            return back()
-                ->withInput()
-                ->with(
-                    'error',
-                    "لقد وصلت إلى الحد الأقصى للعروض اليومية وهو {$maxDailyOffers} عروض."
-                );
-        }
-
-        // ✅ إنشاء العرض بعد التأكد أنه لم يقدم سابقًا
-        $offer = DB::transaction(fn () => Offer::create([
-            'order_id' => $order->id,
-            'craftman_id' => $craftman->id,
-            'price' => $request->price,
-            'message' => $request->message,
-            'status' => 'pending',
-        ]));
 
         $offer->load(['order.customer.user', 'craftman.user']);
         $offer->order->customer->user->notify(new NewOfferSubmitted($offer));

@@ -52,7 +52,7 @@ class AdminSeeder extends Seeder
             'name' => 'Super Admin',
             'user_name' => 'admin',
             'email' => 'admin1@example.com',
-            'password' => Hash::make('123123'),
+            'password' => Hash::make(env('HERAFY_ADMIN_PASSWORD', '123123')),
             'mobile' => '0599999999',
             'gender' => 'male',
             'status' => 'active',

@@ -366,7 +366,13 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if ($user && Hash::check($request->password, $user->password)) {
+        // Always run the hash check to prevent timing-based user enumeration
+        $passwordValid = Hash::check(
+            $request->password,
+            $user?->password ?? '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'
+        );
+
+        if ($user && $passwordValid) {
             if ($user->status != 'active') {
                 return response()->json([
                     'icon' => 'error',

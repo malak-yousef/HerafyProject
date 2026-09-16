@@ -340,10 +340,6 @@ Route::prefix('cms/admin')->middleware('auth:admin')->group(function () {
 
     Route::delete('reports/{id}/force-delete', [ReportController::class, 'forceDelete'])
         ->name('reports.forceDelete');
-    Route::post(
-        'reports/user-store',
-        [ReportController::class, 'userStore']
-    )->name('reports.user_store');
     // Verifications - Admin
     Route::get('verifications', [VerificationController::class, 'index'])
         ->name('verifications.index');
@@ -442,7 +438,6 @@ Route::prefix('cms/admin')->middleware('auth:admin')->group(function () {
     $protectRoutes(['service-jobs.trashed'], 'service-jobs.view');
     $protectRoutes(['service-jobs.restore', 'service-jobs.force-delete'], 'service-jobs.delete');
     $protectRoutes(['reports.trashed'], 'reports.view');
-    $protectRoutes(['reports.user_store'], 'reports.create');
     $protectRoutes(['reports.restore', 'reports.forceDelete'], 'reports.delete');
     $protectRoutes(['verifications.index', 'verifications.trashed', 'verifications.show'], 'verifications.view');
     $protectRoutes(['verifications.edit', 'verifications.update'], 'verifications.update');

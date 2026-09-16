@@ -54,7 +54,6 @@ class PortfolioController extends Controller
                 'status' => 'required',
                 'craftman_id' => 'required',
                 'is_featured' => 'nullable|boolean',
-                'is_featured' => 'nullable|boolean',
             ],
             messages: [
                 'required' => 'هذا الحقل مطلوب.',
@@ -75,10 +74,6 @@ class PortfolioController extends Controller
             return back()->withErrors(['is_featured' => 'يمكن اختيار 6 أعمال كحد أقصى ضمن معرض الأعمال في الصفحة الرئيسية.'])->withInput();
         }
 
-        if ($request->boolean('is_featured') && Portfolio::where('is_featured', true)->count() >= 6) {
-            return back()->withErrors(['is_featured' => 'يمكن اختيار 6 أعمال كحد أقصى ضمن معرض الأعمال في الصفحة الرئيسية.'])->withInput();
-        }
-
         $portfolios = new Portfolio;
         $imageName = $this->storeCover($request->file('portfolioCover_image'));
 
@@ -92,7 +87,6 @@ class PortfolioController extends Controller
                 $portfolios->craftman_id = $request->input('craftman_id');
                 $portfolios->project_date = now();
                 $portfolios->views_count = 0;
-                $portfolios->is_featured = $request->boolean('is_featured');
                 $portfolios->is_featured = $request->boolean('is_featured');
                 $portfolios->saveOrFail();
             });
@@ -114,9 +108,6 @@ class PortfolioController extends Controller
             'craftman.user',
             'craftman.profession',
         ])->findOrFail($id);
-
-        // 🟢 زيادة عداد المشاهدات بمقدار 1
-        $portfolios->increment('views_count');
 
         return view('cms.portfolio.show', compact('portfolios'));
     }
@@ -147,7 +138,6 @@ class PortfolioController extends Controller
                 'craftman_id' => 'required',
                 'status' => 'required',
                 'is_featured' => 'nullable|boolean',
-                'is_featured' => 'nullable|boolean',
             ],
             [
                 'required' => 'هذا الحقل مطلوب.',
@@ -171,11 +161,6 @@ class PortfolioController extends Controller
                 'icon' => 'خطاء في البيانات',
                 'title' => 'هذا المشروع غير موجود',
             ], 400);
-        }
-
-        if ($request->boolean('is_featured') && ! $portfolios->is_featured
-            && Portfolio::where('is_featured', true)->where('id', '!=', $portfolios->id)->count() >= 6) {
-            return back()->withErrors(['is_featured' => 'يمكن اختيار 6 أعمال كحد أقصى ضمن معرض الأعمال في الصفحة الرئيسية.'])->withInput();
         }
 
         if ($request->boolean('is_featured') && ! $portfolios->is_featured

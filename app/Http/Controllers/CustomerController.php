@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class CustomerController extends Controller
@@ -91,29 +92,32 @@ class CustomerController extends Controller
         } else {
             $customers = new Customer;
             $customers->id_number = $request->input('id_number');
-            $isSaved = $customers->save();
 
-            if ($isSaved) {
-                $users = new User;
+            $users = new User;
+            $imageName = null;
 
-                if (request()->hasFile('image')) {
-                    $image = $request->file('image');
-                    $imageName = time().'.'.$image->getClientOriginalExtension();
-                    $image->move('storage/images/customer', $imageName);
-                    $users->image = $imageName;
-                }
+            if (request()->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = time().'.'.$image->getClientOriginalExtension();
+                $image->move(public_path('storage/images/customer'), $imageName);
+                $users->image = $imageName;
+            }
 
-                $users->name = $request->input('name');
-                $users->user_name = $request->input('user_name');
-                $users->email = $request->input('email');
-                $users->password = Hash::make($request->input('password'));
-                $users->address = $request->input('address');
-                $users->mobile = $request->input('mobile');
-                $users->gender = $request->input('gender');
-                $users->date = $request->input('date');
-                $users->status = $request->input('status');
-                $users->actor()->associate($customers);
-                $isSaved = $users->save();
+            $users->name = $request->input('name');
+            $users->user_name = $request->input('user_name');
+            $users->email = $request->input('email');
+            $users->password = Hash::make($request->input('password'));
+            $users->address = $request->input('address');
+            $users->mobile = $request->input('mobile');
+            $users->gender = $request->input('gender');
+            $users->date = $request->input('date');
+            $users->status = $request->input('status');
+            $users->actor()->associate($customers);
+
+            $isSaved = DB::transaction(fn (): bool => $customers->save() && $users->save());
+
+            if (! $isSaved && $imageName) {
+                Storage::disk('public')->delete('images/customer/'.$imageName);
             }
 
             if (! $isSaved) {
@@ -224,15 +228,17 @@ class CustomerController extends Controller
             ], 400);
         }
         $customers->id_number = $request->input('id_number');
-        $isSaved = $customers->save();
+        $oldImage = $user->image;
+        $newImageName = null;
+
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $newImageName = time().'.'.$image->getClientOriginalExtension();
             $image->move(
                 public_path('storage/images/customer'),
-                $imageName
+                $newImageName
             );
-            $user->image = $imageName;
+            $user->image = $newImageName;
         }
         $user->name = $request->input('name');
         $user->user_name = $request->input('user_name');
@@ -245,7 +251,18 @@ class CustomerController extends Controller
         if ($request->filled('password')) {
             $user->password = Hash::make($request->input('password'));
         }
-        $isSaved = $user->save();
+
+        [$customerSaved, $userSaved] = DB::transaction(function () use ($customers, $user): array {
+            return [$customers->save(), $user->save()];
+        });
+
+        if ($newImageName !== null) {
+            if ($userSaved && $oldImage) {
+                Storage::disk('public')->delete('images/customer/'.$oldImage);
+            } elseif (! $userSaved) {
+                Storage::disk('public')->delete('images/customer/'.$newImageName);
+            }
+        }
 
         if (! $request->expectsJson()) {
             return redirect()->route('customers.index')->with('success', 'تم تحديث بيانات الزبون بنجاح');

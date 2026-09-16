@@ -44,7 +44,6 @@ class ServiceJobController extends Controller
                 'offer',
                 'review',
                 'customerReview',
-                'customerReview',
             ])
             ->findOrFail($serviceJob);
 

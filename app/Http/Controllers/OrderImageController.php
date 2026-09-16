@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class OrderImageController extends Controller
 {
@@ -61,7 +62,7 @@ class OrderImageController extends Controller
             if (request()->hasFile('image_path')) {
                 $image = $request->file('image_path');
                 $imageName = time().'_'.$image->getClientOriginalName();
-                $image->move('storage/images/order_images', $imageName);
+                $image->move(public_path('storage/images/order_images'), $imageName);
                 $order_images->image_path = $imageName;
             }
 
@@ -126,17 +127,22 @@ class OrderImageController extends Controller
         }
 
         $order_images = OrderImage::findOrFail($id);
+        $oldImage = $order_images->image_path;
 
         if ($request->hasFile('image_path')) {
             $image = $request->file('image_path');
             $imageName = time().'_'.$image->getClientOriginalName();
-            $image->move('storage/images/order_images', $imageName);
+            $image->move(public_path('storage/images/order_images'), $imageName);
             $order_images->image_path = $imageName;
         }
 
         $order_images->order_id = $request->input('order_id');
 
         $order_images->save();
+
+        if ($oldImage && $request->hasFile('image_path')) {
+            Storage::disk('public')->delete('images/order_images/'.$oldImage);
+        }
 
         return response()->json([
             'icon' => 'success',

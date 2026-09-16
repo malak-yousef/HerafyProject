@@ -7,7 +7,9 @@ use App\Models\Profession;
 use App\Models\User;
 use App\Models\Verification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class CraftmanController extends Controller
@@ -125,28 +127,31 @@ class CraftmanController extends Controller
             $craftmen->hourly_rate = $request->input('hourly_rate');
             $craftmen->daily_rate = $request->input('daily_rate');
             $craftmen->is_featured = $request->boolean('is_featured');
-            $isSaved = $craftmen->save();
 
-            if ($isSaved) {
-                $users = new User;
+            $users = new User;
+            $imageName = null;
 
-                if (request()->hasFile('image')) {
-                    $image = $request->file('image');
-                    $imageName = time().'.'.$image->getClientOriginalExtension();
-                    $image->move('storage/images/craftman', $imageName);
-                    $users->image = $imageName;
-                }
+            if (request()->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = time().'.'.$image->getClientOriginalExtension();
+                $image->move(public_path('storage/images/craftman'), $imageName);
+                $users->image = $imageName;
+            }
 
-                $users->name = $request->input('name');
-                $users->user_name = $request->input('user_name');
-                $users->email = $request->input('email');
-                $users->password = Hash::make($request->input('password'));
-                $users->address = $request->input('address');
-                $users->mobile = $request->input('mobile');
-                $users->gender = $request->input('gender');
-                $users->status = $request->input('status');
-                $users->actor()->associate($craftmen);
-                $isSaved = $users->save();
+            $users->name = $request->input('name');
+            $users->user_name = $request->input('user_name');
+            $users->email = $request->input('email');
+            $users->password = Hash::make($request->input('password'));
+            $users->address = $request->input('address');
+            $users->mobile = $request->input('mobile');
+            $users->gender = $request->input('gender');
+            $users->status = $request->input('status');
+            $users->actor()->associate($craftmen);
+
+            $isSaved = DB::transaction(fn (): bool => $craftmen->save() && $users->save());
+
+            if (! $isSaved && $imageName) {
+                Storage::disk('public')->delete('images/craftman/'.$imageName);
             }
 
             if (! $isSaved) {
@@ -278,16 +283,16 @@ class CraftmanController extends Controller
         $craftmen->daily_rate = $request->input('daily_rate');
         $craftmen->is_featured = $request->boolean('is_featured');
 
-        $craftmen->save();
+        $oldImage = $user->image;
+        $newImageName = null;
+
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = time().'.'.$image->getClientOriginalExtension();
-            $image->move(
-                public_path('storage/images/craftman'),
-                $imageName
-            );
-            $user->image = $imageName;
+            $newImageName = time().'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('storage/images/craftman'), $newImageName);
+            $user->image = $newImageName;
         }
+
         $user->name = $request->input('name');
         $user->user_name = $request->input('user_name');
         $user->email = $request->input('email');
@@ -301,7 +306,17 @@ class CraftmanController extends Controller
             );
         }
 
-        $user->save();
+        [$craftmanSaved, $userSaved] = DB::transaction(function () use ($craftmen, $user): array {
+            return [$craftmen->save(), $user->save()];
+        });
+
+        if ($newImageName !== null) {
+            if ($userSaved && $oldImage) {
+                Storage::disk('public')->delete('images/craftman/'.$oldImage);
+            } elseif (! $userSaved) {
+                Storage::disk('public')->delete('images/craftman/'.$newImageName);
+            }
+        }
 
         if (! $request->expectsJson()) {
             return redirect()->route('craftmen.index')->with('success', 'تم تحديث بيانات الحرفي بنجاح');

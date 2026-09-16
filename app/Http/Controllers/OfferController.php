@@ -183,7 +183,11 @@ class OfferController extends Controller
         $craftman = $this->authenticatedCraftman();
 
         // الحد الأقصى للعروض اليومية
-        $maxDailyOffers = max((int) Setting::where('key', 'max_daily_offers')->value('value'), 1);
+        $maxDailyOffers = (int) Setting::where('key', 'max_daily_offers')->value('value');
+
+        if ($maxDailyOffers <= 0) {
+            $maxDailyOffers = 10;
+        }
 
         // إنشاء العرض داخل معاملة مع قفل لمنع العروض المكررة
         [$offer, $blockedReason] = DB::transaction(function () use ($request, $order, $craftman, $maxDailyOffers): array {

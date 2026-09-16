@@ -162,7 +162,10 @@ class VerificationController extends Controller
     // صفحة التوثيق للحرفي
     public function create()
     {
-        $craftman = auth('craftman')->user()->actor;
+        $user = auth('craftman')->user();
+        $craftman = $user?->actor;
+
+        abort_unless($user?->actor_type === Craftman::class && $craftman instanceof Craftman, 403);
 
         $verification = Verification::where('craftman_id', $craftman->id)
             ->latest()
@@ -181,7 +184,10 @@ class VerificationController extends Controller
             'document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
 
-        $craftman = auth('craftman')->user()->actor;
+        $user = auth('craftman')->user();
+        $craftman = $user?->actor;
+
+        abort_unless($user?->actor_type === Craftman::class && $craftman instanceof Craftman, 403);
 
         /*
         |--------------------------------------------------------------------------
@@ -239,7 +245,10 @@ class VerificationController extends Controller
     // عرض حالة توثيق الحرفي
     public function myVerification()
     {
-        $craftman = auth('craftman')->user()->actor;
+        $user = auth('craftman')->user();
+        $craftman = $user?->actor;
+
+        abort_unless($user?->actor_type === Craftman::class && $craftman instanceof Craftman, 403);
 
         $verification = Verification::where(
             'craftman_id',

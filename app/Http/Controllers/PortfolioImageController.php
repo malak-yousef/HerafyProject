@@ -6,6 +6,7 @@ use App\Models\Portfolio;
 use App\Models\PortfolioImage;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PortfolioImageController extends Controller
 {
@@ -105,8 +106,8 @@ class PortfolioImageController extends Controller
         }
 
         // جلب الحد الأقصى للصور من جدول settings
-        $maxImages = (int) Setting::where('key', 'max_project_images')
-            ->value('value');
+        $maxImages = (int) (Setting::where('key', 'max_project_images')
+            ->value('value') ?? 5);
 
         // عدد الصور الموجودة حاليًا داخل هذا المعرض
         $currentImages = PortfolioImage::where(
@@ -129,7 +130,7 @@ class PortfolioImageController extends Controller
             $imageName = time().'_'.$image->getClientOriginalName();
 
             $image->move(
-                'storage/images/portfolio_images',
+                public_path('storage/images/portfolio_images'),
                 $imageName
             );
 
@@ -199,11 +200,12 @@ class PortfolioImageController extends Controller
         }
 
         $portfolio_images = PortfolioImage::findOrFail($id);
+        $oldImage = $portfolio_images->image_path;
 
         if ($request->hasFile('image_path')) {
             $image = $request->file('image_path');
             $imageName = time().'_'.$image->getClientOriginalName();
-            $image->move('storage/images/portfolio_images', $imageName);
+            $image->move(public_path('storage/images/portfolio_images'), $imageName);
             $portfolio_images->image_path = $imageName;
         }
 
@@ -212,6 +214,10 @@ class PortfolioImageController extends Controller
         $portfolio_images->portfolio_id = $request->input('portfolio_id');
 
         $portfolio_images->save();
+
+        if ($oldImage && $request->hasFile('image_path')) {
+            Storage::disk('public')->delete('images/portfolio_images/'.$oldImage);
+        }
 
         return response()->json([
             'icon' => 'success',

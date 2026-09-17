@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CityController extends Controller
 {
@@ -32,11 +33,11 @@ class CityController extends Controller
     {
         //
         $validator = Validator($request->all(), [
-            'name' => 'required|string|min:4|max:20',
+            'name' => 'required|string|min:4|max:20|unique:cities,name',
 
         ], [
             'name.required' => 'هذا الحقل مطلوب',
-
+            'name.unique' => 'اسم المدينة مستخدم مسبقاً',
             'name.min' => 'لا يقبل اقل من 4 حروف',
             'name.max' => 'لا يقبل اكثر من 20حرف',
         ]);
@@ -83,10 +84,11 @@ class CityController extends Controller
     public function update(Request $request, $id)
     {
         $validator = validator($request->all(), [
-            'name' => 'required|string|min:4|max:20',
+            'name' => ['required', 'string', 'min:4', 'max:20', Rule::unique('cities', 'name')->ignore($id)],
 
         ], [
             'name.required' => 'هذا الحقل مطلوب',
+            'name.unique' => 'اسم المدينة مستخدم مسبقاً',
 
             'name.min' => 'لا يقبل اقل من4حروف',
             'name.max' => 'لا يقبل اكثر من 20حرف',

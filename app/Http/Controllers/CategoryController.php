@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
@@ -32,10 +33,11 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validator = Validator($request->all(), [
-            'name' => 'required|string|min:4|max:20',
+            'name' => 'required|string|min:4|max:20|unique:categories,name',
             'description' => 'required|max:100',
         ], [
             'name.required' => 'هذا الحقل مطلوب',
+            'name.unique' => 'اسم التصنيف مستخدم مسبقاً',
             'description.required' => 'هذا الحقل مطلوب',
             'name.min' => 'لا يقبل اقل من 4 حروف',
             'name.max' => 'لا يقبل اكثر من 20حرف',
@@ -83,10 +85,11 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $validator = validator($request->all(), [
-            'name' => 'required|string|min:4|max:20',
+            'name' => ['required', 'string', 'min:4', 'max:20', Rule::unique('categories', 'name')->ignore($id)],
             'description' => 'required|max:100',
         ], [
             'name.required' => 'هذا الحقل مطلوب',
+            'name.unique' => 'اسم التصنيف مستخدم مسبقاً',
             'description.required' => 'هذا الحقل مطلوب',
             'name.min' => 'لا يقبل اقل من4حروف',
             'name.max' => 'لا يقبل اكثر من 20حرف',

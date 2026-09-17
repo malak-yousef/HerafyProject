@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Profession;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ProfessionController extends Controller
 {
@@ -38,12 +39,13 @@ class ProfessionController extends Controller
     public function store(Request $request)
     {
         $validator = validator($request->all(), [
-            'name' => 'required|string|min:4|max:20',
+            'name' => 'required|string|min:4|max:20|unique:professions,name',
             'description' => 'required|max:100',
             'category_id' => 'required',
             'status' => 'required|in:active,in_active',
         ], [
             'name.required' => 'هذا الحقل مطلوب',
+            'name.unique' => 'اسم المهنة مستخدم مسبقاً',
             'description.required' => 'هذا الحقل مطلوب',
             'name.min' => 'لا يقبل اقل من 4 حروف',
             'name.max' => 'لا يقبل اكثر من 20حرف',
@@ -98,12 +100,13 @@ class ProfessionController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator($request->all(), [
-            'name' => 'sometimes|required|string|min:4|max:20',
+            'name' => ['sometimes', 'required', 'string', 'min:4', 'max:20', Rule::unique('professions', 'name')->ignore($id)],
             'description' => 'sometimes|required|max:100',
             'category_id' => 'sometimes|required',
             'status' => 'sometimes|required|in:active,in_active',
         ], [
             'name.required' => 'هذا الحقل مطلوب',
+            'name.unique' => 'اسم المهنة مستخدم مسبقاً',
             'description.required' => 'هذا الحقل مطلوب',
             'name.min' => 'لا يقبل اقل من 4 حروف',
             'name.max' => 'لا يقبل اكثر من 20حرف',

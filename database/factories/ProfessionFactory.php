@@ -19,18 +19,14 @@ class ProfessionFactory extends Factory
     public function definition(): array
     {
         return [
-            // return [
-            //
-            'name' => fake()->name(),
+            'name' => fake()->unique()->jobTitle().' '.fake()->unique()->numberBetween(1, 10000),
             'description' => fake()->word(),
             'status' => fake()->randomElement([
                 'active',
                 'in_active',
             ]),
             'category_id' => Category::factory(),
-
         ];
-
     }
 
     public function active(): static

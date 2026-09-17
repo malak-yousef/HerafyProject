@@ -12,6 +12,8 @@ class CityFactory extends Factory
 
     public function definition(): array
     {
-        return ['name' => fake()->randomElement(self::GAZA_LOCATIONS)];
+        return [
+            'name' => fake()->unique()->city().' '.fake()->unique()->numberBetween(1, 10000),
+        ];
     }
 }

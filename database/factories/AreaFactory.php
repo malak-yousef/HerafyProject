@@ -21,9 +21,7 @@ class AreaFactory extends Factory
     {
         return [
             'city_id' => City::factory(),
-            'name' => fn (array $attributes) => fake()->randomElement(
-                self::GAZA_AREAS[City::findOrFail($attributes['city_id'])->name]
-            ),
+            'name' => fake()->unique()->streetName().' '.fake()->unique()->numberBetween(1, 10000),
         ];
     }
 }

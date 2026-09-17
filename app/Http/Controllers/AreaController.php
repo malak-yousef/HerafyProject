@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Area;
 use App\Models\City;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AreaController extends Controller
 {
@@ -37,17 +38,22 @@ class AreaController extends Controller
     public function store(Request $request)
     {
         $validator = validator($request->all(), [
-            'name' => 'required|string|min:4|max:20',
-
+            'name' => [
+                'required',
+                'string',
+                'min:4',
+                'max:20',
+                Rule::unique('areas', 'name')->where('city_id', $request->input('city_id')),
+            ],
             'city_id' => 'required|exists:cities,id',
 
         ], [
             'name.required' => 'هذا الحقل مطلوب',
-
+            'name.unique' => 'اسم المنطقة مستخدم مسبقاً في هذه المدينة',
             'name.min' => 'لا يقبل اقل من 4 حروف',
             'name.max' => 'لا يقبل اكثر من 20حرف',
-            'city_id.required' => 'يرجى اختيار التصنيف.',
-            'city_id.exists' => 'التصنيف المختار غير موجود.',
+            'city_id.required' => 'يرجى اختيار المدينة.',
+            'city_id.exists' => 'المدينة المختارة غير موجودة.',
         ]);
         if ($validator->fails()) {
             if ($request->expectsJson()) {
@@ -96,14 +102,20 @@ class AreaController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator($request->all(), [
-            'name' => 'required|string|min:4|max:20',
+            'name' => [
+                'required',
+                'string',
+                'min:4',
+                'max:20',
+                Rule::unique('areas', 'name')->where('city_id', $request->input('city_id'))->ignore($id),
+            ],
             'city_id' => 'required|exists:cities,id',
         ], [
             'name.required' => 'هذا الحقل مطلوب',
-
+            'name.unique' => 'اسم المنطقة مستخدم مسبقاً في هذه المدينة',
             'name.min' => 'لا يقبل اقل من 4 حروف',
             'name.max' => 'لا يقبل اكثر من 20حرف',
-            'city_id.required' => 'يرجى اختيار التصنيف.',
+            'city_id.required' => 'يرجى اختيار المدينة.',
 
         ]);
         if ($validator->fails()) {

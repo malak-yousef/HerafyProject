@@ -22,12 +22,10 @@ class Portfolio extends Model
         'project_date',
         'views_count',
         'is_featured',
-        'is_featured',
     ];
 
     protected $casts = [
         'status' => 'boolean',
-        'is_featured' => 'boolean',
         'is_featured' => 'boolean',
     ];
 

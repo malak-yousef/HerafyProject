@@ -1239,7 +1239,9 @@
                     Swal.fire({
                         icon: 'success',
                         title: response.data.title || 'تم إنشاء الحساب بنجاح',
-                        html: message.replace(/\n/g, '<br>'),
+                        html: message.replace(/[&<>]/g, function (match) {
+                            return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[match];
+                        }).replace(/\n/g, '<br>'),
                         confirmButtonColor: '#FFC107',
                         confirmButtonText: 'تسجيل الدخول'
                     }).then(() => {

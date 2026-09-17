@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -89,8 +90,14 @@ class AdminController extends Controller
         }
         $admin->actor_id = null;
         $admin->actor_type = null;
+
+        $previousImage = $admin->image;
         $this->storeImage($request, $admin);
         $admin->save();
+
+        if ($previousImage && $admin->image !== $previousImage) {
+            Storage::disk('public')->delete('images/admin/'.$previousImage);
+        }
 
         return $this->successResponse($request, 'تم تحديث المسؤول بنجاح.');
     }
@@ -236,7 +243,7 @@ class AdminController extends Controller
 
         $image = $request->file('image');
         $imageName = time().'_image.'.$image->getClientOriginalExtension();
-        $image->move('storage/images/admin', $imageName);
+        $image->move(public_path('storage/images/admin'), $imageName);
         $admin->image = $imageName;
     }
 

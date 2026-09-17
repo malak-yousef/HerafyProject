@@ -12,13 +12,8 @@ class CityFactory extends Factory
 
     public function definition(): array
     {
-        $name = fake()->randomElement(self::GAZA_LOCATIONS);
-        if (City::where('name', $name)->exists()) {
-            $name = $name.' '.fake()->unique()->numberBetween(1, 9999);
-        }
-
         return [
-            'name' => $name,
+            'name' => fake()->unique()->word().' '.fake()->unique()->numberBetween(100, 99999),
         ];
     }
 }

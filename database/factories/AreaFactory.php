@@ -21,22 +21,7 @@ class AreaFactory extends Factory
     {
         return [
             'city_id' => City::factory(),
-            'name' => function (array $attributes) {
-                $cityId = $attributes['city_id'] ?? null;
-                $city = $cityId ? City::find($cityId) : null;
-                $cityName = $city?->name ?? 'غزة';
-                $baseCityName = preg_replace('/\s+\d+$/', '', $cityName);
-                $available = self::GAZA_AREAS[$baseCityName] ?? self::GAZA_AREAS['غزة'];
-
-                $existingNames = $cityId ? Area::where('city_id', $cityId)->pluck('name')->all() : [];
-                $unused = array_values(array_diff($available, $existingNames));
-
-                if (! empty($unused)) {
-                    return fake()->randomElement($unused);
-                }
-
-                return fake()->randomElement($available).' '.fake()->unique()->numberBetween(1, 9999);
-            },
+            'name' => fake()->unique()->word().' '.fake()->unique()->numberBetween(100, 99999),
         ];
     }
 }

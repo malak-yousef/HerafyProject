@@ -17,15 +17,29 @@ class OrderFactory extends Factory
         return [
             'customer_id' => Customer::factory()->active(),
             'profession_id' => Profession::factory()->active(),
-            'city_id' => fn () => City::inRandomOrder()->first()?->id ?? City::factory()->create()->id,
-            'area_id' => function (array $attributes) {
-                $cityId = $attributes['city_id'];
-                $area = Area::where('city_id', $cityId)->inRandomOrder()->first();
-                if ($area) {
-                    return $area->id;
+            'city_id' => function () {
+                $existing = City::inRandomOrder()->first();
+                if ($existing) {
+                    return $existing->id;
                 }
 
-                return Area::factory()->create(['city_id' => $cityId])->id;
+                $gazaName = fake()->randomElement(CityFactory::GAZA_LOCATIONS);
+
+                return City::firstOrCreate(['name' => $gazaName])->id;
+            },
+            'area_id' => function (array $attributes) {
+                $cityId = $attributes['city_id'];
+                $city = City::find($cityId);
+                $existingArea = Area::where('city_id', $cityId)->inRandomOrder()->first();
+                if ($existingArea) {
+                    return $existingArea->id;
+                }
+
+                $cityName = $city?->name ?? 'غزة';
+                $availableAreas = AreaFactory::GAZA_AREAS[$cityName] ?? ['المركز'];
+                $areaName = fake()->randomElement($availableAreas);
+
+                return Area::firstOrCreate(['city_id' => $cityId, 'name' => $areaName])->id;
             },
             'title' => fake()->randomElement([
                 'صيانة تمديدات كهربائية', 'إصلاح تسريب مياه', 'تركيب أبواب خشبية',

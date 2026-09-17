@@ -250,30 +250,4 @@ class OrderController extends Controller
     {
         return $request->validate(['ids' => ['required', 'array', 'min:1'], 'ids.*' => ['integer', 'distinct']])['ids'];
     }
-
-    public function craftmanOrders()
-    {
-        $orders = Order::with([
-            'customer.user',
-            'city',
-            'area',
-        ])
-            ->where('status', 'pending')
-            ->latest()
-            ->paginate(10);
-
-        return view('herafy.order.index', compact('orders'));
-    }
-
-    public function craftmanShow($id)
-    {
-        $order = Order::with([
-            'customer.user',
-            'city',
-            'area',
-            'offers',
-        ])->findOrFail($id);
-
-        return view('herafy.order.show', compact('order'));
-    }
 }

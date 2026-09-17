@@ -17,8 +17,16 @@ class OrderFactory extends Factory
         return [
             'customer_id' => Customer::factory()->active(),
             'profession_id' => Profession::factory()->active(),
-            'city_id' => City::factory(),
-            'area_id' => fn (array $attributes) => Area::factory()->create(['city_id' => $attributes['city_id']])->id,
+            'city_id' => fn () => City::inRandomOrder()->first()?->id ?? City::factory()->create()->id,
+            'area_id' => function (array $attributes) {
+                $cityId = $attributes['city_id'];
+                $area = Area::where('city_id', $cityId)->inRandomOrder()->first();
+                if ($area) {
+                    return $area->id;
+                }
+
+                return Area::factory()->create(['city_id' => $cityId])->id;
+            },
             'title' => fake()->randomElement([
                 'صيانة تمديدات كهربائية', 'إصلاح تسريب مياه', 'تركيب أبواب خشبية',
                 'دهان شقة سكنية', 'صيانة جهاز تكييف', 'تنفيذ أعمال حديدية',

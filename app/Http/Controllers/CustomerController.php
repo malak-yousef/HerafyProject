@@ -64,7 +64,7 @@ class CustomerController extends Controller
             $request->all(),
             [
                 'name' => 'required |string|min:3|max:50',
-                'user_name' => 'required |string|min:3|max:50|unique:users,user_name',
+                'user_name' => 'required |string|min:3|max:45|unique:users,user_name',
                 'id_number' => 'required |numeric|unique:customers,id_number',
                 'mobile' => 'nullable |numeric',
                 'email' => 'required |email|unique:users,email',
@@ -201,7 +201,7 @@ class CustomerController extends Controller
             $request->all(),
             [
                 'name' => 'required |string|min:3|max:50',
-                'user_name' => 'required |string|min:3|max:50|unique:users,user_name,'.$user_id,
+                'user_name' => 'required |string|min:3|max:45|unique:users,user_name,'.$user_id,
                 'id_number' => 'required |numeric|unique:customers,id_number,'.$id,
                 'mobile' => 'nullable |numeric',
                 'email' => 'required |email|unique:users,email,'.$user_id,

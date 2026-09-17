@@ -80,7 +80,7 @@ class CraftmanController extends Controller
             $request->all(),
             [
                 'name' => 'required |string|min:3|max:50',
-                'user_name' => 'required |string|min:3|max:50|unique:users,user_name',
+                'user_name' => 'required |string|min:3|max:45|unique:users,user_name',
                 'id_number' => 'required |numeric|unique:craftmen,id_number',
                 'mobile' => 'nullable |numeric',
                 // 'craft_name'       => 'required |string|min:3|max:50',
@@ -238,7 +238,7 @@ class CraftmanController extends Controller
             $request->all(),
             [
                 'name' => 'required|string|min:3|max:50',
-                'user_name' => 'required|string|min:3|max:50|unique:users,user_name,'.$user_id,
+                'user_name' => 'required|string|min:3|max:45|unique:users,user_name,'.$user_id,
                 'id_number' => 'required|numeric|unique:craftmen,id_number,'.$id,
                 'mobile' => 'nullable|numeric',
                 //  'craft_name'       => 'required|string|min:3|max:50',

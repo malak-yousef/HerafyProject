@@ -156,21 +156,21 @@ class AreaController extends Controller
     {
         $areas = Area::onlyTrashed()->findOrFail($id)->restore();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تمت استعادة المنطقة بنجاح.');
     }
 
     public function force($id)
     {
         $areas = Area::onlyTrashed()->findOrFail($id)->forceDelete();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تم حذف المنطقة نهائيًا.');
     }
 
     public function forceAll(Request $request)
     {
         Area::onlyTrashed()->whereKey($this->trashIds($request))->forceDelete();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تم حذف جميع المناطق نهائيًا.');
     }
 
     private function trashIds(Request $request): array

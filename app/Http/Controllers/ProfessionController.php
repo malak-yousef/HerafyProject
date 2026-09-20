@@ -152,21 +152,21 @@ class ProfessionController extends Controller
     {
         $professions = Profession::onlyTrashed()->findOrFail($id)->restore();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تمت استعادة المهنة بنجاح.');
     }
 
     public function force($id)
     {
         $professions = Profession::onlyTrashed()->findOrFail($id)->forceDelete();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تم حذف المهنة نهائيًا.');
     }
 
     public function forceAll(Request $request)
     {
         Profession::onlyTrashed()->whereKey($this->trashIds($request))->forceDelete();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تم حذف جميع المهن نهائيًا.');
     }
 
     private function trashIds(Request $request): array

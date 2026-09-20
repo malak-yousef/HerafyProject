@@ -20,12 +20,6 @@
         </div>
     </div>
 
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <div class="card">
         <div class="card-body">
 
@@ -113,14 +107,15 @@
 
                                 <form action="{{ route('reports.destroy', $report->id) }}"
                                       method="POST"
-                                      class="d-inline">
+                                      class="d-inline"
+                                      data-swal-confirm
+                                      data-confirm-message="هل أنت متأكد من حذف هذا البلاغ؟">
 
                                     @csrf
                                     @method('DELETE')
 
                                     <button type="submit"
-                                            class="btn btn-sm btn-danger"
-                                            onclick="return confirm('هل أنت متأكد؟')">
+                                            class="btn btn-sm btn-danger">
                                         حذف
                                     </button>
 

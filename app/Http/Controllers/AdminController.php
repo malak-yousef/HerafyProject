@@ -127,7 +127,7 @@ class AdminController extends Controller
         $this->authorizeProtectedTarget($request, $admin);
         $admin->restore();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تمت استعادة المدير بنجاح.');
     }
 
     public function force(Request $request, $id): RedirectResponse
@@ -137,7 +137,7 @@ class AdminController extends Controller
         $this->denySelfTarget($request, $admin);
         $admin->forceDelete();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تم حذف المدير نهائيًا.');
     }
 
     public function forceAll(Request $request): RedirectResponse
@@ -145,7 +145,7 @@ class AdminController extends Controller
         $ids = $this->validatedTrashIds($request);
         $this->protectSuperAdmins($this->adminQuery(true), $request)->whereKey($ids)->forceDelete();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تم حذف جميع المدراء نهائيًا.');
     }
 
     private function validatedTrashIds(Request $request): array

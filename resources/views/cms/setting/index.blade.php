@@ -37,20 +37,6 @@
     </div>
 
 
-    {{-- Success Message --}}
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle me-2"></i>
-            {{ session('success') }}
-
-            <button type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert">
-            </button>
-        </div>
-    @endif
-
-
     {{-- Validation Errors --}}
     @if($errors->any())
         <div class="alert alert-danger">
@@ -139,7 +125,8 @@
                                             {{-- Delete --}}
                                             <form action="{{ route('settings.destroy', $setting) }}"
                                                   method="POST"
-                                                  onsubmit="return confirm('هل أنت متأكد من حذف هذا الإعداد؟');">
+                                                  data-swal-confirm
+                                                  data-confirm-message="هل أنت متأكد من حذف هذا الإعداد؟">
 
                                                 @csrf
                                                 @method('DELETE')

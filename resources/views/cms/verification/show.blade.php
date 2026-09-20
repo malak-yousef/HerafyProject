@@ -36,14 +36,6 @@
 
 
     {{-- رسالة النجاح --}}
-    @if(session('success'))
-
-        <div class="alert alert-success">
-            <i class="fas fa-check-circle"></i>
-            {{ session('success') }}
-        </div>
-
-    @endif
 
 
     <div class="row g-4">
@@ -235,7 +227,8 @@
 
                 <form action="{{ route('verifications.destroy', $verification->id) }}"
                       method="POST"
-                      onsubmit="return confirm('هل أنت متأكد من حذف طلب التوثيق؟');">
+                      data-swal-confirm
+                      data-confirm-message="هل أنت متأكد من حذف طلب التوثيق؟">
 
                     @csrf
                     @method('DELETE')

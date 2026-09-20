@@ -195,7 +195,7 @@ class PortfolioImageController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'icon' => 'خطأ في البيانات',
+                'icon' => 'error',
                 'title' => $validator->getMessageBag()->first(),
             ], 400);
         }

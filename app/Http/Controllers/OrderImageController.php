@@ -54,9 +54,9 @@ class OrderImageController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'icon' => 'خطأ في البيانات',
-                'titel' => $validator->getMessageBag()->first(),
-            ], 400);
+                'icon' => 'error',
+                'errors' => $validator->getMessageBag()->toArray(),
+            ], 422);
         } else {
             $order_images = new OrderImage;
 
@@ -122,9 +122,9 @@ class OrderImageController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'icon' => 'خطأ في البيانات',
-                'title' => $validator->getMessageBag()->first(),
-            ], 400);
+                'icon' => 'error',
+                'errors' => $validator->getMessageBag()->toArray(),
+            ], 422);
         }
 
         $order_images = OrderImage::findOrFail($id);

@@ -29,8 +29,6 @@
         </div>
     </div>
 
-    @if(session('success'))<div class="alert alert-success"><i class="fas fa-check-circle" aria-hidden="true"></i> {{ session('success') }}</div>@endif
-
     <div class="card shadow-sm border-0">
         <div class="card-body">
             <form method="GET" action="{{ route('service-jobs.index') }}" class="row g-3 mb-4 align-items-end">

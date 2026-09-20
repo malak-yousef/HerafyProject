@@ -278,21 +278,21 @@ class ReviewController extends Controller
     {
         Review::onlyTrashed()->findOrFail($id)->restore();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تمت استعادة التقييم بنجاح.');
     }
 
     public function force($id)
     {
         Review::onlyTrashed()->findOrFail($id)->forceDelete();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تم حذف التقييم نهائيًا.');
     }
 
     public function forceAll(Request $request)
     {
         Review::onlyTrashed()->whereKey($this->trashIds($request))->forceDelete();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تم حذف جميع التقييمات نهائيًا.');
     }
 
     private function trashIds(Request $request): array

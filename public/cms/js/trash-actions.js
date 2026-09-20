@@ -1,11 +1,34 @@
-(() => {
+(function (window, document) {
     'use strict';
 
     const confirmation = 'هل أنت متأكد من الحذف النهائي؟ لا يمكن التراجع عن هذه العملية.';
 
     document.addEventListener('submit', (event) => {
-        if (event.target.matches('[data-force-delete-form]') && !window.confirm(confirmation)) {
-            event.preventDefault();
+        const form = event.target.closest('[data-force-delete-form]');
+        if (!form) return;
+
+        event.preventDefault();
+
+        const proceed = () => form.submit();
+
+        if (window.Swal) {
+            window.Swal.fire({
+                title: 'حذف نهائي',
+                text: confirmation,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'نعم، احذف',
+                cancelButtonText: 'إلغاء',
+            }).then((result) => {
+                if (result.isConfirmed) proceed();
+            });
+            return;
+        }
+
+        if (window.confirm(confirmation)) {
+            proceed();
         }
     });
 
@@ -34,4 +57,4 @@
         items.forEach((item) => item.addEventListener('change', refresh));
         refresh();
     });
-})();
+})(window, document);

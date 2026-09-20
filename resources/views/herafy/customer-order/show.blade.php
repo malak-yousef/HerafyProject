@@ -45,7 +45,8 @@
                 @if ($order->status === 'pending')
                     <hr class="my-4">
                     <form method="POST" action="{{ route('herafy.customer.orders.cancel', $order) }}"
-                          onsubmit="return confirm('هل أنت متأكد من إلغاء هذا الطلب؟');">
+                          data-swal-confirm
+                          data-confirm-message="هل أنت متأكد من إلغاء هذا الطلب؟">
                         @csrf
                         @method('PATCH')
                         <button type="submit" class="btn btn-danger">إلغاء الطلب</button>
@@ -127,7 +128,8 @@
 
                             @if ($order->status === 'pending' && $offer->status === 'pending')
                                 <form method="POST" action="{{ route('herafy.customer.orders.offers.accept', [$order, $offer]) }}"
-                                      onsubmit="return confirm('هل أنت متأكد من قبول هذا العرض؟');">
+                                      data-swal-confirm
+                                      data-confirm-message="هل أنت متأكد من قبول هذا العرض؟">
                                     @csrf
                                     @method('PATCH')
                                     <button type="submit" class="btn btn-success btn-sm">قبول العرض</button>

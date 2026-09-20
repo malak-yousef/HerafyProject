@@ -31,7 +31,8 @@
                 @if ($serviceJob->status === 'pending')
                     <hr class="my-4">
                     <form method="POST" action="{{ route('herafy.craftman.jobs.start', $serviceJob) }}"
-                          onsubmit="return confirm('هل أنت متأكد من بدء العمل؟');">
+                          data-swal-confirm
+                          data-confirm-message="هل أنت متأكد من بدء العمل؟">
                         @csrf
                         @method('PATCH')
                         <button class="btn btn-success" type="submit">بدء العمل</button>
@@ -39,7 +40,8 @@
                 @elseif ($serviceJob->status === 'in_progress')
                     <hr class="my-4">
                     <form method="POST" action="{{ route('herafy.craftman.jobs.complete', $serviceJob) }}"
-                          onsubmit="return confirm('هل أنت متأكد من إكمال العمل؟');">
+                          data-swal-confirm
+                          data-confirm-message="هل أنت متأكد من إكمال العمل؟">
                         @csrf
                         @method('PATCH')
                         <button class="btn btn-primary" type="submit">إكمال العمل</button>

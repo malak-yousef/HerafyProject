@@ -229,21 +229,21 @@ class OrderController extends Controller
     {
         $orders = Order::onlyTrashed()->findOrFail($id)->restore();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تمت استعادة الطلب بنجاح.');
     }
 
     public function force($id)
     {
         $orders = Order::onlyTrashed()->findOrFail($id)->forceDelete();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تم حذف الطلب نهائيًا.');
     }
 
     public function forceAll(Request $request)
     {
         Order::onlyTrashed()->whereKey($this->trashIds($request))->forceDelete();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تم حذف جميع الطلبات نهائيًا.');
     }
 
     private function trashIds(Request $request): array

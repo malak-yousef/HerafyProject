@@ -140,21 +140,21 @@ class CategoryController extends Controller
     {
         $categories = Category::onlyTrashed()->findOrFail($id)->restore();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تمت استعادة التصنيف بنجاح.');
     }
 
     public function force($id)
     {
         $categories = Category::onlyTrashed()->findOrFail($id)->forceDelete();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تم حذف التصنيف نهائيًا.');
     }
 
     public function forceAll(Request $request)
     {
         Category::onlyTrashed()->whereKey($this->trashIds($request))->forceDelete();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تم حذف جميع التصنيفات نهائيًا.');
     }
 
     private function trashIds(Request $request): array

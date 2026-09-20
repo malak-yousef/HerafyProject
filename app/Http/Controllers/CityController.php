@@ -138,21 +138,21 @@ class CityController extends Controller
     {
         $cities = City::onlyTrashed()->findOrFail($id)->restore();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تمت استعادة المدينة بنجاح.');
     }
 
     public function force($id)
     {
         $cities = City::onlyTrashed()->findOrFail($id)->forceDelete();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تم حذف المدينة نهائيًا.');
     }
 
     public function forceAll(Request $request)
     {
         City::onlyTrashed()->whereKey($this->trashIds($request))->forceDelete();
 
-        return back()->with('success', 'Success');
+        return back()->with('success', 'تم حذف جميع المدن نهائيًا.');
     }
 
     private function trashIds(Request $request): array

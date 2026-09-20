@@ -142,6 +142,25 @@
         });
     });
 
+    document.addEventListener('submit', event => {
+        const form = event.target.closest('form[data-swal-confirm]');
+        if (!form || !window.Swal) return;
+
+        event.preventDefault();
+        window.Swal.fire({
+            title: form.dataset.confirmTitle || messages.deleteTitle,
+            text: form.dataset.confirmMessage || messages.deleteText,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'نعم',
+            cancelButtonText: 'لا',
+        }).then(result => {
+            if (result.isConfirmed) form.submit();
+        });
+    });
+
     Object.assign(window, {
         store, storepart, storeRoute, storeRedirect, update, updateRoute, updateReload,
         updatePage, confirmDestroy, destroy, showErrorMessages, clearAndHideErrors,

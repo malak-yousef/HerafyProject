@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\ImageOptimizerService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -241,7 +242,7 @@ class AdminController extends Controller
             return;
         }
 
-        $image = $request->file('image');
+        $image = app(ImageOptimizerService::class)->forProfile($request->file('image'));
         $imageName = time().'_image.'.$image->getClientOriginalExtension();
         $image->move(public_path('storage/images/admin'), $imageName);
         $admin->image = $imageName;

@@ -44,7 +44,7 @@ class CmsPortfolioCoverStorageSafetyTest extends TestCase
             ->assertRedirect(route('portfolios.index'));
 
         $portfolio = Portfolio::sole();
-        $this->assertMatchesRegularExpression('/^\d{14}_[A-Za-z0-9]{20}\.png$/', $portfolio->portfolioCover_image);
+        $this->assertMatchesRegularExpression('/^\d{14}_[A-Za-z0-9]{20}\.(?:png|webp)$/', $portfolio->portfolioCover_image);
         $this->assertFileExists($this->coverPath($portfolio->portfolioCover_image));
     }
 

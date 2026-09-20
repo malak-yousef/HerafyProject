@@ -11,6 +11,7 @@ use App\Models\Profession;
 use App\Models\ServiceJob;
 use App\Notifications\NewEligibleOrder;
 use App\Notifications\OfferAccepted;
+use App\Services\ImageOptimizerService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -197,7 +198,7 @@ class CustomerOrderController extends Controller
                 ]);
 
                 foreach ($request->file('images', []) as $image) {
-                    $path = $image->store("order-images/{$order->id}", 'public');
+                    $path = app(ImageOptimizerService::class)->forMedia($image)->store("order-images/{$order->id}", 'public');
                     $storedPaths[] = $path;
                     $order->images()->create(['image_path' => $path]);
                 }

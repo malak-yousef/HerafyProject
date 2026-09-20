@@ -322,7 +322,7 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>
                         @if($craftman->user && $craftman->user->image)
-                        <img src="{{ $craftman->user->profilePhotoUrl() }}" alt="{{ $craftman->user->name }}" class="craftsman-avatar">
+                        <img src="{{ $craftman->user->profilePhotoUrl() }}" alt="{{ $craftman->user->name }}" class="craftsman-avatar" width="42" height="42" loading="lazy" decoding="async">
                         @else
                         <span class="avatar-placeholder">
                             {{ $craftman->user ? substr($craftman->user->name, 0, 1) : '?' }}

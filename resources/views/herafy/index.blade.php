@@ -38,8 +38,8 @@
             </div>
             <div class="col-lg-6 text-center">
                 <div class="hero-image-wrap">
-                <img src="{{ asset('herafy/img/Codex Image 26 Aug 2026, 12_48_14.png') }}" alt="حرفي"
-                    class="hero-image">
+                <img src="{{ asset('herafy/img/Codex Image 26 Aug 2026, 12_48_14.webp') }}" alt="حرفي"
+                    class="hero-image" width="1086" height="1448">
                     <span class="hero-image-badge"><i class="fas fa-star"></i> جودة تستحق الثقة</span>
                 </div>
             </div>
@@ -71,7 +71,7 @@
             </div>
             <div class="col-lg-6 order-lg-1 text-center">
                 <div class="about-image-wrap">
-                    <img src="{{ asset('herafy/img/hero1.png') }}" alt="مجموعة من حرفيي منصة حرفي" class="about-image">
+                    <img src="{{ asset('herafy/img/hero1.webp') }}" alt="مجموعة من حرفيي منصة حرفي" class="about-image" width="1408" height="768" loading="lazy" decoding="async">
                 </div>
             </div>
         </div>
@@ -94,7 +94,7 @@
                 <div class="col-md-6 col-lg-3">
                     <div class="card h-100 craftsman-card hover-card">
                         @if($craftman->user?->profilePhotoUrl())
-                            <img src="{{ $craftman->user->profilePhotoUrl() }}" class="card-img-top" alt="صورة {{ $craftman->user->name }}" style="height: 230px; object-fit: cover;">
+                            <img src="{{ $craftman->user->profilePhotoUrl() }}" class="card-img-top" alt="صورة {{ $craftman->user->name }}" style="height: 230px; object-fit: cover;" width="230" height="230" loading="lazy" decoding="async">
                         @else
                             <div class="card-img-top bg-light d-flex align-items-center justify-content-center text-secondary" style="height: 230px;" role="img" aria-label="لا توجد صورة">
                                 <i class="fas fa-user fa-5x" aria-hidden="true"></i>
@@ -149,7 +149,7 @@
                             <p class="card-text flex-grow-1">“{{ $review->comment }}”</p>
                             <div class="d-flex align-items-center gap-2 mt-3">
                                 @if($review->customer?->user?->profilePhotoUrl())
-                                    <img src="{{ $review->customer->user->profilePhotoUrl() }}" class="rounded-circle" width="50" height="50" style="object-fit: cover;" alt="صورة {{ $review->customer->user->name }}">
+                                    <img src="{{ $review->customer->user->profilePhotoUrl() }}" class="rounded-circle" width="50" height="50" style="object-fit: cover;" alt="صورة {{ $review->customer->user->name }}" loading="lazy" decoding="async">
                                 @else
                                     <span class="rounded-circle bg-warning-subtle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;" aria-hidden="true"><i class="fas fa-user text-warning"></i></span>
                                 @endif
@@ -184,7 +184,7 @@
                 <div class="col-md-6 col-lg-4">
                     <a href="{{ route('herafy.craftmen.portfolios.show', [$portfolio->craftman, $portfolio]) }}" class="card h-100 text-decoration-none text-dark overflow-hidden portfolio-card">
                         @if($portfolio->portfolioCover_image)
-                            <img src="{{ asset('storage/images/portfolio/'.$portfolio->portfolioCover_image) }}" class="card-img-top" style="height: 260px; object-fit: cover;" alt="{{ $portfolio->title }}">
+                            <img src="{{ asset('storage/images/portfolio/'.$portfolio->portfolioCover_image) }}" class="card-img-top" style="height: 260px; object-fit: cover;" alt="{{ $portfolio->title }}" width="260" height="260" loading="lazy" decoding="async">
                         @else
                             <div class="bg-light d-flex align-items-center justify-content-center text-secondary" style="height: 260px;" role="img" aria-label="لا توجد صورة للعمل">
                                 <i class="fas fa-images fa-4x" aria-hidden="true"></i>

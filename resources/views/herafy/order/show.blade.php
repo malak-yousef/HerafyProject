@@ -217,7 +217,7 @@
                         @foreach($order->images as $image)
                             <div class="col-6 col-md-4 col-lg-3">
                                 <a href="{{ $image->publicUrl() }}" target="_blank" rel="noopener" class="d-block">
-                                    <img src="{{ $image->publicUrl() }}" alt="صورة مرفقة بطلب {{ $order->title }}" class="img-fluid rounded-3 border shadow-sm" style="height: 180px; width: 100%; object-fit: cover;">
+                                    <img src="{{ $image->publicUrl() }}" alt="صورة مرفقة بطلب {{ $order->title }}" class="img-fluid rounded-3 border shadow-sm" style="height: 180px; width: 100%; object-fit: cover;" width="180" height="180" loading="lazy" decoding="async">
                                 </a>
                             </div>
                         @endforeach

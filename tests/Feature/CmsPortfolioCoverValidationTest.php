@@ -66,7 +66,7 @@ class CmsPortfolioCoverValidationTest extends TestCase
 
         $newCover = $portfolio->fresh()->portfolioCover_image;
         $this->assertNotSame('existing-cover.jpg', $newCover);
-        $this->assertStringEndsWith('.jpg', $newCover);
+        $this->assertMatchesRegularExpression('/\.(?:jpg|webp)$/', $newCover);
         $this->removeCreatedCover($newCover);
     }
 

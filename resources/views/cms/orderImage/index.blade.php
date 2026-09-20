@@ -252,7 +252,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>
                             @if($order_image->image_path)
-                                <img src="{{ $order_image->publicUrl() }}" alt="{{ $order_image->order->title }}" class="order-image">
+                                <img src="{{ $order_image->publicUrl() }}" alt="{{ $order_image->order->title }}" class="order-image" width="80" height="80" loading="lazy" decoding="async">
                             @else
                                 <span class="image-placeholder">
                                     <i class="fas fa-image"></i>

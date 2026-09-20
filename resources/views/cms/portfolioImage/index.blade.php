@@ -253,7 +253,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>
                             @if($portfolio_image->image_path)
-                                <img src="{{ asset('storage/images/portfolio_images/' . $portfolio_image->image_path) }}" alt="{{ $portfolio_image->image_name }}" class="portfolio-image">
+                                <img src="{{ asset('storage/images/portfolio_images/' . $portfolio_image->image_path) }}" alt="{{ $portfolio_image->image_name }}" class="portfolio-image" width="80" height="80" loading="lazy" decoding="async">
                             @else
                                 <span class="image-placeholder">
                                     <i class="fas fa-image"></i>

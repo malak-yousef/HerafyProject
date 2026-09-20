@@ -284,7 +284,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>
                             @if($admin->image)
-                            <img src="{{ asset('storage/images/admin/'.$admin->image) }}" class="admins-avatar" alt="{{ $admin->name }}">
+                            <img src="{{ asset('storage/images/admin/'.$admin->image) }}" class="admins-avatar" alt="{{ $admin->name }}" width="42" height="42" loading="lazy" decoding="async">
                             @else
                             <span class="avatar-placeholder">
                                 {{ mb_substr($admin->name, 0, 1, 'UTF-8') }}

@@ -6,6 +6,7 @@ use App\Models\Craftman;
 use App\Models\Profession;
 use App\Models\User;
 use App\Models\Verification;
+use App\Services\ImageOptimizerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -132,7 +133,7 @@ class CraftmanController extends Controller
             $imageName = null;
 
             if (request()->hasFile('image')) {
-                $image = $request->file('image');
+                $image = app(ImageOptimizerService::class)->forProfile($request->file('image'));
                 $imageName = time().'.'.$image->getClientOriginalExtension();
                 $image->move(public_path('storage/images/craftman'), $imageName);
                 $users->image = $imageName;
@@ -287,7 +288,7 @@ class CraftmanController extends Controller
         $newImageName = null;
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
+            $image = app(ImageOptimizerService::class)->forProfile($request->file('image'));
             $newImageName = time().'.'.$image->getClientOriginalExtension();
             $image->move(public_path('storage/images/craftman'), $newImageName);
             $user->image = $newImageName;

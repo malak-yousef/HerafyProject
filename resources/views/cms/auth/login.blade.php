@@ -470,9 +470,9 @@
                         <p class="text-muted">منصتك الموثوقة للوصول إلى أفضل الحرفيين</p>
                     </div>
 
-                    <img src="{{ asset('cms/img/login.png') }}"
+                    <img src="{{ asset('cms/img/login.webp') }}"
                         alt="تسجيل الدخول"
-                        class="auth-image">
+                        class="auth-image" width="1536" height="1024">
                 </div>
             </div>
         </div>

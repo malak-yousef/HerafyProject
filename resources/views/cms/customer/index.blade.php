@@ -273,7 +273,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>
                             @if($customer->user && $customer->user->image)
-                            <img src="{{ $customer->user->profilePhotoUrl() }}" alt="{{ $customer->user->name }}" class="customer-avatar">
+                            <img src="{{ $customer->user->profilePhotoUrl() }}" alt="{{ $customer->user->name }}" class="customer-avatar" width="40" height="40" loading="lazy" decoding="async">
                             @else
                             <span class="avatar-placeholder">
                                 {{ $customer->user ? substr($customer->user->name, 0, 1) : '?' }}

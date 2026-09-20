@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderImage;
+use App\Services\ImageOptimizerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -60,7 +61,7 @@ class OrderImageController extends Controller
             $order_images = new OrderImage;
 
             if (request()->hasFile('image_path')) {
-                $image = $request->file('image_path');
+                $image = app(ImageOptimizerService::class)->forMedia($request->file('image_path'));
                 $imageName = time().'_'.$image->getClientOriginalName();
                 $image->move(public_path('storage/images/order_images'), $imageName);
                 $order_images->image_path = $imageName;
@@ -130,7 +131,7 @@ class OrderImageController extends Controller
         $oldImage = $order_images->image_path;
 
         if ($request->hasFile('image_path')) {
-            $image = $request->file('image_path');
+            $image = app(ImageOptimizerService::class)->forMedia($request->file('image_path'));
             $imageName = time().'_'.$image->getClientOriginalName();
             $image->move(public_path('storage/images/order_images'), $imageName);
             $order_images->image_path = $imageName;

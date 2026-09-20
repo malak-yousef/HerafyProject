@@ -154,7 +154,7 @@
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 <span class="account-avatar">
                                     @if($navbarPhotoUrl)
-                                        <img src="{{ $navbarPhotoUrl }}" alt="" class="account-avatar-image">
+                                        <img src="{{ $navbarPhotoUrl }}" alt="" class="account-avatar-image" width="30" height="30">
                                     @else
                                         <i class="fas fa-user"></i>
                                     @endif

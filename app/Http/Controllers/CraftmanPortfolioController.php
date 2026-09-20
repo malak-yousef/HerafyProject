@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Craftman;
 use App\Models\Portfolio;
+use App\Services\ImageOptimizerService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -143,6 +144,7 @@ class CraftmanPortfolioController extends Controller
 
     private function storeCover(UploadedFile $cover): string
     {
+        $cover = app(ImageOptimizerService::class)->forMedia($cover);
         $directory = config('filesystems.portfolio_cover_path');
         File::ensureDirectoryExists($directory);
         $filename = now()->format('YmdHis').'_'.Str::random(20).'.'.$cover->extension();

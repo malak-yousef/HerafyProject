@@ -62,7 +62,7 @@
                     <article class="card craftman-card h-100 shadow-sm">
                         <div class="card-body p-4 text-center">
                             @if($photoUrl)
-                                <img src="{{ $photoUrl }}" alt="صورة {{ $craftman->user->name }}" class="craftman-avatar mb-3">
+                                <img src="{{ $photoUrl }}" alt="صورة {{ $craftman->user->name }}" class="craftman-avatar mb-3" width="88" height="88" loading="lazy" decoding="async">
                             @else
                                 <span class="craftman-avatar-fallback mb-3"><i class="fas fa-user"></i></span>
                             @endif

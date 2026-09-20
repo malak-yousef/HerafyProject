@@ -26,7 +26,7 @@
                 <div class="row align-items-center g-4">
                     <div class="col-md-auto text-center">
                         @if($photoUrl)
-                            <img src="{{ $photoUrl }}" alt="صورة {{ $user->name }}" class="craftman-avatar">
+                            <img src="{{ $photoUrl }}" alt="صورة {{ $user->name }}" class="craftman-avatar" width="130" height="130">
                         @else
                             <span class="craftman-avatar-fallback"><i class="fas fa-user"></i></span>
                         @endif

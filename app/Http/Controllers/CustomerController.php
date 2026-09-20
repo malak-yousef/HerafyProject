@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\User;
+use App\Services\ImageOptimizerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -97,7 +98,7 @@ class CustomerController extends Controller
             $imageName = null;
 
             if (request()->hasFile('image')) {
-                $image = $request->file('image');
+                $image = app(ImageOptimizerService::class)->forProfile($request->file('image'));
                 $imageName = time().'.'.$image->getClientOriginalExtension();
                 $image->move(public_path('storage/images/customer'), $imageName);
                 $users->image = $imageName;
@@ -232,7 +233,7 @@ class CustomerController extends Controller
         $newImageName = null;
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
+            $image = app(ImageOptimizerService::class)->forProfile($request->file('image'));
             $newImageName = time().'.'.$image->getClientOriginalExtension();
             $image->move(
                 public_path('storage/images/customer'),

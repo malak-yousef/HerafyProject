@@ -7,6 +7,7 @@ use App\Models\Offer;
 use App\Models\Order;
 use App\Models\Profession;
 use App\Models\ServiceJob;
+use App\Services\ImageOptimizerService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -108,7 +109,7 @@ class CraftmanDashboardController extends Controller
 
         try {
             if ($request->hasFile('profile_photo')) {
-                $newPath = $request->file('profile_photo')
+                $newPath = app(ImageOptimizerService::class)->forProfile($request->file('profile_photo'))
                     ->store("profile-photos/craftmen/{$craftman->id}", 'public');
             }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Portfolio;
 use App\Models\PortfolioImage;
 use App\Models\Setting;
+use App\Services\ImageOptimizerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -61,7 +62,7 @@ class PortfolioImageController extends Controller
             $portfolio_images = new PortfolioImage();
 
             if (request()->hasFile('image_path')) {
-                $image = $request->file('image_path');
+                $image = app(ImageOptimizerService::class)->forMedia($request->file('image_path'));
                 $imageName = time() . '_' . $image->getClientOriginalName();
                 $image->move('storage/images/portfolio_images', $imageName);
                 $portfolio_images->image_path =  $imageName;
@@ -126,7 +127,7 @@ class PortfolioImageController extends Controller
         $portfolio_images = new PortfolioImage;
 
         if ($request->hasFile('image_path')) {
-            $image = $request->file('image_path');
+            $image = app(ImageOptimizerService::class)->forMedia($request->file('image_path'));
             $imageName = time().'_'.$image->getClientOriginalName();
 
             $image->move(
@@ -203,7 +204,7 @@ class PortfolioImageController extends Controller
         $oldImage = $portfolio_images->image_path;
 
         if ($request->hasFile('image_path')) {
-            $image = $request->file('image_path');
+            $image = app(ImageOptimizerService::class)->forMedia($request->file('image_path'));
             $imageName = time().'_'.$image->getClientOriginalName();
             $image->move(public_path('storage/images/portfolio_images'), $imageName);
             $portfolio_images->image_path = $imageName;

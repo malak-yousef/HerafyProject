@@ -129,6 +129,52 @@ class GoogleAuthenticationTest extends TestCase
         $this->assertGuest('customer');
     }
 
+    public function test_google_response_without_a_email_fails_gracefully(): void
+    {
+        $googleUser = $this->googleUser('google-no-email', '', 'No Email User');
+
+        $this->mockGoogleCallback($googleUser);
+
+        $this->get(route('auth.google.callback'))
+            ->assertRedirect(route('login'))
+            ->assertSessionHasErrors(['google']);
+
+        $this->assertGuest('customer');
+        $this->assertDatabaseCount('users', 0);
+    }
+
+    public function test_google_oauth_failure_redirects_to_login_with_friendly_error(): void
+    {
+        $provider = Mockery::mock(Provider::class);
+        $provider->shouldReceive('user')
+            ->once()
+            ->andThrow(new \RuntimeException('User denied the authorization request.'));
+
+        Socialite::shouldReceive('driver')->once()->with('google')->andReturn($provider);
+
+        $this->get(route('auth.google.callback'))
+            ->assertRedirect(route('login'))
+            ->assertSessionHasErrors([
+                'google' => 'تعذر تسجيل الدخول عبر Google. يرجى المحاولة مرة أخرى.',
+            ]);
+
+        $this->assertGuest('customer');
+        $this->assertDatabaseCount('users', 0);
+    }
+
+    public function test_google_redirect_is_unavailable_when_configuration_is_missing(): void
+    {
+        config()->set('services.google.client_id', null);
+        config()->set('services.google.client_secret', null);
+        config()->set('services.google.redirect', null);
+
+        $this->get(route('auth.google.redirect'))
+            ->assertRedirect(route('login'))
+            ->assertSessionHasErrors([
+                'google' => 'تسجيل الدخول عبر Google غير متاح حالياً.',
+            ]);
+    }
+
     private function googleUser(string $id, string $email, string $name): GoogleUser
     {
         $user = new GoogleUser;

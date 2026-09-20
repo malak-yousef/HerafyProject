@@ -151,7 +151,7 @@ Route::prefix('herafy')->group(function () {
 Route::middleware('guest:admin,customer,craftman')->group(function () {
     Route::get('login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('login', [AuthController::class, 'login'])->middleware('throttle:login');
-    Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])
+    Route::get('auth/google/redirect', [AuthController::class, 'redirectToGoogle'])
         ->middleware('throttle:20,1')
         ->name('auth.google.redirect');
     Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback'])

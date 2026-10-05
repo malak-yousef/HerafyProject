@@ -298,9 +298,6 @@
 
 @section('scripts')
 <script>
-    function performDestroy(id, reference) {
-        confirmDestroy('/cms/admin/order_images/' + id, reference);
-    }
 
     function filterTable() {
         const searchText = document.getElementById('searchImages').value.toLowerCase().trim();

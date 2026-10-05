@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\BusinessConflictException;
 use App\Http\Requests\CmsReviewRequest;
 use App\Models\Craftman;
 use App\Models\Customer;
@@ -30,34 +31,35 @@ class ReviewController extends Controller
             'comment' => ['nullable', 'string', 'max:2000', 'not_regex:/<[^>]*>/'],
         ]);
 
-        DB::transaction(function () use ($craftman, $serviceJob, $validated): void {
-            $job = ServiceJob::query()
-                ->where('craftman_id', $craftman->id)
-                ->lockForUpdate()
-                ->findOrFail($serviceJob);
+        try {
+            DB::transaction(function () use ($craftman, $serviceJob, $validated): void {
+                $job = ServiceJob::query()
+                    ->where('craftman_id', $craftman->id)
+                    ->lockForUpdate()
+                    ->findOrFail($serviceJob);
 
-            abort_unless(
-                $job->status === 'completed'
-                    && $job->completed_at !== null
-                    && $job->customer()->exists(),
-                409,
-                'This service job is not eligible for customer review.'
-            );
+                if ($job->status !== 'completed' || $job->completed_at === null || ! $job->customer()->exists()) {
+                    throw new BusinessConflictException('لا يمكن إرسال تقييم لهذا العمل في الوقت الحالي.');
+                }
 
-            abort_if(
-                CustomerReview::withTrashed()->where('service_job_id', $job->id)->lockForUpdate()->exists(),
-                409,
-                'This customer has already been reviewed for this job.'
-            );
+                if (CustomerReview::withTrashed()->where('service_job_id', $job->id)->lockForUpdate()->exists()) {
+                    throw new BusinessConflictException('تم تقييم هذا العميل مسبقًا لهذا العمل.');
+                }
 
-            CustomerReview::create([
-                'service_job_id' => $job->id,
-                'craftman_id' => $job->craftman_id,
-                'customer_id' => $job->customer_id,
-                'rating' => $validated['rating'],
-                'comment' => $validated['comment'] ?? null,
-            ]);
-        });
+                CustomerReview::create([
+                    'service_job_id' => $job->id,
+                    'craftman_id' => $job->craftman_id,
+                    'customer_id' => $job->customer_id,
+                    'rating' => $validated['rating'],
+                    'comment' => $validated['comment'] ?? null,
+                ]);
+            });
+        } catch (BusinessConflictException $conflict) {
+            return redirect()
+                ->route('herafy.craftman.jobs.show', $serviceJob)
+                ->with('error', $conflict->userMessage())
+                ->withInput();
+        }
 
         return redirect()
             ->route('herafy.craftman.jobs.show', $serviceJob)
@@ -76,56 +78,68 @@ class ReviewController extends Controller
             'comment' => ['nullable', 'string', 'max:2000', 'not_regex:/<[^>]*>/'],
         ]);
 
-        [$orderId, $review, $job, $reviewedCraftman] = DB::transaction(function () use ($customer, $serviceJob, $validated): array {
-            $job = ServiceJob::query()
+        try {
+            [$orderId, $review, $job, $reviewedCraftman] = DB::transaction(function () use ($customer, $serviceJob, $validated): array {
+                $job = ServiceJob::query()
+                    ->where('customer_id', $customer->id)
+                    ->lockForUpdate()
+                    ->findOrFail($serviceJob);
+                $order = Order::query()->lockForUpdate()->find($job->order_id);
+                $offer = Offer::query()->lockForUpdate()->find($job->offer_id);
+
+                if (! $order
+                    || ! $offer
+                    || $job->status !== 'completed'
+                    || $job->completed_at === null
+                    || $order->status !== 'completed'
+                    || $offer->status !== 'completed'
+                    || $job->customer_id !== $order->customer_id
+                    || $job->craftman_id !== $offer->craftman_id
+                    || $offer->order_id !== $order->id
+                    || ! $offer->craftman()->exists()
+                ) {
+                    throw new BusinessConflictException('لا يمكن إرسال تقييم لهذا الطلب في الوقت الحالي.');
+                }
+
+                if (Review::withTrashed()->where('request_id', $order->id)->lockForUpdate()->exists()) {
+                    throw new BusinessConflictException('تم تقييم هذا الطلب مسبقًا.');
+                }
+
+                $reviewedCraftman = Craftman::query()->with('user')->lockForUpdate()->find($job->craftman_id);
+
+                if (! $reviewedCraftman
+                    || ! $reviewedCraftman->user
+                    || $reviewedCraftman->user->actor_type !== Craftman::class
+                    || $reviewedCraftman->user->actor_id !== $reviewedCraftman->id
+                ) {
+                    throw new BusinessConflictException('حساب الحرفي غير متاح حاليًا، يرجى المحاولة لاحقًا.');
+                }
+
+                $review = Review::create([
+                    'rating' => $validated['rating'],
+                    'comment' => $validated['comment'] ?? null,
+                    'craftsman_id' => $job->craftman_id,
+                    'customer_id' => $job->customer_id,
+                    'request_id' => $order->id,
+                    'status' => 'approved',
+                ]);
+
+                return [$order->id, $review, $job, $reviewedCraftman];
+            });
+        } catch (BusinessConflictException $conflict) {
+            $orderId = ServiceJob::query()
                 ->where('customer_id', $customer->id)
-                ->lockForUpdate()
-                ->findOrFail($serviceJob);
-            $order = Order::query()->lockForUpdate()->find($job->order_id);
-            $offer = Offer::query()->lockForUpdate()->find($job->offer_id);
+                ->whereKey($serviceJob)
+                ->value('order_id');
 
-            abort_unless(
-                $order
-                    && $offer
-                    && $job->status === 'completed'
-                    && $job->completed_at !== null
-                    && $order->status === 'completed'
-                    && $offer->status === 'completed'
-                    && $job->customer_id === $order->customer_id
-                    && $job->craftman_id === $offer->craftman_id
-                    && $offer->order_id === $order->id
-                    && $offer->craftman()->exists(),
-                409,
-                'This service job is not eligible for review.'
-            );
+            $redirect = $orderId
+                ? redirect()->route('herafy.customer.orders.show', $orderId)
+                : redirect()->route('herafy.customer.orders.index');
 
-            abort_if(
-                Review::withTrashed()->where('request_id', $order->id)->lockForUpdate()->exists(),
-                409,
-                'This service job has already been reviewed.'
-            );
-
-            $reviewedCraftman = Craftman::query()->with('user')->lockForUpdate()->find($job->craftman_id);
-            abort_unless(
-                $reviewedCraftman
-                    && $reviewedCraftman->user
-                    && $reviewedCraftman->user->actor_type === Craftman::class
-                    && $reviewedCraftman->user->actor_id === $reviewedCraftman->id,
-                409,
-                'The reviewed craftman is unavailable.'
-            );
-
-            $review = Review::create([
-                'rating' => $validated['rating'],
-                'comment' => $validated['comment'] ?? null,
-                'craftsman_id' => $job->craftman_id,
-                'customer_id' => $job->customer_id,
-                'request_id' => $order->id,
-                'status' => 'approved',
-            ]);
-
-            return [$order->id, $review, $job, $reviewedCraftman];
-        });
+            return $redirect
+                ->with('error', $conflict->userMessage())
+                ->withInput();
+        }
 
         $job->load('order');
         $reviewedCraftman->user->notify(new ReviewSubmitted($review, $job));
@@ -261,7 +275,19 @@ class ReviewController extends Controller
      */
     public function destroy($id)
     {
-        Review::destroy($id);
+        $deleted = Review::destroy($id);
+
+        if (request()->expectsJson()) {
+            return $deleted === 0
+                ? response()->json(['success' => false, 'title' => 'تعذّر حذف التقييم، قد يكون تم حذفه مسبقًا.'], 404)
+                : response()->json(['success' => true, 'title' => 'تم حذف التقييم بنجاح.']);
+        }
+
+        if ($deleted === 0) {
+            return back()->with('error', 'تعذّر حذف التقييم، قد يكون تم حذفه مسبقًا.');
+        }
+
+        return back()->with('success', 'تم حذف التقييم بنجاح.');
     }
 
     public function trashed()

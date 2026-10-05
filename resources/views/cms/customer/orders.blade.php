@@ -74,51 +74,11 @@
 
                         <td>{{ $order->area->name }}</td>
 
-                        <td>{{ $order->budget }} ₪</td>
+                        <x-money :value="$order->budget" />
 
                         <td>
 
-                            @switch($order->status)
-
-                            @case('pending')
-
-                            <span class="badge bg-warning">
-                                قيد الانتظار
-                            </span>
-
-                            @break
-
-                            @case('accepted')
-
-                            <span class="badge bg-success">
-                                مقبول
-                            </span>
-
-                            @break
-
-                            @case('completed')
-
-                            <span class="badge bg-primary">
-                                مكتمل
-                            </span>
-
-                            @break
-
-                            @case('cancelled')
-
-                            <span class="badge bg-danger">
-                                ملغي
-                            </span>
-
-                            @break
-
-                            @default
-
-                            <span class="badge bg-secondary">
-                                {{ $order->status }}
-                            </span>
-
-                            @endswitch
+                            <x-cms.status-badge :status="$order->status" />
 
                         </td>
 

@@ -138,12 +138,15 @@ class OrderController extends Controller
     {
         $order->load([
             'customer.user',
+            'profession',
             'city',
             'area',
+            'images',
             'offers.craftman.user',
+            'serviceJob.craftman.user',
         ]);
 
-        return view('herafy.order.show', compact('order'));
+        return view('cms.order.show', compact('order'));
     }
 
     /**

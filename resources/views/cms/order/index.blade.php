@@ -36,7 +36,7 @@
                 <div class="col-lg-2 col-md-6">
                     <label for="order-status" class="form-label">الحالة</label>
                     <select id="order-status" name="status" class="form-select"><option value="">الكل</option>
-                        @foreach(['pending' => 'قيد الانتظار', 'accepted' => 'مقبول', 'in_progress' => 'قيد التنفيذ', 'completed' => 'مكتمل', 'cancelled' => 'ملغي'] as $value => $label)
+                        @foreach(['pending' => 'قيد الانتظار', 'accepted' => 'مقبول', 'in_progress' => 'قيد التنفيذ', 'completed' => 'مكتمل', 'cancelled' => 'ملغى'] as $value => $label)
                             <option value="{{ $value }}" @selected(request('status') === $value)>{{ $label }}</option>
                         @endforeach
                     </select>
@@ -69,7 +69,7 @@
                                 <td class="order-title-cell" title="{{ $order->title }}"><span>{{ $order->title }}</span></td>
                                 <td>{{ $order->profession?->name ?? 'غير متاح' }}</td>
                                 <td>{{ $order->city?->name ?? 'غير متاح' }} <span class="text-muted">/</span> {{ $order->area?->name ?? 'غير متاح' }}</td>
-                                <td>{{ $order->budget !== null ? number_format((float) $order->budget, 2) : 'غير محددة' }}</td>
+                                <td><x-money :value="$order->budget" placeholder="غير محددة" /></td>
                                 <td>{{ $order->service_date?->format('Y-m-d') ?? 'غير محدد' }}</td>
                                 <td><x-cms.status-badge :status="$order->status" /></td>
                                 <td>{{ $order->created_at?->format('Y-m-d') ?? 'غير متاح' }}</td>
@@ -107,8 +107,5 @@
         initCmsOrderLocation('#order-city', '#order-area');
     });
 
-    function performDestroy(id, reference) {
-        confirmDestroy('/cms/admin/orders/' + id, reference);
-    }
 </script>
 @endsection

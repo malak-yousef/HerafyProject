@@ -42,7 +42,7 @@
                         </div>
                         <div class="d-flex flex-wrap justify-content-center justify-content-md-start gap-2 mb-2">
                             <span class="badge text-bg-warning">{{ $craftman->profession?->name ?? 'بدون تخصص' }}</span>
-                            @if($verification)<span class="badge text-bg-{{ $verification->status === 'approved' ? 'success' : ($verification->status === 'rejected' ? 'danger' : 'secondary') }}">{{ $verificationLabels[$verification->status] ?? $verification->status }}</span>@endif
+                            @if($verification)<span class="badge {{ \App\Support\StatusLabel::solidBadgeClass($verification->status) }}">{{ \App\Support\StatusLabel::label($verification->status) }}</span>@endif
                         </div>
                         <h1 class="h2 fw-bold mb-1">{{ $user->name }}</h1>
                         <div class="rating-stars mb-2"><i class="fas fa-star"></i> <strong>{{ number_format($averageRating, 1) }}</strong> <span class="text-muted">({{ $reviewsCount }} تقييم)</span></div>
@@ -61,8 +61,8 @@
                     <div class="col-md-6"><div class="profile-label">العنوان</div><strong>{{ $user->address }}</strong></div>
                     <div class="col-md-6"><div class="profile-label">الجنس</div><strong>{{ $user->gender === 'male' ? 'ذكر' : 'أنثى' }}</strong></div>
                     <div class="col-md-6"><div class="profile-label">سنوات الخبرة</div><strong>{{ $craftman->experience_years }} سنة</strong></div>
-                    <div class="col-md-6"><div class="profile-label">السعر بالساعة</div><strong>{{ number_format((float) $craftman->hourly_rate, 2) }} ₪</strong></div>
-                    <div class="col-md-6"><div class="profile-label">السعر باليوم</div><strong>{{ number_format((float) $craftman->daily_rate, 2) }} ₪</strong></div>
+                    <div class="col-md-6"><div class="profile-label">السعر بالساعة</div><strong><x-money :value="$craftman->hourly_rate" /> / ساعة</strong></div>
+                    <div class="col-md-6"><div class="profile-label">السعر باليوم</div><strong><x-money :value="$craftman->daily_rate" /> / يوم</strong></div>
                 </div></div></section>
             </div>
             <div class="col-lg-5">

@@ -296,47 +296,14 @@
                                 </td>
 
                                 <td>
-                                    {{ $order->budget ? number_format($order->budget) . ' ₪' : '-' }}
+                                    <x-money :value="$order->budget" />
                                 </td>
 
                                 <td>
 
-                                    @if($order->status == 'pending')
+                                    <x-cms.status-badge :status="$order->status" />
 
-                                    <span class="badge bg-warning text-dark">
-                                        قيد الانتظار
-                                    </span>
-
-
-                                    @elseif($order->status == 'accepted')
-
-                                    <span class="badge bg-success">
-                                        تم القبول
-                                    </span>
-
-
-                                    @elseif($order->status == 'in_progress')
-
-                                    <span class="badge bg-info">
-                                        قيد التنفيذ
-                                    </span>
-
-
-                                    @elseif($order->status == 'completed')
-
-                                    <span class="badge bg-primary">
-                                        مكتمل
-                                    </span>
-
-
-                                    @else
-
-                                    <span class="badge bg-danger">
-                                        ملغي
-                                    </span>
-
-
-                                    @endif
+                                </td>
 
 
                                 </td>
@@ -414,7 +381,7 @@
                         </td>
 
                         <td>
-                            {{ $job->status }}
+                            <x-cms.status-badge :status="$job->status" />
                         </td>
 
                         <td>
@@ -456,9 +423,13 @@
                     <a href="{{ route('customers.edit', $customers->id) }}" class="btn btn-warning btn-submit">
                         <i class="fas fa-edit"></i> تعديل
                     </a>
-                    <button class="btn btn-danger btn-submit" onclick="performDestroy('{{ $customers->id }}', this)">
-                        <i class="fas fa-trash-alt"></i> حذف
-                    </button>
+                    <form action="{{ route('customers.destroy', $customers->id) }}" method="POST" class="d-inline" data-crud-delete data-confirm-message="لا يمكن التراجع عن حذف هذا العميل.">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-danger btn-submit">
+                            <i class="fas fa-trash-alt"></i> حذف
+                        </button>
+                    </form>
                     <a href="{{ route('customers.index') }}" class="btn btn-outline-secondary btn-back ms-auto">
                         <i class="fas fa-arrow-right"></i> العودة إلى القائمة
                     </a>
@@ -474,9 +445,6 @@
         // ============================================
         // حذف الزبون
         // ============================================
-        function performDestroy(id, reference) {
-            confirmDestroy('/cms/admin/customers/' + id, reference);
-        }
 
         console.log('✅ صفحة عرض الزبون جاهزة');
     </script>

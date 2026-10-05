@@ -384,9 +384,13 @@
                             </a>
 
                             {{-- حذف --}}
-                            <button class="action-btn btn-delete" onclick="performDestroy('{{ $craftman->id }}', this)" title="حذف">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
+                            <form action="{{ route('craftmen.destroy', $craftman->id) }}" method="POST" class="d-inline" data-crud-delete data-confirm-message="لا يمكن التراجع عن حذف هذا الحرفي.">
+                                @csrf
+                                @method('DELETE')
+                                <button class="action-btn btn-delete" title="حذف">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
                         </div>
                     </td>
                 </tr>
@@ -421,9 +425,6 @@
     // ============================================
     // 2. حذف الحرفي
     // ============================================
-    function performDestroy(id, reference) {
-        confirmDestroy('/cms/admin/craftmen/' + id, reference);
-    }
 
     // ============================================
     // 3. فلترة الجدول

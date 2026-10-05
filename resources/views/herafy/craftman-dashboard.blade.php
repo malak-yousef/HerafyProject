@@ -14,10 +14,6 @@
 @endsection
 
 @section('content')
-@php
-    $statusLabels = ['pending' => 'قيد الانتظار', 'accepted' => 'مقبول', 'in_progress' => 'قيد التنفيذ', 'completed' => 'مكتمل', 'cancelled' => 'ملغي'];
-    $statusColors = ['pending' => 'warning', 'accepted' => 'info', 'in_progress' => 'primary', 'completed' => 'success', 'cancelled' => 'secondary'];
-@endphp
 <main class="craftman-dashboard py-5">
     <div class="container">
         <section class="craftman-welcome p-4 p-lg-5 mb-4 shadow-sm">
@@ -45,7 +41,7 @@
             <div class="col-lg-6">
                 <section class="card activity-card shadow-sm h-100"><div class="card-body p-4"><h2 class="h5 fw-bold mb-3">أحدث العروض</h2>
                     @forelse($recentOffers as $offer)
-                        <a href="{{ route('herafy.offer.show', $offer) }}" class="d-flex justify-content-between gap-3 py-3 border-top text-decoration-none text-dark"><span>{{ $offer->order?->title ?? 'طلب غير متاح' }}</span><span class="badge text-bg-{{ $statusColors[$offer->status] ?? 'secondary' }}">{{ $statusLabels[$offer->status] ?? $offer->status }}</span></a>
+                        <a href="{{ route('herafy.offer.show', $offer) }}" class="d-flex justify-content-between gap-3 py-3 border-top text-decoration-none text-dark"><span>{{ $offer->order?->title ?? 'طلب غير متاح' }}</span><span class="badge {{ \App\Support\StatusLabel::solidBadgeClass($offer->status) }}">{{ \App\Support\StatusLabel::label($offer->status) }}</span></a>
                     @empty
                         <div class="text-center text-muted py-4"><i class="fas fa-file-circle-plus fa-2x text-warning mb-2"></i><p class="mb-0">لم تقدم أي عروض بعد.</p></div>
                     @endforelse
@@ -54,7 +50,7 @@
             <div class="col-lg-6">
                 <section class="card activity-card shadow-sm h-100"><div class="card-body p-4"><h2 class="h5 fw-bold mb-3">أحدث الأعمال</h2>
                     @forelse($recentJobs as $job)
-                        <a href="{{ route('herafy.craftman.jobs.show', $job) }}" class="d-flex justify-content-between gap-3 py-3 border-top text-decoration-none text-dark"><span>{{ $job->order?->title ?? 'طلب غير متاح' }}</span><span class="badge text-bg-{{ $statusColors[$job->status] ?? 'secondary' }}">{{ $statusLabels[$job->status] ?? $job->status }}</span></a>
+                        <a href="{{ route('herafy.craftman.jobs.show', $job) }}" class="d-flex justify-content-between gap-3 py-3 border-top text-decoration-none text-dark"><span>{{ $job->order?->title ?? 'طلب غير متاح' }}</span><span class="badge {{ \App\Support\StatusLabel::solidBadgeClass($job->status) }}">{{ \App\Support\StatusLabel::label($job->status) }}</span></a>
                     @empty
                         <div class="text-center text-muted py-4"><i class="fas fa-briefcase fa-2x text-warning mb-2"></i><p class="mb-0">لا توجد أعمال مسندة إليك بعد.</p></div>
                     @endforelse

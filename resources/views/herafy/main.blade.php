@@ -15,10 +15,6 @@
 
 @section('content')
     @if($customer)
-        @php
-            $statusLabels = ['pending' => 'قيد الانتظار', 'accepted' => 'مقبول', 'in_progress' => 'قيد التنفيذ', 'completed' => 'مكتمل', 'cancelled' => 'ملغي'];
-            $statusColors = ['pending' => 'warning', 'accepted' => 'info', 'in_progress' => 'primary', 'completed' => 'success', 'cancelled' => 'secondary'];
-        @endphp
         <main class="customer-home py-5">
             <div class="container">
                 <section class="welcome-card p-4 p-lg-5 mb-4 shadow-sm">
@@ -57,7 +53,7 @@
                         @forelse($recentOrders as $order)
                             <a href="{{ route('herafy.customer.orders.show', $order) }}" class="d-flex flex-column flex-md-row justify-content-between gap-2 py-3 border-top text-decoration-none text-dark">
                                 <div><strong>{{ $order->title }}</strong><div class="small text-muted mt-1">{{ $order->profession?->name }} @if($order->city) · {{ $order->city->name }} @endif</div></div>
-                                <div class="d-flex align-items-center gap-3"><span class="badge text-bg-{{ $statusColors[$order->status] ?? 'secondary' }} status-badge">{{ $statusLabels[$order->status] ?? $order->status }}</span><small class="text-muted">{{ $order->created_at->format('Y-m-d') }}</small></div>
+                                <div class="d-flex align-items-center gap-3"><span class="badge {{ \App\Support\StatusLabel::solidBadgeClass($order->status) }}">{{ \App\Support\StatusLabel::label($order->status) }}</span><small class="text-muted">{{ $order->created_at->format('Y-m-d') }}</small></div>
                             </a>
                         @empty
                             <div class="text-center py-5"><i class="fas fa-clipboard fa-3x text-warning mb-3"></i><h3 class="h5 fw-bold">لا توجد طلبات بعد</h3><p class="text-muted">أنشئ أول طلب خدمة وسيظهر هنا.</p><a href="{{ route('request') }}" class="btn btn-warning">طلب خدمة</a></div>

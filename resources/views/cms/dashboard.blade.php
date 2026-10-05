@@ -196,17 +196,6 @@
 @endsection
 
 @section('content')
-@php
-    $statusLabels = [
-        'pending' => 'معلق',
-        'accepted' => 'مقبول',
-        'in_progress' => 'قيد التنفيذ',
-        'completed' => 'مكتمل',
-        'cancelled' => 'ملغي',
-        'approved' => 'معتمد',
-        'rejected' => 'مرفوض',
-    ];
-@endphp
 
 <div class="dashboard-page" data-testid="admin-dashboard">
     <div class="stats-grid">
@@ -263,7 +252,7 @@
                 <div class="status-summary">
                     @foreach ($summary['counts'] as $status => $count)
                         <div class="status-item" data-testid="status-{{ Str::slug($summary['title']) }}-{{ $status }}">
-                            <strong>{{ $count }}</strong><span>{{ $statusLabels[$status] }}</span>
+                            <strong>{{ $count }}</strong><span>{{ \App\Support\StatusLabel::label($status) }}</span>
                         </div>
                     @endforeach
                 </div>
@@ -311,7 +300,7 @@
             @else
                 <div class="dashboard-table-wrap"><table class="dashboard-table"><thead><tr><th>الطلب</th><th>الزبون</th><th>المهنة</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody>
                 @foreach ($recentOrders as $order)
-                    <tr><td>{{ $order->title }}</td><td>{{ $order->customer?->user?->name ?? 'غير متاح' }}</td><td>{{ $order->profession?->name ?? 'غير متاح' }}</td><td><span class="status-badge status-{{ $order->status }}">{{ $statusLabels[$order->status] ?? $order->status }}</span></td><td>{{ $order->created_at?->format('Y-m-d') }}</td></tr>
+                    <tr><td>{{ $order->title }}</td><td>{{ $order->customer?->user?->name ?? 'غير متاح' }}</td><td>{{ $order->profession?->name ?? 'غير متاح' }}</td><td><x-cms.status-badge :status="$order->status" /></td><td>{{ $order->created_at?->format('Y-m-d') }}</td></tr>
                 @endforeach
                 </tbody></table></div>
             @endif
@@ -324,7 +313,7 @@
             @else
                 <div class="dashboard-table-wrap"><table class="dashboard-table"><thead><tr><th>الطلب</th><th>الزبون</th><th>الحرفي</th><th>الحالة</th><th>آخر تحديث</th></tr></thead><tbody>
                 @foreach ($recentServiceJobs as $job)
-                    <tr><td>{{ $job->order?->title ?? 'غير متاح' }}</td><td>{{ $job->customer?->user?->name ?? 'غير متاح' }}</td><td>{{ $job->craftman?->user?->name ?? 'غير متاح' }}</td><td><span class="status-badge status-{{ $job->status }}">{{ $statusLabels[$job->status] ?? $job->status }}</span></td><td>{{ $job->updated_at?->format('Y-m-d') }}</td></tr>
+                    <tr><td>{{ $job->order?->title ?? 'غير متاح' }}</td><td>{{ $job->customer?->user?->name ?? 'غير متاح' }}</td><td>{{ $job->craftman?->user?->name ?? 'غير متاح' }}</td><td><x-cms.status-badge :status="$job->status" /></td><td>{{ $job->updated_at?->format('Y-m-d') }}</td></tr>
                 @endforeach
                 </tbody></table></div>
             @endif

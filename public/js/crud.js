@@ -81,7 +81,7 @@
                         if (options.resetFirstForm) document.querySelector('form')?.reset();
                         if (options.clearForm) clearForm();
                         clearAndHideErrors();
-                        if (options.removeRow) options.removeRow.closest('tr')?.remove();
+                        if (options.removeRow && removeRow(options.removeRow)) options.reload = true;
                         redirectFrom(response, options.redirectUrl);
                         if (options.reload && !response?.data?.redirect) window.location.reload();
                         return response;
@@ -91,6 +91,44 @@
                 handleError(error);
                 return null;
             });
+    }
+
+    /**
+     * Determines whether a table is rendered together with pagination controls.
+     *
+     * Laravel renders the `links()` markup as a sibling of the table, usually
+     * after the `.table-responsive` wrapper. The search therefore walks up the
+     * ancestors of the table; searching from the row could never match, because
+     * a `<tr>` is never an ancestor of the pagination element.
+     */
+    function tableIsPaginated(table) {
+        let node = table;
+
+        while (node && node !== document.body) {
+            if (node.querySelector?.('.pagination')) return true;
+            node = node.parentElement;
+        }
+
+        return false;
+    }
+
+    /**
+     * Removes the deleted row from the table.
+     *
+     * Returns true when the page must be reloaded instead: when the removed row
+     * was the last one of a paginated table, the pagination links and result
+     * counts on screen no longer match the data, so a reload is required.
+     */
+    function removeRow(reference) {
+        const row = reference?.closest('tr');
+        if (!row) return false;
+
+        const isLastRow = row.parentElement.querySelectorAll('tr').length === 1;
+        const isPaginated = tableIsPaginated(row.closest('table'));
+
+        row.remove();
+
+        return isLastRow && isPaginated;
     }
 
     function store(url, data) {

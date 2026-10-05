@@ -31,7 +31,7 @@ class CmsServiceJobFormUiTest extends TestCase
         foreach (['طلب دهان المنزل', 'عميل المهمة', 'حرفي المهمة', (string) $job->offer->price] as $label) {
             $this->assertStringContainsString($label, $content);
         }
-        foreach (['قيد الانتظار', 'قيد التنفيذ', 'مكتمل', 'ملغي'] as $label) {
+        foreach (['قيد الانتظار', 'قيد التنفيذ', 'مكتمل', 'ملغى'] as $label) {
             $this->assertStringContainsString($label, $content);
         }
         $this->assertStringContainsString('value="'.$job->order_id.'" data-customer-id="'.$job->customer_id.'"', $content);

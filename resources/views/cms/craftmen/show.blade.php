@@ -384,7 +384,7 @@
                     </td>
 
                     <td>
-                        {{ $job->status }}
+                        <x-cms.status-badge :status="$job->status" />
                     </td>
 
                     <td>

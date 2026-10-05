@@ -151,7 +151,7 @@
 
                             <strong>الميزانية:</strong>
 
-                            {{ $order->budget ?? 'غير محددة' }} ₪
+                            <x-money :value="$order->budget" placeholder="غير محددة" />
 
                         </p>
 
@@ -159,7 +159,7 @@
 
                             <strong>التاريخ المطلوب:</strong>
 
-                            {{ $order->service_date ?? '-' }}
+                            {{ $order->service_date?->format('Y-m-d') ?? '-' }}
 
                         </p>
 
@@ -167,37 +167,7 @@
 
                             <strong>الحالة:</strong>
 
-                            @if($order->status === 'pending')
-
-                                <span class="badge bg-warning text-dark">
-                                    قيد الانتظار
-                                </span>
-
-                            @elseif($order->status === 'accepted')
-
-                                <span class="badge bg-success">
-                                    مقبول
-                                </span>
-
-                            @elseif($order->status === 'completed')
-
-                                <span class="badge bg-primary">
-                                    مكتمل
-                                </span>
-
-                            @elseif($order->status === 'cancelled')
-
-                                <span class="badge bg-danger">
-                                    ملغي
-                                </span>
-
-                            @else
-
-                                <span class="badge bg-secondary">
-                                    {{ $order->status }}
-                                </span>
-
-                            @endif
+                            <x-herafy.status-badge :status="$order->status" />
 
                         </p>
 
@@ -259,31 +229,7 @@
                                     </h5>
 
 
-                                    @if($offer->status === 'pending')
-
-                                        <span class="badge bg-warning text-dark">
-                                            قيد الانتظار
-                                        </span>
-
-                                    @elseif($offer->status === 'accepted')
-
-                                        <span class="badge bg-success">
-                                            مقبول
-                                        </span>
-
-                                    @elseif($offer->status === 'rejected')
-
-                                        <span class="badge bg-danger">
-                                            مرفوض
-                                        </span>
-
-                                    @else
-
-                                        <span class="badge bg-secondary">
-                                            {{ $offer->status }}
-                                        </span>
-
-                                    @endif
+                                    <x-herafy.status-badge :status="$offer->status" />
 
                                 </div>
 
@@ -300,7 +246,7 @@
 
                                     <span class="price">
 
-                                        {{ $offer->price }} ₪
+                                        <x-money :value="$offer->price" />
 
                                     </span>
 
@@ -350,11 +296,15 @@
             {{-- زر تقديم العرض --}}
             {{-- ============================= --}}
 
-            @if($order->status === 'pending')
+            @php
+
+                $currentCraftman = auth('craftman')->user()?->actor;
+
+            @endphp
+
+            @if($order->status === 'pending' && $currentCraftman)
 
                 @php
-
-                    $currentCraftman = auth('craftman')->user()->actor;
 
                     $hasOffered = $order->offers
                         ->where('craftman_id', $currentCraftman->id)

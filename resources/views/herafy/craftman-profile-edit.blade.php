@@ -25,8 +25,6 @@
                     <a href="{{ route('herafy.craftman.profile.show') }}" class="btn btn-outline-secondary">رجوع</a>
                 </div>
 
-                @if($errors->any())<div class="alert alert-danger"><ul class="mb-0">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
-
                 <form method="POST" action="{{ route('herafy.craftman.profile.update') }}" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')

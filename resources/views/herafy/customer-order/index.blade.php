@@ -22,15 +22,13 @@
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between gap-3 mb-3">
                                 <h5 class="fw-bold mb-0">{{ $order->title }}</h5>
-                                <span class="badge {{ $order->status === 'pending' ? 'bg-warning text-dark' : ($order->status === 'cancelled' ? 'bg-danger' : 'bg-secondary') }}">
-                                    {{ $order->status }}
-                                </span>
+                                <x-herafy.status-badge :status="$order->status" />
                             </div>
 
                             <div class="row g-2 text-muted small">
                                 <div class="col-sm-6"><i class="fas fa-tools text-warning"></i> {{ $order->profession->name ?? '-' }}</div>
                                 <div class="col-sm-6"><i class="fas fa-location-dot text-warning"></i> {{ $order->city->name ?? '-' }} / {{ $order->area->name ?? '-' }}</div>
-                                <div class="col-sm-6"><i class="fas fa-money-bill text-warning"></i> {{ $order->budget ?? '-' }}</div>
+                                <div class="col-sm-6"><i class="fas fa-money-bill text-warning"></i> <x-money :value="$order->budget" /></div>
                                 <div class="col-sm-6"><i class="fas fa-calendar text-warning"></i> {{ $order->service_date?->format('Y-m-d') ?? '-' }}</div>
                                 <div class="col-sm-6"><i class="fas fa-image text-warning"></i> {{ $order->images_count }} صورة</div>
                                 <div class="col-sm-6"><i class="fas fa-clock text-warning"></i> {{ $order->created_at->format('Y-m-d') }}</div>

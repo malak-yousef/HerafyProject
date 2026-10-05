@@ -27,7 +27,7 @@ class CmsServiceJobIndexUiTest extends TestCase
         $response = $this->actingAs($this->adminWith(['service-jobs.view']), 'admin')
             ->get(route('service-jobs.index'))->assertOk();
 
-        foreach (['قيد الانتظار', 'قيد التنفيذ', 'مكتمل', 'ملغي'] as $label) {
+        foreach (['قيد الانتظار', 'قيد التنفيذ', 'مكتمل', 'ملغى'] as $label) {
             $response->assertSee($label);
         }
 

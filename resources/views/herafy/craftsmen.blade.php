@@ -81,8 +81,8 @@
 
                             <div class="row g-2 text-start">
                                 <div class="col-12"><i class="fas fa-award text-warning ms-1"></i> الخبرة: {{ $craftman->experience_years }} سنة</div>
-                                <div class="col-12"><i class="fas fa-clock text-warning ms-1"></i> الساعة: {{ number_format((float) $craftman->hourly_rate, 2) }} ₪</div>
-                                <div class="col-12"><i class="fas fa-calendar-day text-warning ms-1"></i> اليوم: {{ number_format((float) $craftman->daily_rate, 2) }} ₪</div>
+                                <div class="col-12"><i class="fas fa-clock text-warning ms-1"></i> الساعة: <x-money :value="$craftman->hourly_rate" /></div>
+                                <div class="col-12"><i class="fas fa-calendar-day text-warning ms-1"></i> اليوم: <x-money :value="$craftman->daily_rate" /></div>
                             </div>
                             <a href="{{ route('herafy.craftmen.show', $craftman) }}" class="btn btn-outline-warning w-100 mt-4">
                                 <i class="fas fa-id-card ms-1"></i> عرض الملف ومعرض الأعمال

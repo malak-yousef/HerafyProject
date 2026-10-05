@@ -258,9 +258,13 @@
                         <td>
                             <div class="action-btns">
                                 @if($role->guard_name != 'admin')
-                                <button class="action-btn btn-delete" onclick="performDestroy('{{ $role->id }}', this, 'roles')" title="حذف">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
+                                <form action="{{ route('roles.destroy', $role->id) }}" method="POST" class="d-inline" data-crud-delete data-confirm-message="لا يمكن التراجع عن حذف هذا الدور.">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="action-btn btn-delete" title="حذف">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
                                 @endif
                             </div>
                         </td>
@@ -292,9 +296,6 @@
     // ============================================
     // حذف (دور أو صلاحية)
     // ============================================
-    function performDestroy(id, reference, type) {
-        confirmDestroy('/cms/admin/' + type + '/' + id, reference);
-    }
 
     console.log('✅ صفحة الصلاحيات والأدوار جاهزة');
     console.log('📊 عدد الأدوار: {{ $roles->count() }}');

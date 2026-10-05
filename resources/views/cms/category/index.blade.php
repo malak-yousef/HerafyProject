@@ -13,4 +13,3 @@
     @if($categories->hasPages())<div class="mt-4">{{ $categories->links() }}</div>@endif
 </div>
 @endsection
-@section('scripts')<script>function performDestroy(id, reference) { confirmDestroy(@json(route('categories.index')) + '/' + id, reference); }</script>@endsection

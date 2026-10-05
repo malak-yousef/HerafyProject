@@ -56,7 +56,7 @@ class CmsOrderFormUiTest extends TestCase
         $this->assertStringContainsString('is-invalid', $content);
         $this->assertStringContainsString('المنطقة غير متوافقة.', $content);
         $this->assertStringContainsString('name="status"', $content);
-        foreach (['قيد الانتظار', 'مقبول', 'قيد التنفيذ', 'مكتمل', 'ملغي'] as $label) {
+        foreach (['قيد الانتظار', 'مقبول', 'قيد التنفيذ', 'مكتمل', 'ملغى'] as $label) {
             $this->assertStringContainsString($label, $content);
         }
     }
@@ -82,7 +82,7 @@ class CmsOrderFormUiTest extends TestCase
         $this->assertStringContainsString('value="in_progress" selected', $content);
         $this->assertStringContainsString('name="_method" value="PUT"', $content);
         $this->assertStringContainsString('href="'.route('orders.index').'"', $content);
-        foreach (['قيد الانتظار', 'مقبول', 'قيد التنفيذ', 'مكتمل', 'ملغي'] as $label) {
+        foreach (['قيد الانتظار', 'مقبول', 'قيد التنفيذ', 'مكتمل', 'ملغى'] as $label) {
             $this->assertStringContainsString($label, $content);
         }
     }

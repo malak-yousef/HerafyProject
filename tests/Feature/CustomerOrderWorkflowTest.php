@@ -34,6 +34,57 @@ class CustomerOrderWorkflowTest extends TestCase
         $this->assertDatabaseCount('orders', 0);
     }
 
+    public function test_validation_errors_are_summarised_once_at_the_top_of_the_herafy_page(): void
+    {
+        $customer = Customer::factory()->create();
+
+        $this->actingAs($customer->user, 'customer')
+            ->from(route('request'))
+            ->post(route('herafy.customer.orders.store'), ['title' => ''])
+            ->assertRedirect(route('request'))
+            ->assertSessionHasErrors();
+
+        $page = $this->actingAs($customer->user, 'customer')
+            ->get(route('request'))
+            ->assertOk();
+
+        $page->assertSee('يرجى تصحيح الأخطاء التالية:')
+            ->assertSee('validation-summary', false);
+
+        $this->assertSame(
+            1,
+            substr_count($page->getContent(), 'validation-summary'),
+            'The validation summary must be rendered exactly once per page.'
+        );
+    }
+
+    public function test_request_form_renders_field_level_validation_feedback(): void
+    {
+        $customer = Customer::factory()->create();
+
+        $this->actingAs($customer->user, 'customer')
+            ->from(route('request'))
+            ->post(route('herafy.customer.orders.store'), ['title' => ''])
+            ->assertRedirect(route('request'))
+            ->assertSessionHasErrors(['profession_id', 'city_id', 'area_id', 'title', 'description']);
+
+        $content = $this->actingAs($customer->user, 'customer')
+            ->get(route('request'))
+            ->assertOk()
+            ->getContent();
+
+        $this->assertStringContainsString(
+            'is-invalid',
+            $content,
+            'The request form must mark invalid controls instead of relying only on the global summary.'
+        );
+
+        foreach (['profession_id', 'city_id', 'area_id', 'title', 'description'] as $field) {
+            $this->assertStringContainsString('id="'.$field.'-error"', $content, $field.' must render its own error message.');
+            $this->assertStringContainsString('aria-describedby="'.$field.'-error"', $content, $field.' must reference its error message for screen readers.');
+        }
+    }
+
     public function test_customer_creates_pending_order_with_server_side_ownership(): void
     {
         $customer = Customer::factory()->create();

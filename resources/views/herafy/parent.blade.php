@@ -44,7 +44,7 @@
                 <ul class="navbar-nav align-items-xl-center gap-xl-1 me-xl-3 mb-3 mb-xl-0">
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('index', 'main', 'herafy.craftman.dashboard') ? 'active' : '' }}"
-                            href="{{ auth('craftman')->check() ? route('herafy.craftman.dashboard') : route('index') }}">الرئيسية</a>
+                            href="{{ auth('craftman')->check() ? route('herafy.craftman.dashboard') : route('main') }}">الرئيسية</a>
                     </li>
 
                     @auth('customer')
@@ -231,6 +231,19 @@
 
     
 
+    @if($errors->any())
+        <div class="container mt-4">
+            <div class="alert alert-danger" role="alert" aria-live="assertive" data-testid="validation-summary">
+                <strong class="d-block mb-1">يرجى تصحيح الأخطاء التالية:</strong>
+                <ul class="mb-0">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    @endif
+
     @yield('content')
 
 
@@ -244,36 +257,32 @@
                 <div class="col-md-4">
                     <h5 class="fw-bold"><i class="fas fa-hammer text-warning"></i> حرفي</h5>
                     <p class="text-white small">منصة تربط المستخدمين بأفضل الحرفيين في المنطقة.</p>
-                    <div class="social-icons">
-                        <a href="#" class="text-white me-2"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-white me-2"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-white me-2"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-youtube"></i></a>
-                    </div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-4">
                     <h6 class="fw-bold text-warning">روابط سريعة</h6>
                     <ul class="list-unstyled small">
-                        <li><a href="#" class="text-white text-decoration-none">الرئيسية</a></li>
-                        <li><a href="#about" class="text-white text-decoration-none">من نحن</a></li>
-                        <li><a href="#craftsmen" class="text-white text-decoration-none">الحرفيون</a></li>
-                        <li><a href="#testimonials" class="text-white text-decoration-none">الآراء</a></li>
+                        <li><a href="{{ route('index') }}" class="text-white text-decoration-none">الرئيسية</a></li>
+                        <li><a href="{{ route('index') }}#about" class="text-white text-decoration-none">من نحن</a></li>
+                        <li><a href="{{ route('showCraftsmen') }}" class="text-white text-decoration-none">الحرفيون</a></li>
+                        <li><a href="{{ route('index') }}#testimonials" class="text-white text-decoration-none">الآراء</a></li>
                     </ul>
                 </div>
-                <div class="col-md-3">
-                    <h6 class="fw-bold text-warning">للحرفيين</h6>
+                <div class="col-md-4">
+                    <h6 class="fw-bold text-warning">الحساب</h6>
                     <ul class="list-unstyled small">
-                        <li><a href="#" class="text-white text-decoration-none">كيف تصبح حرفي</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">شروط التسجيل</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">نصائح للنجاح</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h6 class="fw-bold text-warning">تواصل معنا</h6>
-                    <ul class="list-unstyled small">
-                        <li><i class="fas fa-phone text-warning"></i> 012 345 6789</li>
-                        <li><i class="fas fa-envelope text-warning"></i> info@harfi.com</li>
-                        <li><i class="fas fa-map-marker-alt text-warning"></i> فلسطين</li>
+                        @auth('customer')
+                            <li><a href="{{ route('main') }}" class="text-white text-decoration-none">لوحة التحكم</a></li>
+                            <li><a href="{{ route('herafy.customer.orders.index') }}" class="text-white text-decoration-none">طلباتي</a></li>
+                            <li><a href="{{ route('herafy.customer.notifications.index') }}" class="text-white text-decoration-none">الإشعارات</a></li>
+                        @elseauth('craftman')
+                            <li><a href="{{ route('herafy.craftman.dashboard') }}" class="text-white text-decoration-none">لوحة التحكم</a></li>
+                            <li><a href="{{ route('herafy.craftman.jobs.index') }}" class="text-white text-decoration-none">أعمالي</a></li>
+                            <li><a href="{{ route('herafy.craftman.profile.show') }}" class="text-white text-decoration-none">ملفي الشخصي</a></li>
+                        @else
+                            <li><a href="{{ route('register') }}" class="text-white text-decoration-none">إنشاء حساب</a></li>
+                            <li><a href="{{ route('login') }}" class="text-white text-decoration-none">تسجيل الدخول</a></li>
+                            <li><a href="{{ route('password.request') }}" class="text-white text-decoration-none">نسيت كلمة المرور؟</a></li>
+                        @endauth
                     </ul>
                 </div>
             </div>

@@ -27,7 +27,7 @@ class CmsOrderIndexUiTest extends TestCase
 
         $response = $this->get(route('orders.index'))->assertOk();
 
-        foreach (['قيد الانتظار', 'مقبول', 'قيد التنفيذ', 'مكتمل', 'ملغي'] as $label) {
+        foreach (['قيد الانتظار', 'مقبول', 'قيد التنفيذ', 'مكتمل', 'ملغى'] as $label) {
             $response->assertSee($label);
         }
 

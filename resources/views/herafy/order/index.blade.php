@@ -71,8 +71,7 @@
 
                             <strong>الميزانية:</strong>
 
-                            {{ $order->budget ?? 'غير محدد' }}
-                            ₪
+                            <x-money :value="$order->budget" placeholder="غير محدد" />
                         </p>
 
 
@@ -81,7 +80,7 @@
 
                             <strong>التاريخ:</strong>
 
-                            {{ $order->service_date ?? '-' }}
+                            {{ $order->service_date?->format('Y-m-d') ?? '-' }}
                         </p>
 
 

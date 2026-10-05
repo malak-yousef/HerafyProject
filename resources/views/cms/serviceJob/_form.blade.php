@@ -54,7 +54,7 @@
     <div class="row g-3"><div class="col-md-6">
         <label for="service-job-status" class="form-label fw-semibold">الحالة <span class="cms-required" aria-hidden="true">*</span></label>
         <select id="service-job-status" name="status" @class(['form-select', 'is-invalid' => $errors->has('status')]) required>
-            @foreach(['pending' => 'قيد الانتظار', 'in_progress' => 'قيد التنفيذ', 'completed' => 'مكتمل', 'cancelled' => 'ملغي'] as $value => $label)
+            @foreach(['pending' => 'قيد الانتظار', 'in_progress' => 'قيد التنفيذ', 'completed' => 'مكتمل', 'cancelled' => 'ملغى'] as $value => $label)
                 <option value="{{ $value }}" @selected(old('status', $serviceJob->status ?? 'pending') === $value)>{{ $label }}</option>
             @endforeach
         </select>

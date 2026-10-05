@@ -70,11 +70,12 @@ class ReviewSubmittedNotificationTest extends TestCase
         Notification::fake();
 
         foreach (['pending', 'in_progress'] as $status) {
-            [$job, $customer] = $this->completedJob();
+            [$job, $customer, , $order] = $this->completedJob();
             $job->update(['status' => $status, 'completed_at' => null]);
             $this->actingAs($customer->user, 'customer')
                 ->post(route('herafy.customer.jobs.review.store', $job), ['rating' => 4])
-                ->assertConflict();
+                ->assertRedirect(route('herafy.customer.orders.show', $order))
+                ->assertSessionHas('error');
             auth('customer')->logout();
         }
 
@@ -90,11 +91,12 @@ class ReviewSubmittedNotificationTest extends TestCase
 
     public function test_duplicate_review_attempt_creates_no_duplicate_notification(): void
     {
-        [$job, $customer, $craftman] = $this->completedJob();
+        [$job, $customer, $craftman, $order] = $this->completedJob();
         $this->submitReview($customer, $job)->assertRedirect();
         $this->actingAs($customer->user, 'customer')
             ->post(route('herafy.customer.jobs.review.store', $job), ['rating' => 2])
-            ->assertConflict();
+            ->assertRedirect(route('herafy.customer.orders.show', $order))
+            ->assertSessionHas('error');
 
         $this->assertSame(1, Review::count());
         $this->assertSame(1, $craftman->user->notifications()->where('type', ReviewSubmitted::class)->count());

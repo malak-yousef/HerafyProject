@@ -33,7 +33,7 @@
         <div class="card-body">
             <form method="GET" action="{{ route('offers.index') }}" class="row g-3 mb-4 align-items-end">
                 <div class="col-lg-3 col-md-6"><label for="offer-search" class="form-label">البحث</label><input id="offer-search" name="search" value="{{ request('search') }}" class="form-control" maxlength="100" placeholder="الطلب أو اسم الحرفي"></div>
-                <div class="col-lg-2 col-md-6"><label for="offer-status" class="form-label">الحالة</label><select id="offer-status" name="status" class="form-select"><option value="">كل الحالات</option>@foreach(['pending' => 'قيد الانتظار', 'accepted' => 'مقبول', 'in_progress' => 'قيد التنفيذ', 'completed' => 'مكتمل', 'cancelled' => 'ملغي'] as $value => $label)<option value="{{ $value }}" @selected(request('status') === $value)>{{ $label }}</option>@endforeach</select></div>
+                <div class="col-lg-2 col-md-6"><label for="offer-status" class="form-label">الحالة</label><select id="offer-status" name="status" class="form-select"><option value="">كل الحالات</option>@foreach(['pending' => 'قيد الانتظار', 'accepted' => 'مقبول', 'in_progress' => 'قيد التنفيذ', 'completed' => 'مكتمل', 'cancelled' => 'ملغى'] as $value => $label)<option value="{{ $value }}" @selected(request('status') === $value)>{{ $label }}</option>@endforeach</select></div>
                 <div class="col-lg-2 col-md-6"><label for="offer-craftman" class="form-label">الحرفي</label><select id="offer-craftman" name="craftman_id" class="form-select"><option value="">كل الحرفيين</option>@foreach($craftmen as $craftman)<option value="{{ $craftman->id }}" @selected((string) request('craftman_id') === (string) $craftman->id)>{{ $craftman->user?->name ?? 'غير متاح' }}</option>@endforeach</select></div>
                 <div class="col-lg-3 col-md-6"><label for="offer-order" class="form-label">الطلب</label><select id="offer-order" name="order_id" class="form-select"><option value="">كل الطلبات</option>@foreach($orders as $order)<option value="{{ $order->id }}" @selected((string) request('order_id') === (string) $order->id)>{{ $order->title }}</option>@endforeach</select></div>
                 <div class="col-lg-2 col-md-6"><label for="offer-price-min" class="form-label">السعر من</label><input id="offer-price-min" type="number" step="0.01" min="0" name="price_min" value="{{ request('price_min') }}" class="form-control"></div>
@@ -52,7 +52,7 @@
                             <tr>
                                 <td class="offer-order-title" title="{{ $offer->order?->title }}"><span>{{ $offer->order?->title ?? 'غير متاح' }}</span></td>
                                 <td>{{ $offer->craftman?->user?->name ?? 'غير متاح' }}</td>
-                                <td>{{ number_format((float) $offer->price, 2) }} ₪</td>
+                                <td><x-money :value="$offer->price" /></td>
                                 <td><x-cms.status-badge :status="$offer->status" /></td>
                                 <td>{{ $offer->created_at?->format('Y-m-d') ?? '—' }}</td>
                                 <td><x-cms.table-actions :show-url="route('offers.show', $offer->id)" :edit-url="route('offers.edit', $offer->id)" :delete-url="route('offers.destroy', $offer->id)" show-permission="offers.view" edit-permission="offers.update" delete-permission="offers.delete" :delete-id="$offer->id" /></td>
@@ -70,10 +70,3 @@
 </div>
 @endsection
 
-@section('scripts')
-<script>
-    function performDestroy(id, reference) {
-        confirmDestroy('/cms/admin/offers/' + id, reference);
-    }
-</script>
-@endsection

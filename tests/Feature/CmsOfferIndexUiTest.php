@@ -5,7 +5,10 @@ namespace Tests\Feature;
 use App\Models\Craftman;
 use App\Models\Offer;
 use App\Models\Order;
+use App\Models\ServiceJob;
 use App\Models\User;
+use App\Support\Money;
+use App\Support\StatusLabel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -27,7 +30,7 @@ class CmsOfferIndexUiTest extends TestCase
 
         $response = $this->actingAs($this->adminWith(['offers.view']), 'admin')->get(route('offers.index'))->assertOk();
 
-        foreach (['قيد الانتظار', 'مقبول', 'قيد التنفيذ', 'مكتمل', 'ملغي'] as $label) {
+        foreach (['قيد الانتظار', 'مقبول', 'قيد التنفيذ', 'مكتمل', 'ملغى'] as $label) {
             $response->assertSee($label);
         }
 
@@ -95,6 +98,69 @@ class CmsOfferIndexUiTest extends TestCase
         ])->assertSessionHasErrors('craftman_id');
 
         $this->assertDatabaseCount('offers', 0);
+    }
+
+    public function test_offer_price_uses_the_shared_money_component(): void
+    {
+        $order = Order::factory()->create();
+        $craftman = Craftman::factory()->create();
+        Offer::factory()->create([
+            'order_id' => $order->id,
+            'craftman_id' => $craftman->id,
+            'status' => 'pending',
+            'price' => 1234.5,
+        ]);
+
+        $content = $this->actingAs($this->adminWith(['offers.view']), 'admin')
+            ->get(route('offers.index'))
+            ->assertOk()
+            ->getContent();
+
+        $this->assertStringContainsString(
+            Money::format(1234.5),
+            $content,
+            'The offer index must render prices exactly as Money::format does.'
+        );
+    }
+
+    public function test_offer_show_renders_the_linked_service_job_status_as_an_arabic_badge(): void
+    {
+        $order = Order::factory()->create();
+        $craftman = Craftman::factory()->create();
+        $offer = Offer::factory()->create([
+            'order_id' => $order->id,
+            'craftman_id' => $craftman->id,
+            'status' => 'in_progress',
+        ]);
+        ServiceJob::factory()->inProgress()->create([
+            'offer_id' => $offer->id,
+            'order_id' => $order->id,
+            'craftman_id' => $craftman->id,
+        ]);
+
+        $response = $this->actingAs($this->adminWith(['offers.view']), 'admin')
+            ->get(route('offers.show', $offer))
+            ->assertOk();
+
+        $response->assertSee(StatusLabel::label('in_progress'))
+            ->assertSee('class="badge '.StatusLabel::badgeClass('in_progress').'"', false);
+
+        $this->assertStringNotContainsString(
+            '>in_progress<',
+            $response->getContent(),
+            'The linked service job status must not render as a raw English machine value.'
+        );
+    }
+
+    public function test_offer_templates_do_not_bypass_the_shared_money_and_status_helpers(): void
+    {
+        $index = file_get_contents(resource_path('views/cms/offer/index.blade.php'));
+        $this->assertStringContainsString('<x-money :value="$offer->price" />', $index);
+        $this->assertStringNotContainsString('number_format((float) $offer->price', $index);
+
+        $show = file_get_contents(resource_path('views/cms/offer/show.blade.php'));
+        $this->assertStringContainsString('<x-cms.status-badge :status="$offer->serviceJob->status" />', $show);
+        $this->assertStringNotContainsString('{{ $offer->serviceJob->status }}', $show);
     }
 
     private function adminWith(array $permissions): User

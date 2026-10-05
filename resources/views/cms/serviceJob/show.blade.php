@@ -33,7 +33,7 @@
                 <tr>
                     <th>رقم الخدمة</th>
                     <td>{{ $serviceJob->id }}</td>
-                </tr>ئ
+                </tr>
 
                 <tr>
                     <th>رقم الطلب</th>
@@ -62,7 +62,7 @@
                 <tr>
                     <th>الحالة</th>
                     <td>
-                        {{ $serviceJob->status }}
+                        <x-cms.status-badge :status="$serviceJob->status" />
                     </td>
                 </tr>
 

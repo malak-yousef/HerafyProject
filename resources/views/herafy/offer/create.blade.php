@@ -132,7 +132,7 @@
 
                             <strong>الميزانية:</strong>
 
-                            {{ $order->budget ?? 'غير محددة' }} ₪
+                            <x-money :value="$order->budget" placeholder="غير محددة" />
 
                         </p>
 
@@ -150,7 +150,7 @@
 
                             <strong>التاريخ المطلوب:</strong>
 
-                            {{ $order->service_date ?? '-' }}
+                            {{ $order->service_date?->format('Y-m-d') ?? '-' }}
 
                         </p>
 

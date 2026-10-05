@@ -323,9 +323,13 @@
                                 <a href="{{ route('admins.edit', $admin->id) }}" class="action-btn btn-edit" title="تعديل">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <button class="action-btn btn-delete" onclick="performDestroy({{ $admin->id }}, this)" title="حذف">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                                <form action="{{ route('admins.destroy', $admin->id) }}" method="POST" class="d-inline" data-crud-delete data-confirm-message="لا يمكن التراجع عن حذف هذا الحساب.">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="action-btn btn-delete" title="حذف">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -355,9 +359,6 @@
 @section('scripts')
 <script>
     // حذف المشرف
-    function performDestroy(id, reference) {
-        confirmDestroy('/cms/admin/admins/' + id, reference);
-    }
 
     // فلترة وبحث الجدول
     function filterTable() {

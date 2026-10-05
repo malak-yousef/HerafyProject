@@ -327,9 +327,13 @@
                                     <i class="fas fa-edit"></i>
                                 </a>
 
-                                <button class="action-btn btn-delete" onclick="performDestroy('{{ $customer->id }}', this)" title="حذف">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
+                                <form action="{{ route('customers.destroy', $customer->id) }}" method="POST" class="d-inline" data-crud-delete data-confirm-message="لا يمكن التراجع عن حذف هذا العميل.">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="action-btn btn-delete" title="حذف">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -364,9 +368,6 @@
 <script>
     // 2. حذف الزبون
     // ============================================
-    function performDestroy(id, reference) {
-        confirmDestroy('/cms/admin/customers/' + id, reference);
-    }
 
     // ============================================
     // 3. فلترة الجدول

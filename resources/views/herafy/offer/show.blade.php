@@ -159,7 +159,7 @@
 
                             <strong>الميزانية:</strong>
 
-                            {{ $offer->order->budget ?? 'غير محددة' }} ₪
+                            <x-money :value="$offer->order->budget" placeholder="غير محددة" />
 
                         </p>
 
@@ -189,7 +189,7 @@
 
                         <div class="price mb-3">
 
-                            {{ $offer->price }} ₪
+                            <x-money :value="$offer->price" />
 
                         </div>
 
@@ -217,26 +217,7 @@
 
                         </h5>
 
-                        <span class="status {{ $offer->status }}">
-
-                            @if($offer->status == 'pending')
-                                قيد الانتظار
-
-                            @elseif($offer->status == 'accepted')
-                                مقبول
-
-                            @elseif($offer->status == 'in_progress')
-                                قيد التنفيذ
-
-                            @elseif($offer->status == 'completed')
-                                مكتمل
-
-                            @elseif($offer->status == 'cancelled')
-                                ملغي
-
-                            @endif
-
-                        </span>
+                        <x-herafy.status-badge :status="$offer->status" />
 
                     </div>
 

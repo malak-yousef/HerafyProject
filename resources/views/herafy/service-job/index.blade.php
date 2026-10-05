@@ -14,9 +14,9 @@
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between gap-3 mb-3">
                                 <h5 class="fw-bold">{{ $job->order->title ?? '-' }}</h5>
-                                <span class="badge bg-warning text-dark">{{ $job->status }}</span>
+                                <x-herafy.status-badge :status="$job->status" />
                             </div>
-                            <p><strong>السعر المتفق عليه:</strong> {{ $job->offer->price ?? '-' }}</p>
+                            <p><strong>السعر المتفق عليه:</strong> <x-money :value="$job->offer->price" /></p>
                             <a href="{{ route('herafy.craftman.jobs.show', $job) }}" class="btn btn-outline-warning w-100">عرض تفاصيل العمل</a>
                         </div>
                     </div>

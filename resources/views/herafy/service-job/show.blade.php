@@ -10,7 +10,7 @@
                 <div class="d-flex flex-wrap justify-content-between gap-3 mb-4">
                     <div>
                         <h2 class="fw-bold">{{ $serviceJob->order->title }}</h2>
-                        <span class="badge bg-warning text-dark">{{ $serviceJob->status }}</span>
+                        <x-herafy.status-badge :status="$serviceJob->status" />
                     </div>
                     <a href="{{ route('herafy.craftman.jobs.index') }}" class="btn btn-outline-secondary">العودة إلى أعمالي</a>
                 </div>
@@ -20,7 +20,7 @@
                     <div class="col-md-6"><strong>العميل:</strong> {{ $serviceJob->order->customer->user->name ?? '-' }}</div>
                     <div class="col-md-6"><strong>المهنة:</strong> {{ $serviceJob->order->profession->name ?? '-' }}</div>
                     <div class="col-md-6"><strong>الموقع:</strong> {{ $serviceJob->order->city->name ?? '-' }} / {{ $serviceJob->order->area->name ?? '-' }}</div>
-                    <div class="col-md-6"><strong>السعر المتفق عليه:</strong> {{ $serviceJob->offer->price }}</div>
+                    <div class="col-md-6"><strong>السعر المتفق عليه:</strong> <x-money :value="$serviceJob->offer->price" /></div>
                     <div class="col-md-6"><strong>تاريخ الخدمة:</strong> {{ $serviceJob->order->service_date?->format('Y-m-d') ?? '-' }}</div>
                     <div class="col-md-6"><strong>الهاتف:</strong> {{ $serviceJob->order->phone ?? '-' }}</div>
                     <div class="col-12"><strong>العنوان:</strong> {{ $serviceJob->order->address ?? '-' }}</div>

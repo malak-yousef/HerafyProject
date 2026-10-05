@@ -34,7 +34,8 @@ class CraftmanCustomerReviewTest extends TestCase
 
         $this->actingAs($job->craftman->user, 'craftman')
             ->post(route('herafy.craftman.jobs.customer-review.store', $job), ['rating' => 4])
-            ->assertConflict();
+            ->assertRedirect(route('herafy.craftman.jobs.show', $job))
+            ->assertSessionHas('error', 'تم تقييم هذا العميل مسبقًا لهذا العمل.');
 
         $this->assertDatabaseCount('customer_reviews', 1);
     }
@@ -45,7 +46,8 @@ class CraftmanCustomerReviewTest extends TestCase
 
         $this->actingAs($pending->craftman->user, 'craftman')
             ->post(route('herafy.craftman.jobs.customer-review.store', $pending), ['rating' => 5])
-            ->assertConflict();
+            ->assertRedirect(route('herafy.craftman.jobs.show', $pending))
+            ->assertSessionHas('error', 'لا يمكن إرسال تقييم لهذا العمل في الوقت الحالي.');
 
         $otherCraftman = Craftman::factory()->active()->create();
         $completed = ServiceJob::factory()->completed()->create();

@@ -187,9 +187,13 @@
                 <a href="{{ route('portfolio_images.edit', $portfolio_images->id) }}" class="btn btn-warning btn-submit">
                     <i class="fas fa-edit"></i> تعديل
                 </a>
-                <button class="btn btn-danger btn-submit" onclick="performDestroy('{{ $portfolio_images->id }}', this)">
-                    <i class="fas fa-trash-alt"></i> حذف
-                </button>
+                <form action="{{ route('portfolio_images.destroy', $portfolio_images->id) }}" method="POST" class="d-inline" data-crud-delete data-confirm-message="لا يمكن التراجع عن حذف هذه الصورة.">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-danger btn-submit">
+                        <i class="fas fa-trash-alt"></i> حذف
+                    </button>
+                </form>
                 <a href="{{ route('portfolio_images.index') }}" class="btn btn-outline-secondary btn-back ms-auto">
                     <i class="fas fa-arrow-right"></i> العودة إلى القائمة
                 </a>
@@ -201,9 +205,6 @@
 
 @section('scripts')
 <script>
-    function performDestroy(id, reference) {
-        confirmDestroy('/cms/admin/portfolio_images/' + id, reference);
-    }
 
 
     console.log('✅ صفحة عرض الصورة جاهزة');

@@ -33,7 +33,7 @@
         <div class="card-body">
             <form method="GET" action="{{ route('service-jobs.index') }}" class="row g-3 mb-4 align-items-end">
                 <div class="col-lg-3 col-md-6"><label for="job-search" class="form-label">البحث</label><input id="job-search" name="search" value="{{ request('search') }}" class="form-control" maxlength="100" placeholder="الطلب أو العميل أو الحرفي"></div>
-                <div class="col-lg-2 col-md-6"><label for="job-status" class="form-label">الحالة</label><select id="job-status" name="status" class="form-select"><option value="">كل الحالات</option>@foreach(['pending' => 'قيد الانتظار', 'in_progress' => 'قيد التنفيذ', 'completed' => 'مكتمل', 'cancelled' => 'ملغي'] as $value => $label)<option value="{{ $value }}" @selected(request('status') === $value)>{{ $label }}</option>@endforeach</select></div>
+                <div class="col-lg-2 col-md-6"><label for="job-status" class="form-label">الحالة</label><select id="job-status" name="status" class="form-select"><option value="">كل الحالات</option>@foreach(['pending' => 'قيد الانتظار', 'in_progress' => 'قيد التنفيذ', 'completed' => 'مكتمل', 'cancelled' => 'ملغى'] as $value => $label)<option value="{{ $value }}" @selected(request('status') === $value)>{{ $label }}</option>@endforeach</select></div>
                 <div class="col-lg-2 col-md-6"><label for="job-customer" class="form-label">العميل</label><select id="job-customer" name="customer_id" class="form-select"><option value="">كل العملاء</option>@foreach($customers as $customer)<option value="{{ $customer->id }}" @selected((string) request('customer_id') === (string) $customer->id)>{{ $customer->user?->name ?? 'غير متاح' }}</option>@endforeach</select></div>
                 <div class="col-lg-2 col-md-6"><label for="job-craftman" class="form-label">الحرفي</label><select id="job-craftman" name="craftman_id" class="form-select"><option value="">كل الحرفيين</option>@foreach($craftsmen as $craftman)<option value="{{ $craftman->id }}" @selected((string) request('craftman_id') === (string) $craftman->id)>{{ $craftman->user?->name ?? 'غير متاح' }}</option>@endforeach</select></div>
                 <div class="col-lg-3 col-md-6"><label for="job-order" class="form-label">الطلب</label><select id="job-order" name="order_id" class="form-select"><option value="">كل الطلبات</option>@foreach($orders as $order)<option value="{{ $order->id }}" @selected((string) request('order_id') === (string) $order->id)>{{ $order->title }}</option>@endforeach</select></div>
@@ -72,10 +72,3 @@
 </div>
 @endsection
 
-@section('scripts')
-<script>
-    function performDestroy(id, reference) {
-        confirmDestroy('/cms/admin/service-jobs/' + id, reference);
-    }
-</script>
-@endsection

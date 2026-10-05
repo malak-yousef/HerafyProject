@@ -183,9 +183,9 @@
 
                                         <td>{{ $order->customer->user->name ?? '-' }}</td>
 
-                                        <td>{{ $order->budget ?? '-' }}</td>
+                                        <x-money :value="$order->budget" />
 
-                                        <td>{{ $order->status }}</td>
+                                        <td><x-cms.status-badge :status="$order->status" /></td>
 
                                         <td>{{ $order->created_at->format('Y-m-d') }}</td>
                                     </tr>

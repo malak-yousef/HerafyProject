@@ -10,9 +10,7 @@
                 <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
                     <div>
                         <h2 class="fw-bold">{{ $order->title }}</h2>
-                        <span class="badge {{ $order->status === 'pending' ? 'bg-warning text-dark' : ($order->status === 'cancelled' ? 'bg-danger' : 'bg-secondary') }}">
-                            {{ $order->status }}
-                        </span>
+                        <x-herafy.status-badge :status="$order->status" />
                     </div>
                     <a href="{{ route('herafy.customer.orders.index') }}" class="btn btn-outline-secondary">العودة إلى طلباتي</a>
                 </div>
@@ -22,7 +20,7 @@
                 <div class="row g-3 mt-2">
                     <div class="col-md-6"><strong>المهنة:</strong> {{ $order->profession->name ?? '-' }}</div>
                     <div class="col-md-6"><strong>الموقع:</strong> {{ $order->city->name ?? '-' }} / {{ $order->area->name ?? '-' }}</div>
-                    <div class="col-md-6"><strong>الميزانية:</strong> {{ $order->budget ?? '-' }}</div>
+                    <div class="col-md-6"><strong>الميزانية:</strong> <x-money :value="$order->budget" /></div>
                     <div class="col-md-6"><strong>تاريخ الخدمة:</strong> {{ $order->service_date?->format('Y-m-d') ?? '-' }}</div>
                     <div class="col-md-6"><strong>العنوان:</strong> {{ $order->address ?? '-' }}</div>
                     <div class="col-md-6"><strong>الهاتف:</strong> {{ $order->phone ?? '-' }}</div>
@@ -61,8 +59,8 @@
                     <h3 class="fw-bold text-success mb-3"><i class="fas fa-briefcase"></i> اتفاق العمل</h3>
                     <div class="row g-3">
                         <div class="col-md-4"><strong>الحرفي:</strong> {{ $order->serviceJob->craftman->user->name ?? '-' }}</div>
-                        <div class="col-md-4"><strong>السعر المتفق عليه:</strong> {{ $order->serviceJob->offer->price ?? '-' }}</div>
-                        <div class="col-md-4"><strong>حالة العمل:</strong> {{ $order->serviceJob->status }}</div>
+                        <div class="col-md-4"><strong>السعر المتفق عليه:</strong> <x-money :value="$order->serviceJob->offer->price" /></div>
+                        <div class="col-md-4"><strong>حالة العمل:</strong> <x-herafy.status-badge :status="$order->serviceJob->status" /></div>
                         <div class="col-md-4"><strong>وقت البدء:</strong> {{ $order->serviceJob->started_at?->format('Y-m-d H:i') ?? '-' }}</div>
                         <div class="col-md-4"><strong>وقت الإكمال:</strong> {{ $order->serviceJob->completed_at?->format('Y-m-d H:i') ?? '-' }}</div>
                     </div>
@@ -79,16 +77,18 @@
                             @csrf
                             <div class="mb-3">
                                 <label for="rating" class="form-label">التقييم</label>
-                                <select id="rating" name="rating" class="form-select" required>
+                                <select id="rating" name="rating" class="form-select @error('rating') is-invalid @enderror" required @error('rating') aria-invalid="true" aria-describedby="rating-error" @enderror>
                                     <option value="">اختر من 1 إلى 5</option>
                                     @for ($rating = 1; $rating <= 5; $rating++)
                                         <option value="{{ $rating }}" @selected(old('rating') == $rating)>{{ $rating }}</option>
                                     @endfor
                                 </select>
+                                @error('rating')<div id="rating-error" class="text-danger small mt-1">{{ $message }}</div>@enderror
                             </div>
                             <div class="mb-3">
                                 <label for="comment" class="form-label">التعليق (اختياري)</label>
-                                <textarea id="comment" name="comment" class="form-control" rows="4" maxlength="2000">{{ old('comment') }}</textarea>
+                                <textarea id="comment" name="comment" class="form-control @error('comment') is-invalid @enderror" rows="4" maxlength="2000" @error('comment') aria-invalid="true" aria-describedby="comment-error" @enderror>{{ old('comment') }}</textarea>
+                                @error('comment')<div id="comment-error" class="text-danger small mt-1">{{ $message }}</div>@enderror
                             </div>
                             <button type="submit" class="btn btn-warning">إرسال التقييم</button>
                         </form>
@@ -111,7 +111,7 @@
                     <div class="border rounded-3 p-3 mb-3 {{ $offer->status === 'accepted' ? 'border-success bg-success-subtle' : '' }}">
                         <div class="d-flex justify-content-between gap-3">
                             <strong>{{ $offer->craftman->user->name ?? 'حرفي' }}</strong>
-                            <span class="fw-bold text-warning">{{ $offer->price }}</span>
+                            <span class="fw-bold text-warning"><x-money :value="$offer->price" /></span>
                         </div>
                         <p class="text-muted mb-1 mt-2">{{ $offer->message }}</p>
                         <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mt-2">
@@ -122,7 +122,7 @@
                                 @elseif ($order->status !== 'pending' && $offer->status === 'pending')
                                     <span class="badge bg-secondary">غير مختار</span>
                                 @else
-                                    <span class="badge bg-warning text-dark">{{ $offer->status }}</span>
+                                    <x-herafy.status-badge :status="$offer->status" />
                                 @endif
                             </small>
 

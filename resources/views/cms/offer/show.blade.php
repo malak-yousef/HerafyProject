@@ -100,7 +100,7 @@
 
                 <p class="info-value">
                     <strong>السعر:</strong>
-                    {{ $offer->price }} ₪
+                    <x-money :value="$offer->price" />
                 </p>
 
                 <p class="info-value">
@@ -123,31 +123,7 @@
 
                 </h5>
 
-                <span class="status {{ $offer->status }}">
-
-                    @if($offer->status=='pending')
-
-                        قيد الانتظار
-
-                    @elseif($offer->status=='accepted')
-
-                        مقبول
-
-                    @elseif($offer->status=='in_progress')
-
-                        قيد التنفيذ
-
-                    @elseif($offer->status=='completed')
-
-                        مكتمل
-
-                    @else
-
-                        ملغي
-
-                    @endif
-
-                </span>
+                <x-cms.status-badge :status="$offer->status" />
 
             </div>
 
@@ -184,7 +160,7 @@
 
             <p>
                 <strong>حالة الخدمة:</strong>
-                {{ $offer->serviceJob->status }}
+                <x-cms.status-badge :status="$offer->serviceJob->status" />
             </p>
 
             <a href="{{ route('service-jobs.show', $offer->serviceJob) }}"

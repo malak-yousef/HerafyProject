@@ -47,12 +47,13 @@ class ReviewRatingTest extends TestCase
     public function test_pending_in_progress_and_cancelled_jobs_cannot_be_reviewed(): void
     {
         foreach (['pending', 'in_progress', 'cancelled'] as $status) {
-            [$job, $customer] = $this->completedJob();
+            [$job, $customer, , $order] = $this->completedJob();
             $job->update(['status' => $status, 'completed_at' => null]);
 
             $this->actingAs($customer->user, 'customer')
                 ->post(route('herafy.customer.jobs.review.store', $job), ['rating' => 4])
-                ->assertConflict();
+                ->assertRedirect(route('herafy.customer.orders.show', $order))
+                ->assertSessionHas('error', 'لا يمكن إرسال تقييم لهذا الطلب في الوقت الحالي.');
 
             auth('customer')->logout();
         }
@@ -67,12 +68,14 @@ class ReviewRatingTest extends TestCase
 
         $this->actingAs($customer->user, 'customer')
             ->post(route('herafy.customer.jobs.review.store', $job), ['rating' => 4])
-            ->assertConflict();
+            ->assertRedirect(route('herafy.customer.orders.show', $order))
+            ->assertSessionHas('error', 'لا يمكن إرسال تقييم لهذا الطلب في الوقت الحالي.');
 
         $order->update(['status' => 'completed']);
         $offer->update(['status' => 'in_progress']);
         $this->post(route('herafy.customer.jobs.review.store', $job), ['rating' => 4])
-            ->assertConflict();
+            ->assertRedirect(route('herafy.customer.orders.show', $order))
+            ->assertSessionHas('error', 'لا يمكن إرسال تقييم لهذا الطلب في الوقت الحالي.');
 
         $this->assertDatabaseCount('reviews', 0);
     }
@@ -115,9 +118,10 @@ class ReviewRatingTest extends TestCase
 
         $this->actingAs($customer->user, 'customer')
             ->post(route('herafy.customer.jobs.review.store', $job), ['rating' => 4])
-            ->assertRedirect();
+            ->assertRedirect(route('herafy.customer.orders.show', $order));
         $this->post(route('herafy.customer.jobs.review.store', $job), ['rating' => 2])
-            ->assertConflict();
+            ->assertRedirect(route('herafy.customer.orders.show', $order))
+            ->assertSessionHas('error', 'تم تقييم هذا الطلب مسبقًا.');
         $this->assertDatabaseCount('reviews', 1);
 
         $this->expectException(QueryException::class);

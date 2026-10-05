@@ -253,9 +253,13 @@
                         <td>
                             <div class="action-btns">
                                 @if($permission->guard_name != 'admin')
-                                <button class="action-btn btn-delete" onclick="performDestroy('{{ $permission->id }}', this, 'permissions')" title="حذف">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
+                                <form action="{{ route('permissions.destroy', $permission->id) }}" method="POST" class="d-inline" data-crud-delete data-confirm-message="لا يمكن التراجع عن حذف هذه الصلاحية.">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="action-btn btn-delete" title="حذف">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
                                 @endif
                             </div>
                         </td>
@@ -287,9 +291,6 @@
     // ============================================
     // حذف (دور أو صلاحية)
     // ============================================
-    function performDestroy(id, reference, type) {
-        confirmDestroy('/cms/admin/' + type + '/' + id, reference);
-    }
 
     console.log('✅ صفحة الصلاحيات الخاصة بالنظام جاهزة');
     console.log('📊 عدد الأدوار: {{ $permissions->count() }}');

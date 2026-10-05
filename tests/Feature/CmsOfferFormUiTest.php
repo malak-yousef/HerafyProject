@@ -39,7 +39,7 @@ class CmsOfferFormUiTest extends TestCase
         $this->assertSame(1, substr_count($content, "CmsMarketplaceRelations.initOffer('#offer-order', '#offer-craftman')"));
         $this->assertStringContainsString('method="POST"', $content);
         $this->assertStringContainsString('name="_token"', $content);
-        foreach (['قيد الانتظار', 'مقبول', 'قيد التنفيذ', 'مكتمل', 'ملغي'] as $label) {
+        foreach (['قيد الانتظار', 'مقبول', 'قيد التنفيذ', 'مكتمل', 'ملغى'] as $label) {
             $this->assertStringContainsString($label, $content);
         }
     }

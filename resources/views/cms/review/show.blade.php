@@ -365,25 +365,7 @@
 
 
 
-                    <span class="status {{$review->status}}">
-
-
-                        @if($review->status == 'pending')
-
-                        قيد الانتظار
-
-                        @elseif($review->status == 'approved')
-
-                        مقبول
-
-                        @else
-
-                        مرفوض
-
-                        @endif
-
-
-                    </span>
+                    <x-cms.status-badge :status="$review->status" />
 
 
 

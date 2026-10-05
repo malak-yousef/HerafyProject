@@ -94,7 +94,7 @@
     <div class="row g-3"><div class="col-md-6">
         <label for="order-status" class="form-label fw-semibold">حالة الطلب @isset($order)<span class="cms-required" aria-hidden="true">*</span>@else<small class="text-muted">(اختياري)</small>@endisset</label>
         <select id="order-status" name="status" @class(['form-select', 'is-invalid' => $errors->has('status')]) @isset($order) required @endisset>
-            @foreach(['pending' => 'قيد الانتظار', 'accepted' => 'مقبول', 'in_progress' => 'قيد التنفيذ', 'completed' => 'مكتمل', 'cancelled' => 'ملغي'] as $value => $label)
+            @foreach(['pending' => 'قيد الانتظار', 'accepted' => 'مقبول', 'in_progress' => 'قيد التنفيذ', 'completed' => 'مكتمل', 'cancelled' => 'ملغى'] as $value => $label)
                 <option value="{{ $value }}" @selected(old('status', $order->status ?? 'pending') === $value)>{{ $label }}</option>
             @endforeach
         </select>

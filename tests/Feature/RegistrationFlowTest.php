@@ -165,8 +165,8 @@ class RegistrationFlowTest extends TestCase
 
         $craftman = Craftman::factory()->create();
         $this->actingAs($craftman->user, 'craftman');
-        $this->get('/register')->assertRedirect('/herafy/main');
-        $this->postJson('/register', $this->customerPayload())->assertRedirect('/herafy/main');
+        $this->get('/register')->assertRedirect(route('herafy.craftman.dashboard'));
+        $this->postJson('/register', $this->customerPayload())->assertRedirect(route('herafy.craftman.dashboard'));
     }
 
     private function customerPayload(array $overrides = []): array

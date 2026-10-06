@@ -234,7 +234,7 @@ class AuthenticationFlowTest extends TestCase
         $craftman = Craftman::factory()->create();
         $this->actingAs($this->activate($craftman->user), 'craftman')
             ->get('/login')
-            ->assertRedirect('/herafy/main');
+            ->assertRedirect(route('herafy.craftman.dashboard'));
     }
 
     public function test_profileless_user_without_an_admin_role_cannot_login(): void

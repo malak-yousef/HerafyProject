@@ -21,8 +21,12 @@ return Application::configure(basePath: dirname(__DIR__))
                 return '/cms/admin';
             }
 
-            if (Auth::guard('customer')->check() || Auth::guard('craftman')->check()) {
-                return '/herafy/main';
+            if (Auth::guard('craftman')->check()) {
+                return route('herafy.craftman.dashboard');
+            }
+
+            if (Auth::guard('customer')->check()) {
+                return route('main');
             }
 
             return '/';

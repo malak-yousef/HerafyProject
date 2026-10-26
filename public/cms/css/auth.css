@@ -1,0 +1,647 @@
+/* ============================================ */
+/* تصميم حرفي - صفحات تسجيل الدخول وإنشاء الحساب */
+/* ============================================ */
+
+:root {
+    --primary: #FFC107;
+    --primary-dark: #e5a900;
+    --dark: #252525;
+    --muted: #777;
+    --border: #eeeeee;
+    --soft: #fffaf0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #fff;
+    color: var(--dark);
+    font-family: "Tajawal", "Cairo", Arial, sans-serif;
+}
+
+/* ============================================ */
+/* NAVBAR */
+/* ============================================ */
+.navbar {
+    min-height: 70px;
+    background: rgba(255, 255, 255, .96) !important;
+    border-bottom: 1px solid #f2f2f2;
+    box-shadow: 0 4px 22px rgba(0, 0, 0, .04) !important;
+    position: relative;
+    z-index: 10;
+}
+
+.navbar .navbar-brand {
+    color: var(--dark);
+    font-size: 1.55rem !important;
+    letter-spacing: -.5px;
+}
+
+.navbar .navbar-brand i {
+    color: var(--primary) !important;
+}
+
+.navbar .nav-link {
+    color: #444;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 9px 14px !important;
+    border-radius: 10px;
+    transition: .25s ease;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+    color: #b47c00;
+    background: #fff8df;
+}
+
+.navbar .btn-warning,
+.navbar .btn-outline-warning {
+    border-radius: 9px;
+    font-weight: 700;
+    padding: 7px 15px;
+    transition: .25s ease;
+}
+
+.navbar .btn-warning {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #222;
+}
+
+.navbar .btn-outline-warning {
+    border: 1px solid var(--primary);
+    color: #9a6b00;
+}
+
+.navbar .btn-warning:hover,
+.navbar .btn-outline-warning:hover {
+    background: #ffca28;
+    border-color: #ffca28;
+    color: #222;
+    transform: translateY(-1px);
+}
+
+/* ============================================ */
+/* AUTH SECTION */
+/* ============================================ */
+.auth-section {
+    min-height: calc(100vh - 130px);
+    padding: 55px 0 !important;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 13% 35%, rgba(255, 193, 7, .08) 0 100px, transparent 101px),
+        radial-gradient(circle at 86% 72%, rgba(255, 193, 7, .07) 0 150px, transparent 151px),
+        linear-gradient(135deg, #fff 0%, #fffdf8 100%);
+}
+
+.auth-section:before {
+    content: "";
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    border: 35px solid rgba(255, 193, 7, .055);
+    border-radius: 50%;
+    left: -120px;
+    top: 80px;
+}
+
+.auth-section:after {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border: 28px solid rgba(255, 193, 7, .05);
+    border-radius: 50%;
+    right: -80px;
+    bottom: 60px;
+}
+
+.auth-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+.auth-section .row {
+    min-height: auto !important;
+    gap: 10px 0;
+}
+
+/* ============================================ */
+/* AUTH CARD */
+/* ============================================ */
+.auth-section .card {
+    border: 1px solid #f0f0f0 !important;
+    border-radius: 24px !important;
+    background: rgba(255, 255, 255, .98);
+    box-shadow: 0 18px 55px rgba(0, 0, 0, .09) !important;
+    padding: 28px 30px !important;
+    max-width: 500px;
+    margin: auto;
+    transition: .3s ease;
+}
+
+.auth-section .card:hover {
+    box-shadow: 0 22px 65px rgba(0, 0, 0, .12) !important;
+}
+
+.auth-section .register-card {
+    max-width: 580px;
+}
+
+.auth-section .card .auth-icon {
+    width: 56px !important;
+    height: 56px !important;
+    background: #fff3c4 !important;
+    color: #222 !important;
+    border: 5px solid #fff8df;
+    font-size: 1.4rem !important;
+    box-shadow: 0 8px 20px rgba(255, 193, 7, .18);
+}
+
+.auth-section .card h3 {
+    font-size: 1.5rem;
+    color: #222;
+    margin-bottom: 5px;
+}
+
+.auth-section .card .text-muted {
+    color: #888 !important;
+    font-size: 13px;
+}
+
+/* ============================================ */
+/* ACCOUNT TYPE CARDS (صفحة إنشاء الحساب) */
+/* ============================================ */
+.account-type-card {
+    cursor: pointer;
+    border: 2px solid #eef0f2 !important;
+    border-radius: 14px !important;
+    background: #fff;
+    padding: 16px 12px !important;
+    transition: all .3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.account-type-card .type-icon {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fff8df;
+    color: #b47c00;
+    font-size: 1.3rem;
+    transition: all .3s ease;
+}
+
+.account-type-card h6 {
+    font-size: 14px;
+    font-weight: 800;
+    color: #333;
+    margin: 10px 0 2px;
+}
+
+.account-type-card small {
+    font-size: 11px;
+    color: #999;
+}
+
+.account-type-card .type-check {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #e9ecef;
+    color: #fff;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(.5);
+    transition: all .3s ease;
+}
+
+.account-type-card:hover {
+    border-color: var(--primary) !important;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(255, 193, 7, .15);
+}
+
+.account-type-card:hover .type-icon {
+    transform: scale(1.08);
+}
+
+.account-type-card.active {
+    border-color: var(--primary) !important;
+    background: linear-gradient(180deg, #fffdf3 0%, #fff 100%);
+    box-shadow: 0 10px 28px rgba(255, 193, 7, .22);
+}
+
+.account-type-card.active .type-icon {
+    background: var(--primary);
+    color: #222;
+    box-shadow: 0 6px 16px rgba(255, 193, 7, .4);
+}
+
+.account-type-card.active .type-check {
+    opacity: 1;
+    transform: scale(1);
+    background: var(--primary);
+    color: #222;
+}
+
+/* ============================================ */
+/* LABELS & INPUTS */
+/* ============================================ */
+.auth-section .form-label {
+    color: #333;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 7px;
+}
+
+.auth-section .form-label i {
+    margin-left: 4px;
+}
+
+.auth-section .form-control,
+.auth-section .form-select {
+    height: 44px;
+    border: 1px solid #e4e4e4;
+    border-radius: 10px !important;
+    background: #fff;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #333;
+    box-shadow: none;
+    transition: .2s ease;
+}
+
+.auth-section .form-select {
+    cursor: pointer;
+}
+
+.auth-section .form-control::placeholder {
+    color: #b5b5b5;
+}
+
+.auth-section .form-control:focus,
+.auth-section .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, .13);
+}
+
+.auth-section .input-group .form-control {
+    border-radius: 10px 0 0 10px !important;
+}
+
+.auth-section .input-group .btn-outline-secondary {
+    width: 48px;
+    border: 1px solid #e4e4e4;
+    border-right: 0;
+    border-radius: 0 10px 10px 0;
+    background: #fff;
+    color: #888;
+}
+
+.auth-section .input-group .btn-outline-secondary:hover {
+    color: #555;
+    background: #fffaf0;
+    border-color: var(--primary);
+}
+
+/* ============================================ */
+/* MAIN BUTTON */
+/* ============================================ */
+.auth-section .btn-warning {
+    height: 44px;
+    background: var(--primary);
+    border: 0;
+    border-radius: 10px;
+    color: #222;
+    font-size: 14px;
+    font-weight: 800;
+    box-shadow: 0 7px 18px rgba(255, 193, 7, .18);
+    transition: .25s ease;
+}
+
+.auth-section .btn-warning:hover {
+    background: var(--primary-dark);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(255, 193, 7, .28);
+}
+
+.auth-section .btn-warning:disabled {
+    opacity: .7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ============================================ */
+/* FORM CHECK */
+/* ============================================ */
+.auth-section .form-check-label,
+.auth-section .small {
+    font-size: 12px !important;
+}
+
+.auth-section .form-check-input {
+    border-color: #d5d5d5;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.auth-section .form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.auth-section .text-warning {
+    color: #d99a00 !important;
+    font-weight: 700;
+}
+
+/* ============================================ */
+/* SOCIAL BUTTONS */
+/* ============================================ */
+.auth-section .btn-outline-danger,
+.auth-section .btn-outline-primary {
+    height: 42px;
+    border-radius: 9px;
+    background: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    border-width: 1px;
+    transition: .25s ease;
+}
+
+.auth-section .btn-outline-danger:hover,
+.auth-section .btn-outline-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(0, 0, 0, .07);
+}
+
+.auth-section .btn-outline-danger:hover {
+    background: #fff7f7;
+}
+
+.auth-section .btn-outline-primary:hover {
+    background: #f7faff;
+}
+
+/* ============================================ */
+/* CRAFTSMAN FIELDS DIVIDER */
+/* ============================================ */
+.craftsman-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0 12px;
+    padding: 9px 14px;
+    background: linear-gradient(135deg, #fff8df 0%, #fffdf5 100%);
+    border: 1px dashed #ffd55a;
+    border-radius: 12px;
+}
+
+.craftsman-divider .divider-icon {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 9px;
+    background: var(--primary);
+    color: #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .9rem;
+}
+
+.craftsman-divider .divider-text h6 {
+    font-size: 13px;
+    font-weight: 800;
+    margin: 0;
+    color: #333;
+}
+
+.craftsman-divider .divider-text small {
+    font-size: 11px;
+    color: #a07c00;
+}
+
+/* ============================================ */
+/* CUSTOM CRAFT FIELD */
+/* ============================================ */
+#customCraftField {
+    animation: slideDown .3s ease forwards;
+}
+
+#customCraftField .form-control {
+    border-color: var(--primary);
+    background-color: #fffdf5;
+}
+
+#customCraftField .form-control:focus {
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, .25);
+}
+
+/* ============================================ */
+/* PASSWORD STRENGTH */
+/* ============================================ */
+#passwordStrength {
+    margin-top: 8px !important;
+    height: 22px !important;
+    border-radius: 6px !important;
+    font-size: 12px !important;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================================ */
+/* SIDE PANEL */
+/* ============================================ */
+.auth-side-panel {
+    background: linear-gradient(160deg, #fffdf3 0%, #fff 100%);
+    border: 1px solid #f3ead2;
+    border-radius: 20px;
+    padding: 28px 22px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .06);
+    text-align: center;
+}
+
+.auth-side-panel .side-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #FFC107 0%, #ffb300 100%);
+    color: #222;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+    box-shadow: 0 12px 30px rgba(255, 193, 7, .35);
+    transform: rotate(-6deg);
+}
+
+.auth-side-panel h4 {
+    font-size: 20px;
+    color: #252525;
+    margin-bottom: 5px;
+}
+
+.auth-side-panel>p {
+    font-size: 12px;
+    color: #888 !important;
+}
+
+.auth-side-panel .features-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    text-align: right;
+    margin-top: 18px;
+}
+
+.auth-side-panel .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid #f3f0e8;
+    border-radius: 12px;
+    padding: 10px 12px;
+    transition: .25s ease;
+}
+
+.auth-side-panel .feature-item:hover {
+    transform: translateX(-4px);
+    border-color: #ffd55a;
+    box-shadow: 0 6px 18px rgba(255, 193, 7, .12);
+}
+
+.auth-side-panel .feature-icon {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 10px;
+    background: #fff8df;
+    color: #b47c00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .9rem;
+}
+
+.auth-side-panel .feature-item strong {
+    font-size: 13px;
+    color: #333;
+    display: block;
+}
+
+.auth-side-panel .feature-item small {
+    font-size: 11px;
+    color: #999;
+}
+
+/* ============================================ */
+/* FOOTER */
+/* ============================================ */
+footer {
+    background: #22272b !important;
+    padding: 17px 0 !important;
+}
+
+footer p {
+    color: rgba(255, 255, 255, .55) !important;
+    font-size: 11px;
+}
+
+/* ============================================ */
+/* ANIMATIONS */
+/* ============================================ */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+        max-height: 0;
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 200px;
+    }
+}
+
+/* ============================================ */
+/* RESPONSIVE */
+/* ============================================ */
+@media (max-width: 991px) {
+    .auth-section {
+        padding: 35px 0 !important;
+    }
+
+    .auth-section .row {
+        min-height: auto !important;
+    }
+
+    .auth-section .card {
+        max-width: 560px;
+    }
+}
+
+@media (max-width: 768px) {
+    .auth-section {
+        min-height: auto;
+        padding: 35px 12px !important;
+    }
+
+    .auth-section .card {
+        padding: 28px 22px !important;
+        border-radius: 18px !important;
+    }
+
+    .auth-section .card h3 {
+        font-size: 1.4rem;
+    }
+
+    .navbar .nav-link {
+        text-align: center;
+    }
+
+    .account-type-card {
+        padding: 13px 10px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-section .card {
+        padding: 24px 18px !important;
+    }
+
+    .auth-section .d-flex.justify-content-between {
+        gap: 8px;
+    }
+
+    .auth-side-panel {
+        padding: 25px 18px;
+    }
+}

@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&display=swap');
+
+.herafy-navbar { min-height: 70px; background: rgba(255,255,255,.96) !important; border-bottom: 1px solid #f2f2f2; box-shadow: 0 4px 22px rgba(0,0,0,.04) !important; z-index: 1030; font-family: 'Tajawal','Cairo',Arial,sans-serif; }
+.herafy-navbar .navbar-brand { color: #252525 !important; font-size: 1.55rem !important; letter-spacing: -.5px; flex-shrink: 0; }
+.herafy-navbar .nav-link { color: #444 !important; font-weight: 600; font-size: 14px; padding: 9px 14px !important; border-radius: 10px; transition: background-color .25s ease,color .25s ease; white-space: nowrap; }
+.herafy-navbar .nav-link:hover,.herafy-navbar .nav-link.active { color: #9a6b00 !important; background: #fff8df; }
+.herafy-navbar .navbar-account { padding-inline-start: 1rem; border-inline-start: 1px solid #eee; }
+.herafy-navbar .btn { min-width: 96px; border-radius: 9px; padding: 7px 15px; font-weight: 700; transition: background-color .25s ease,border-color .25s ease,color .25s ease,transform .25s ease; }
+.herafy-navbar .btn-outline-warning { color: #8a6200; border-color: #ffc107; }
+.herafy-navbar .btn-warning { color: #212529; background: #ffc107; border-color: #ffc107; }
+.herafy-navbar .btn-warning:hover { color: #212529; background: #ffca28; border-color: #ffca28; transform: translateY(-1px); }
+@media (max-width:1199.98px) { .herafy-navbar .navbar-collapse{padding-top:1rem}.herafy-navbar .navbar-nav{align-items:stretch!important}.herafy-navbar .nav-link{display:block}.herafy-navbar .navbar-account{padding:1rem 0 0;border-inline-start:0;border-top:1px solid #eee}.herafy-navbar .btn{width:100%} }

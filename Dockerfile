@@ -38,7 +38,7 @@ RUN mkdir -p \
 # 3) richarvey/nginx-php-fpm image switches (read by /start.sh)
 # -----------------------------------------------------------------------------
 # Skip the image's own composer install; scripts/00-laravel-deploy.sh does it.
-ENV SKIP_COMPOSER 1
+ENV SKIP_COMPOSER 0
 
 # Laravel's public directory becomes the nginx document root.
 ENV WEBROOT /var/www/html/public

@@ -1,0 +1,33 @@
+# Keep the image small and, above all, keep secrets and local state out of it.
+# Render injects configuration through environment variables, never through .env.
+
+.git
+.gitignore
+.gitattributes
+
+# Secrets and environment files must never be baked into an image.
+.env
+.env.*
+!.env.example
+
+# Build/test artefacts.
+node_modules
+npm-debug.log
+yarn-error.log
+.phpunit.result.cache
+.phpunit.cache
+coverage
+storage/logs/*.log
+Homestead.json
+Homestead.yaml
+auth.json
+
+# Local machine state, but keep the directory skeletons Laravel needs at runtime.
+storage/app/*
+!storage/app/public
+bootstrap/cache/*.php
+
+# These are still needed inside the image (RUN_SCRIPTS reads scripts/, and
+# /start.sh copies conf/nginx/nginx-site.conf) - do NOT ignore them below.
+# conf/
+# scripts/

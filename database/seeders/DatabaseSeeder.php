@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             AreaSeeder::class,
             AdminSeeder::class,
             SettingSeeder::class,
+            CraftmanSeeder::class,
         ]);
     }
 }
